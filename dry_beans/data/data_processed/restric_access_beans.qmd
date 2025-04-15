@@ -1,0 +1,630 @@
+---
+title: "Beans"
+format: html
+editor: visual
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, 
+                      warning = FALSE)
+```
+
+In this file we use 2017 Census of Agriculture data to understand the expenditure patterns of dry bean producers. While the focus of our analysis is New York, due to the potential for small sample sizes, we gather data for New York, the Northeast.
+
+We separate data for local, organic, and all producers.
+
+## Import 2017 Census of Agriculture data and define producer group
+
+After importing the 2017 data, we explore the data for the number of bean producers. We do not include lima beans, lentils, or dry peas.
+
+The Census of Ag categories for dry beans included here: - Dry beans harvested (excl chickpeas and limas), Acres (k554) - Dry beans harvested (excl chickpeas and limas), Hundredweight (k555) - Dry beans irrigated (excl chickpeas and limas), Acres (k556) - Dry beans harvested (excl chickpeas and limas), Value of sales (k4554)
+
+We originaly wanted to include chickpeas but there are no farms with harvested chickpea areas in the region. - Chickpeas (garbanzo beans), harvested acres (k2816) - Chickpeas (garbanzo beans), production (2817) - Chickpeas (garbanzo beans), irrigated harvested acres (k2818) - Chickpeas (garbanzo beans), total value of sales (k2819)
+
+We define bean producers as those with positive value of dry bean sales.
+
+## Data needed to do environmental analysis
+
+By bean what is needed: - Acres - Yield - Sales per crop - Fertilizer (type and quantity/application rate) - Manure (type and quantity/application rate) - Chemicals (type and quantity/application rate) - Tillage type/# of passes over the field - Seeds (lbs/ac) - Gasoline - Diesel
+
+If we can get Jasmine yield per acre for each crop grown by the operation then she can back out amounts.
+
+```{r}
+library(tidyverse)
+
+# Load data
+load("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/data_processed/coa.RData")
+
+# Get 2017 data only 
+df <- coa %>% 
+  filter(year==2017)
+
+# Explore bean producers
+## Operations with positive value of sales for dry beans 
+df <- df %>% 
+  filter(k4554>0)
+
+```
+
+## Define variables
+
+All variables used across multiple projects are defined in "COA.qmd".
+
+When we get the variables, we will also include those that produce organic products according to USDA’s National Organic Program (NOP) standards or have acres transitioning into USDA NOP production (k3501). For now, we will say that operations with positive Cropland and Pastureland Treated with Organic Fertilizer (K1570) are organic.
+
+### Understanding crop mix
+
+NASS collects information on harvested acres by commodity so double cropping is robust to this. If a producer harvests winter wheat and then plants and harvests soybeans on that same 100-acre field it will report 200 acres harvested; one hundred of corn and one hundred of soybeans. With two harvests on the same land for two different crops, harvested acres would appear twice. As a result, total harvested acres could sum to more than total cropland on the farm.
+
+We take the harvested acres of each crop divided by total cropland to get understand cropping mix.
+
+-   CRLND - Sum of Cropland
+-   K787 Cropland Harvested, Acres
+-   K791 - Cropland in Summer Fallow, Acres
+-   K1062 Cropland Idle or Used for Cover Crops, Acres
+-   K3456 - Cropland acres planted to a cover crop
+-   CROP - Crop - Sum of Cropland Harvested
+-   K67 - Field Corn for Grain Harvested, Acres
+-   K70 - Field Corn for Silage Harvested, Acres
+-   K578 - Durum Wheat Harvested, Acres
+-   K728 - Other Spring Wheat Harvested, Acres
+-   K572 - Winter Wheat Harvested, Acres
+-   K88 - Soybeans Harvested, Acres
+-   VEGA - Sum Acres of Vegetables
+-   CFRNNNAC - Fruit & Nut None Irrigated Acres
+-   CFRNWHAC - Fruit & Nut Wholly Irrigated Acres
+-   SUMBRTA - Calculated Sum of Total Berry Acres HAY - Acres Hay Harvested
+
+## Total sales
+
+-   K6764 Total Dry Beans Harvested (Excl Chickpeas and Limas) Sales
+-   K3538 Total Hay & Forage Crops Sales
+-   K4070 Field Corn for Silage Harvested Value of Sales
+-   K4067 Field Corn for Grain Harvested Value of Sales
+-   K4572 Winter Wheat Harvested Value of Sales
+-   K4578 Durum Wheat Harvested Value of Sales
+-   K4728 Other Spring Wheat Harvested Value of Sales
+-   K1792 Total Wheat Sales \$
+-   K6298 Total Soybeans Harvested Sales (don't have this variable)
+-   K3598 Total Vegetables, Potatoes, and Melons (Excl Veg Seeds & Transplants) Sales
+-   K3539 Total Fruit & Nuts Sales
+-   K3540 Total Berries Sales
+-   total value of sales
+-   dry bean sales as a percent of total value of sales
+
+## Yield
+
+k555 - Dry Beans Harvested (Excl Chickpeas and Limas), Hundredweight
+
+## Tillage
+
+k3455 - no till acres k3454 - reduced (conservation) tillage, excluding no-till, acres k3453 - intensive (conventional) tillage practices acres k3456 - cover crop acres
+
+```{r}
+
+# How many and what percentage of crop acres do our producers plant as cover crops
+df <- df %>% 
+  mutate(
+    cover_crop_acres = k3456, 
+    cover_crop_acres_pct_cropland = k3456/crlnd)
+
+# Organic - based on >0 Cropland and Pastureland Treated with Organic Fertilizer
+df <- df %>% 
+  mutate(organic = case_when(
+    k1570 >0 ~ 1, 
+    k1570 ==0 ~ 0))
+           
+# Tillage practices 
+df <- df %>% 
+  mutate(
+    no_till_acres = k3455, 
+    reduced_till_acres = k3454, 
+    intensive_till_acres = k3453) %>% 
+  mutate(across(no_till_acres:intensive_till_acres, 
+                ~.x/crlnd, 
+              .names = "{.col}_pct_cropland"))
+
+# Define harvested acres for beans and beans, soybeans, corn, wheat, and fruit/veg as a percent of all crop acres 
+df <- df %>% mutate(
+  harvested_acres_drybeans = k554, 
+  harvested_acres_corn = k67 + k70, 
+  harvested_acres_wheat = k578 + k728 + k572, 
+  harvested_acres_soybeans = k88, 
+  harvested_acres_fruitveg = vega + cfrnnnac +cfrnwhac + sumbrta, 
+  harvested_acres_hay = hay,
+  pasture_acres = past) %>% 
+  mutate(across(harvested_acres_drybeans:harvested_acres_fruitveg, 
+                ~./crlnd, 
+                .names = "{.col}_pct_cropland"))
+
+# Total value of bean sales 
+df <- df %>% 
+  mutate(
+    drybean_sales = k4554, 
+    drybean_sales_percent_tvp = drybean_sales/tvp, 
+    hay_sales = k3538, 
+    corn_silage_sales = k4070, 
+    corn_grain_sales = k4067, 
+    wheat_sales = k1792, 
+    veg_sales = k3598, 
+    fruit_nut_sales = k3539,
+    berry_sales = k3539, 
+    fruitveg_sales = veg_sales + fruit_nut_sales + berry_sales)
+
+# Yield for beans
+df <- df %>% 
+  mutate(
+    cwt_drybeans = k555, 
+    yield_acre_drybeans = k555/k554)
+
+```
+
+### Variable expenses
+
+We gather variable expenses data as a total per category and as a percent of total variable expenses.
+
+Challenge: we have total expenses for the operation, total acres, and total acres of bean production. In order to accurately calculate cost per bean acre, we would have to keep producers that only produce beans, which is too small subset of the population. But, order to do the environmental analysis, we need expenditures on a per acre basis. We are trying to capture expenditures on the acres in which the beans are planted. Beans are all part of a rotation, but we are interested in all of these acres.
+
+We want to tell a story about what these other bean growers are growing. Get value of sales from each commodity.
+
+Total variable expenses, categorized the same as they do in ARMS 
+
+-   k1501 fertilizer 
+-   k1502 chemicals 
+-   k1503 seeds, plants k1504, 
+-   k1505 livestock purchases 
+-   k1506 feed 
+-   k1507 gasoline, fuels, oils 
+-   k1508 utilities 
+-   k1509 maintenance and repair 
+-   k1510, k1511 labor 
+-   k1512 customwork 
+-   k1518 other expenses (Include storage and warehousing, marketing expenses, insurance, etc.)
+
+We calculate it both including other expenses and not.
+
+## Fertilizer questions
+
+Management practices: 
+
+-   K932 - Cropland Fertilized, Acres 
+-   K933 - Pastureland Fertilized, Acres 
+-   K1569 - Acres on Which Manure Was Applied 
+-   K1570 - Cropland and Pastureland Treated with Organic Fertilizer 
+-   K936 - Land Treated for Insects on Hay or Other Crops, Acres 
+-   K939 - Land Treated for Weeds in Crops and Pasture, Acres 
+-   K937 - Land Treated for Nematodes in Crops, Acres 
+-   K938 - Land Treated for Diseases in Crops and Orchards, Acres 
+-   K940 - Crops on Which Chemicals for Defoliation Applied, Acres
+
+```{r}
+
+# Define variable expenses 
+df <- df %>% 
+  mutate(
+    fert = k1501,
+    chem = k1502, 
+    seedp = k1503, 
+    animalpurchase = k1504 + k1505, 
+    feed = k1506, 
+    fuelo = k1507, 
+    util = k1508,
+    mainr = k1509, 
+    labor = k1510 + k1511,
+    cwork = k1512,
+    otherexp = k1518, 
+    totvarexp = fert + chem + seedp + animalpurchase + feed + fuelo + 
+      util + mainr + labor + cwork, 
+    totvarexp_alt = totvarexp + otherexp)
+
+# Define expenses as a percent of total 
+df <- df %>% 
+  mutate(across(fert:cwork, 
+                ~.x/totvarexp, 
+                .names = "{.col}_pct")) %>% 
+  mutate(across(fert:otherexp, 
+                ~.x/totvarexp_alt, 
+                .names = "{.col}_alt_pct"))
+
+# Define fertilizer variables 
+df <- df %>% 
+  mutate(
+    cropland_acres_fertilized = k932, 
+    pasture_acres_fertilized = k933, 
+    manure_acres = k1569, 
+    organic_fertilizer_acres = k1570, 
+    chemicals_insects_acres = k936, 
+    chemicals_weeds_acres = k939, 
+    chemicals_nematodes_acres = k937,
+    chemicals_disease_acres = k938, 
+    chemicals_defoliation_acres = k940) %>% 
+  mutate(across(cropland_acres_fertilized:chemicals_defoliation_acres, 
+                ~./crlnd, 
+                .names = "{.col}_pct_cropland"))
+
+# Define a beginning farmer as both any and all beginning 
+df <- df %>% 
+  mutate(
+    beginning_alt_dummy = case_when(
+      beginning_alt == "Established" ~ 0, 
+      TRUE ~ 1))
+```
+
+## Define regions
+
+While we are generally interested in New York, we are expanding the study to both the Middle Atlantic and New England as a whole.
+
+```{r}
+# Define three regions
+df_NY <- df %>% 
+  filter(state_name == "New York")
+
+df_midatlantic <- df %>% 
+  filter(census_divisions == "Middle Atlantic") 
+
+df_northeast <- df %>% 
+  filter(census_regions == "Northeast")
+
+```
+
+## Summary stats
+
+Summary stats are separated for local, nonlocal, all and by the three different regional definitions.
+
+Summary stats include expenses, profitability measures and farm characteristics. This will allow to to provide survey respondents with our estimate of expenses, they will be able to move it either higher or lower. Profitability and farm characteristics will allow us to understand how the group of bean producers we are meeting with compare to this sample. If SE's are high, see if there are outlier problems. For disclosure, we also provide the n in each category and the top two observations
+
+We provide mean, se, and totals (so we can compute percentages for the group as a whole).
+
+### Profitability measures:
+
+-   net profitability (infi) (GCFI - EXP)
+-   ROA
+-   OPM
+-   total sales
+
+### Demographics and farm characteristics
+
+-   bean sales
+-   total value of sales
+-   bean sales as a percent of total value of sales
+-   total harvested crop acres
+-   percent of harvested acres by crop
+-   cover crop acres
+-   cover crop acres as a percent of total harvested acres
+-   percent all/any beginning, beginning_alt != "Established"
+-   owned vs. rented, tenure_fct
+-   other commodities,
+-   total acres operated, k46
+-   gross cash farm income, gcfi
+-   gcfi categories
+-   crop insurance (1/0), crop_insurance
+-   government payments (1/0), gov_payments_cat
+
+```{r}
+library(srvyr)
+
+# Turn off scientific notation 
+options(scipen=999)
+
+# Define variables of interest
+var_list <- df %>% 
+  select(
+    cover_crop_acres: beginning_alt_dummy, 
+    crop, crlnd,
+    gcfi_0_75, gcfi_75_350, gcfi_350_1M, gcfi_over_1M,
+    tvp, gcfi, roa, opm, infi, k46, 
+    fullowner, partowner, fulltenant, 
+    crop_insurance, gov_payments_cat, 
+    fieldcrop, fruitveg, othercrops, 
+    livestock, dairy, poultry, otheranimal) %>% 
+  names()
+
+# Define list of dataframes 
+df_list <- list(df_NY, df_northeast, df_midatlantic)
+
+for(i in seq_along(df_list)){
+# Define dataframe 
+df <- df_list[[i]]
+
+# Define data frame and groupbyvar
+df <- df %>% 
+  mutate(
+    groupbyvar = local)
+
+# Define data frame as a survey object
+df <- df %>% as_survey(weight = weight)
+
+# Summary stats 
+sum <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total))) %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total)))) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+   names_to = "variable", 
+    values_to = "value") %>% 
+  ungroup() 
+
+# Drop total_se
+sum <- sum %>% 
+  filter(!str_detect(variable, "total_se$"))
+
+# Add a column with the statistic 
+sum <- sum %>% 
+  mutate(
+    statistic = case_when(
+      str_detect(variable, "se$") ~ "se", 
+      str_detect(variable, "total$") ~ "total", 
+      TRUE ~ "mean"), 
+    variable = str_remove_all(variable, 
+                          "_mean|_se|_total"))
+
+# Get weighted N
+n <- df %>% 
+  group_by(groupbyvar) %>% 
+  survey_tally() %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% survey_tally()) %>%
+  select(-n_se) 
+
+# Get unweighted n
+unweighted_n <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% 
+      summarise(n = n())) %>% 
+  rename(unweighted_n = n)
+
+# Join data frames
+sum <- left_join(sum, n) %>% left_join(unweighted_n) %>%
+  arrange(groupbyvar, statistic) 
+
+# Get top 2 observations for each variable. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- df$variables %>% 
+  select(groupbyvar, all_of(var_list)) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(groupbyvar, variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(groupbyvar, variable)
+
+dis_all <- df$variables %>% 
+  select(all_of(var_list)) %>%
+  pivot_longer(
+    cols = everything(), 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(variable)
+
+# Make data wider so there is a column for second largest and largest obs. First need to add the column that says first and second largest. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- dis %>% 
+  group_by(groupbyvar, variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2)
+
+dis_all <- dis_all %>% 
+  group_by(variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2) %>% 
+  mutate(
+    groupbyvar = NA)
+
+# Bind data for "groupbyvar" and not 
+dis <- bind_rows(dis, dis_all)
+rm(dis_all)
+
+# Join with original data frame 
+sum <- sum %>% left_join(dis) 
+
+# Arrange columns in correct order and rename groupby
+sum <- sum %>% 
+  select(groupbyvar, variable, statistic, everything()) %>% 
+  mutate(
+    groupbyvar = case_when(
+      groupbyvar==0 ~ "nonlocal", 
+      groupbyvar==1 ~ "local", 
+      is.na(groupbyvar) ~ "all operations"))
+
+write_csv(sum, str_glue("data_processed/summary_{i}.csv"))
+}
+```
+
+## Organic
+
+For organic, we only need the data grouped by organic and do not need data for all producers as we already have that.
+
+```{r}
+
+for(i in seq_along(df_list)){
+# Define dataframe 
+df <- df_list[[i]]
+
+# Define data frame and groupbyvar
+df <- df %>% 
+  mutate(
+    groupbyvar = organic)
+
+# Define data frame as a survey object
+df <- df %>% as_survey(weight = weight)
+
+# Summary stats 
+sum <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total))) %>% 
+  ungroup() %>% 
+  pivot_longer(
+    cols = -groupbyvar, 
+   names_to = "variable", 
+    values_to = "value") %>% 
+  ungroup() 
+
+# Drop total_se
+sum <- sum %>% 
+  filter(!str_detect(variable, "total_se$"))
+
+# Add a column with the statistic 
+sum <- sum %>% 
+  mutate(
+    statistic = case_when(
+      str_detect(variable, "se$") ~ "se", 
+      str_detect(variable, "total$") ~ "total", 
+      TRUE ~ "mean"), 
+    variable = str_remove_all(variable, 
+                          "_mean|_se|_total"))
+
+# Get weighted N
+n <- df %>% 
+  group_by(groupbyvar) %>% 
+  survey_tally() %>% 
+  ungroup() %>% 
+  select(-n_se)
+
+# Get unweighted n
+unweighted_n <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  rename(unweighted_n = n)
+
+# Join data frames
+sum <- left_join(sum, n) %>% left_join(unweighted_n) %>%
+  arrange(groupbyvar, statistic) 
+
+# Get top 2 observations for each variable. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- df$variables %>% 
+  select(groupbyvar, all_of(var_list)) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(groupbyvar, variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(groupbyvar, variable)
+
+dis_all <- df$variables %>% 
+  select(all_of(var_list)) %>%
+  pivot_longer(
+    cols = everything(), 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(variable)
+
+# Make data wider so there is a column for second largest and largest obs. First need to add the column that says first and second largest. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- dis %>% 
+  group_by(groupbyvar, variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2)
+
+dis_all <- dis_all %>% 
+  group_by(variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2) %>% 
+  mutate(
+    groupbyvar = NA)
+
+# Bind data for "groupbyvar" and not 
+dis <- bind_rows(dis, dis_all)
+rm(dis_all)
+
+# Join with original data frame 
+sum <- sum %>% left_join(dis) 
+
+# Arrange columns in correct order and rename groupby
+sum <- sum %>% 
+  select(groupbyvar, variable, statistic, everything()) %>% 
+  mutate(
+    groupbyvar = case_when(
+      groupbyvar==0 ~ "non_organic", 
+      groupbyvar==1 ~ "organic"))
+
+write_csv(sum, str_glue("data_processed/organic_summary_{i}.csv"))
+}
+```
+
+## Write final results
+
+```{r}
+library(openxlsx)
+
+# Read files
+sum_df_NY <- read_csv("data_processed/summary_1.csv")
+sum_df_northeast <- read_csv("data_processed/summary_2.csv")
+sum_df_midatlantic <- read_csv("data_processed/summary_3.csv")
+sum_df_NY_organic <- read_csv("data_processed/organic_summary_1.csv")
+sum_df_northeast_organic <- read_csv("data_processed/organic_summary_2.csv")
+sum_df_midatlantic_organic <- read_csv("data_processed/organic_summary_3.csv")
+
+# Create workbook
+wb <- createWorkbook()
+
+# Add worksheets 
+addWorksheet(wb, "sum_df_NY")
+addWorksheet(wb, "sum_df_midatlantic")
+addWorksheet(wb, "sum_df_northeast")
+addWorksheet(wb, "sum_df_NY_organic")
+addWorksheet(wb, "sum_df_midatlantic_organic")
+addWorksheet(wb, "sum_df_northeast_organic")
+
+writeData(wb, sheet = "sum_df_NY", sum_df_NY)
+writeData(wb, sheet = "sum_df_midatlantic", sum_df_midatlantic)
+writeData(wb, sheet = "sum_df_northeast", sum_df_northeast)
+writeData(wb, sheet = "sum_df_NY_organic", sum_df_NY_organic)
+writeData(wb, sheet = "sum_df_midatlantic_organic", sum_df_midatlantic_organic)
+writeData(wb, sheet = "sum_df_northeast_organic", sum_df_northeast_organic)
+
+saveWorkbook(wb, "data_final/bean_focus_group_results.xlsx",
+             overwrite = TRUE)
+```

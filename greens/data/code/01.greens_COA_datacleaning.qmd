@@ -1,0 +1,184 @@
+---
+title: "Leafy Greens Focus Group - Data Cleaning"
+format: 
+  html:
+    toc: true
+    number-sections: true
+  docx:
+    toc: true
+    number-sections: true
+editor: visual
+prefer-html: false
+---
+
+# Data Description
+
+We use data compiled from the 2022 restricted access farm-level data from the Census of Agriculture. All dollars are reported in 2022 dollars.
+
+We include two operations with leafy green or cabbage production in New York. Where cabbage operations are defined as those with positive harvested acres for cabbage head (k391) and leafy green operations are defined as those operations with positive harvested acres of:
+
+-   K389 Cabbage, Chinese, Harvested, Tenth-Acres
+-   K407 Collards Harvested, Tenth-Acres
+-   K425 Kale Harvested, Tenth-Acres
+-   K428 Lettuce, Head, Harvested, Tenth-Acres
+-   K430 Lettuce, Leaf, Harvested, Tenth-Acres
+-   K432 Lettuce, Romaine, Harvested, Tenth-Acres
+-   K431 Mustard Greens Harvested, Tenth-Acres
+-   K457 Spinach Harvested, Tenth-Acres
+
+We do not want to include operations that are greenhouse only. Operations with more than 1/2 acre production are very unlikely to have high tunnels and we assume they are a greenhouse operation, these operations are not included in the analysis.
+
+## Import processed COA data
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(scales)
+
+# Turn off scientific notation 
+options(scipen = 999)
+
+# Read in total number of observations
+n <- read_xlsx("../data_processed/lettuce_approved_updated.xlsx", 
+               sheet = "sum")
+
+# Read in mean/se data
+df <- read_xlsx("../data_processed/lettuce_approved_updated.xlsx", 
+               sheet = "ols_tidy")
+
+# Keep p-value for statistically significant diff with organic and conventional
+pvalue <- df %>% 
+  filter(term=="organic_farm") %>%
+  select(farm_type, yvar, p.value)
+
+# Read in meta data
+meta <- read_csv("../data_processed/meta_coa_approved.csv") %>% 
+  rename(yvar = variable_name) %>% 
+  filter(year == 2017) 
+
+# Keep only the meta data of interest 
+meta <- df %>% 
+  filter(farm_type=="cabbage_farm" & term == "organic_farm") %>%
+  select(yvar) %>% 
+  left_join(meta) %>% 
+  select(yvar, variable_description)
+```
+
+## Add in missing metadata
+
+```{r}
+
+# Add in missing data
+meta <- meta %>% 
+  mutate(
+    variable_description = case_when(
+      yvar== "veg_sales" ~ "Total vegetable sales", 
+      yvar== "fert_chemical" ~ "Fertilizer and chemicals", 
+      yvar== "hired_labor" ~ "Hired labor expense", 
+      yvar== "contract_labor" ~ "Contract labor expense", 
+      yvar== "rent_land_buildings" ~ "Cash rent for land and buildings", 
+      yvar== "rent_lease_machinery" ~ "Rent and lease expense for machinery, equipment and farm share of vehicles", 
+      yvar=="fert_chemical_var_pct" ~ "Fertilizer and chemicals purchased as a percent of total variable expense",
+      yvar=="labor_cwork_var_pct" ~ "Labor and customwork expense as a percent of total variable expense", 
+      yvar=="rent_land_buildings_fixed_pct" ~ "Cash rent for land and buildings as a percent of total fixed expense", 
+      yvar=="rent_lease_machinery_fixed_pct" ~ "Rent and lease expense for machinery, equipment and farm share of vehicles as a percent of total fixed expense", 
+      yvar=="depreciation" ~ "Depreciation expense", 
+      yvar=="depreciation_machinery_pct" ~ "Depreciation expense as a percent of total cost of machinery and equipment", 
+      yvar=="leafy_green_10thacres" ~ "10th acres of leafy greens harvested", 
+      yvar=="cabbage_10thacres" ~ "10th acres of cabbage harvested",
+      TRUE ~ variable_description))
+
+# Add short variable description 
+meta <- meta %>% 
+  mutate(
+    short_variable_description = case_when(
+      yvar=="gcfi_0_75" ~ "GCFI $0 to $74,999", 
+      yvar=="gcfi_75_350" ~ "GCFI $75,000 to $349,999", 
+      yvar=="gcfi_350_1M" ~ "GCFI $350,000 to $999,999", 
+      yvar=="gcfi_over_1M" ~ "GCFI $1M or more",
+      yvar=="tvp" ~ "Total sales", 
+      yvar=="gcfi" ~ "Gross cash farm income", 
+      yvar=="roa" ~ "Return on assets",
+      yvar=="opm" ~ "Operating profit margin", 
+      yvar=="infi" ~ "Net farm income", 
+      str_detect(yvar, "seedp") ~ "Seeds and plants", 
+      str_detect(yvar, "animalpurchase") ~ "Breeding livestock", 
+      str_detect(yvar, "feed") ~ "Feed", 
+      str_detect(yvar, "fuelo") ~ "Fuel and oil", 
+      str_detect(yvar, "util") ~ "Utilities", 
+      str_detect(yvar, "mainr") ~ "Maintenance and repair", 
+      str_detect(yvar, "hired_labor") ~ "Hired labor", 
+      str_detect(yvar, "contract_labor") ~ "Contract labor",
+      str_detect(yvar, "cwork") ~ "Customwork", 
+      str_detect(yvar, "labor") ~ "Hired and contract labor", 
+      str_detect(yvar, "interest") ~ "Interest", 
+      str_detect(yvar, "veterinary") ~ "Medical supplies", 
+      yvar=="fullowner" ~ "Full owner", 
+      yvar=="fulltenant" ~ "Full tenant", 
+      yvar=="partowner" ~ "Part owner", 
+      yvar=="beginning" ~ "Beginning",
+      yvar=="fieldcrop" ~ "Primary commodity: Field crop", 
+      yvar=="fruitveg" ~ "Primary commodity: Fruit/veg", 
+      yvar=="othercrops" ~ "Primary commodity: Other crops", 
+      yvar=="livestock" ~ "Primary commodity: Livestock", 
+      yvar=="dairy" ~ "Primary commodity: Dairy", 
+      yvar=="poultry" ~ "Primary commodity: Poultry", 
+      yvar=="otheranimal" ~ "Primary commodity: Other animal",
+      yvar=="cover_crop" ~ "Cover crop", 
+      yvar=="no_till" ~ "No till", 
+      yvar=="reduced_till" ~ "Reduced till", 
+      yvar=="crop_insurance" ~ "Has Federal crop insurance", 
+      yvar=="gov_payments_cat" ~ "Recieves government payments",
+      str_detect(yvar, "rent_lease_machinery") ~ "Rent/lease for machinery",
+      yvar=="fert_var_pct" ~ "Fertilizers", 
+      yvar=="chemical_var_pct" ~ "Chemicals",
+      yvar=="fert_chemical_var_pct" ~ "Fertilizers and chemicals",
+      str_detect(yvar, "rent_land_buildings") ~ "Rent/lease for land and buildings",
+      yvar=="rent_lease" ~ "Rent/lease",
+      yvar=="rent_lease_fixed_pct" ~ "Rent/lease",
+      yvar=="otherexp_fixed_pct" ~ "Other", 
+      yvar=="property_tax_fixed_pct" ~ "Property tax",
+      TRUE ~ variable_description))
+
+# Add variable description that is the same as short but with percent fixed/variable
+meta <- meta %>% 
+  mutate(
+    alt_short_variable_description = case_when(
+      str_detect(yvar, "fixed_pct") ~ str_c(short_variable_description, "as a percent of total fixed expense", sep = " "), 
+      str_detect(yvar, "var_pct") ~ str_c(short_variable_description, "as a percent of total variable expense", sep = " "), 
+      TRUE ~ short_variable_description))
+
+# Join df and meta
+df <- df %>% 
+  left_join(meta)
+rm(meta)
+```
+
+## Summary stats
+
+Get mean/se for both organic and conventional.
+
+```{r}
+
+# Keep only columns of interest
+df <- df %>% 
+  select(farm_type, short_variable_description, alt_short_variable_description, yvar, term, estimate, std.error)
+
+# Pivot wider
+df <- df %>%
+  pivot_wider(
+    names_from = term, 
+    values_from = c(estimate, std.error))
+
+# Get mean/se for organic and not organic
+df <- df %>% 
+  mutate(
+    mean_conventional = `estimate_(Intercept)`, 
+    se_conventional = `std.error_(Intercept)`, 
+    mean_organic = `estimate_(Intercept)` + estimate_organic_farm, 
+    se_organic = sqrt(`std.error_(Intercept)`^2 + std.error_organic_farm^2)) %>% 
+  select(!c(`estimate_(Intercept)`:std.error_organic_farm))
+
+```

@@ -1,0 +1,95 @@
+---
+title: "COA - Survival analysis"
+format: html
+editor: visual
+---
+
+We create survival data frames to indicate which operations survived over a 5 year time frame (2007-2012, 2012-2017), and a 10-year time frame (2007-2017).
+
+To do this we do an inner join, which returns all rows that are in 2007 (x) and in 2012/2017 (y). Columns from both are returned with a .x at the end of 2007 columns and a .y at the end of 2012/2017 columns.
+
+We also create a list of all those who failed by doing an anti-join, which returns rows from 2007 (x) without a match in 2012/2017 (y).
+
+We will use weights from the initial year for all data analysis.
+
+## Combine data frames and add survival
+
+```{r}
+library(tidyverse)
+
+# Read in data 
+load("data_processed/coa_07.RData")
+load("data_processed/coa_12.RData")
+
+# Join 2012 to 2007 beginning observations by cfn. Variables with a .x are from 2007 and with a .y from 2012. Keep all rows from 2007 (x) with a match in 2012 (y) (i.e., those that survived). To get a list of those that failed, do an anti join.This returns all columns from 2007 (x) unchanged and all rows without a match in 2012 (y). All operations that failed don't have the .y variables. 
+survive_07_12 <- inner_join(coa_07, coa_12, by = "cfn")
+failed_07_12 <- anti_join(coa_07, coa_12, by = "cfn")
+
+rm(coa_07, coa_12)
+
+# Add a dummy for survive and change variable names for failed to have a .x
+survive_07_12 <- survive_07_12 %>% mutate(survive = 1)
+failed_07_12 <- failed_07_12 %>% rename_at(vars(-cfn), function(x) paste0(x, ".x")) %>% mutate(survive = 0)
+
+# Create one data frame with all observations from 2007 and a dummy for if they survived or failed in 2012. We want the columns of interest for both years. 
+coa_07_12 <- bind_rows(survive_07_12, failed_07_12)
+rm(survive_07_12, failed_07_12)
+
+# Save as Rdata file
+save(coa_07_12, file = "data_processed/survival/coa_07_12.RData")
+rm(coa_07_12)
+
+#2012 to 2017
+load("data_processed/coa_12.RData")
+load("data_processed/coa_17.RData")
+
+# create survive and fail data frames
+survive_12_17 <- inner_join(coa_12, coa_17, by = "cfn") %>% mutate(survive = 1)
+failed_12_17 <- anti_join(coa_12, coa_17, by = "cfn")  %>% rename_at(vars(-cfn), function(x) paste0(x, ".x")) %>% mutate(survive = 0)
+rm(coa_12, coa_17)
+
+# bind into one data frame
+coa_12_17 <- bind_rows(survive_12_17, failed_12_17)
+
+rm(survive_12_17, failed_12_17)
+
+save(coa_12_17, file = "data_processed/survival/coa_12_17.RData")
+rm(coa_12_17)
+
+# Join 2017 to 2007 beginning observations by cfn. Variables with a .x are from 2007 and with a .y from 2017. Keep all rows from 2007 (x) with a match in 2017 (y) (i.e., those that survived).
+load("data_processed/coa_07.RData")
+load("data_processed/coa_17.RData")
+
+survive_07_17 <- inner_join(coa_07, coa_17, by = "cfn") %>% mutate(survive = 1)
+failed_07_17 <- anti_join(coa_07, coa_17, by = "cfn") %>% rename_at(vars(-cfn), function(x) paste0(x, ".x")) %>% mutate(survive = 0)
+rm(coa_07, coa_17)
+
+coa_07_17 <- bind_rows(survive_07_17, failed_07_17)
+
+rm(survive_07_17, failed_07_17)
+save(coa_07_17, file = "data_processed/survival/coa_07_17.RData")
+rm(coa_07_17)
+
+```
+
+## Save data
+
+```{r}
+
+# Define as survey, use weights from 2007
+load("data_processed/survival/coa_07_12.RData")
+coa_07_12_srv <- as_survey_design(coa_07_12, weights = weight.x) 
+saveRDS(coa_07_12_srv, "data_processed/survival/coa_07_12_srv.rds")
+rm(coa_07_12, coa_07_12_srv)
+
+load("dataframes/coa_12_17.RData")
+coa_12_17_srv <- as_survey_design(coa_12_17, weights = weight.x) 
+saveRDS(coa_12_17_srv, "data_processed/survival/coa_12_17_srv.rds")
+rm(coa_12_17, coa_12_17_srv)
+
+load("dataframes/coa_07_17.RData")
+coa_07_17_srv <- as_survey_design(coa_07_17, weights = weight.x) 
+saveRDS(coa_07_17_srv, "data_processed/survival/coa_07_17_srv.rds")
+rm(coa_07_17, coa_07_17_srv)
+
+```
