@@ -1,0 +1,9 @@
+# Data 
+
+Here we describe all of the data used to understand the dry bean supply chain. 
+
+## Census of Agriculture {#coa_data}
+
+## Focus groups {#focusgroup_data}
+
+
