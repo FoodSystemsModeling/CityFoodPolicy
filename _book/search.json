@@ -1,0 +1,439 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "CityFoodPolicy",
+    "section": "",
+    "text": "Introduction",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#a-global-trend-cities-committed-to-values-based-food-policy",
+    "href": "index.html#a-global-trend-cities-committed-to-values-based-food-policy",
+    "title": "CityFoodPolicy",
+    "section": "A Global Trend: Cities Committed to Values-Based Food Policy",
+    "text": "A Global Trend: Cities Committed to Values-Based Food Policy\nThe policies that inform how cities purchase food provide critical opportunities to drive regional resilience and positively impact a region’s economic and environmental goals. To be effective, food policy plans require consideration of local conditions. What works for one city may not work for another. Production systems associated with generating positive environmental impacts are not automatically transferable to other locations; their impacts may vary depending on numerous factors, ranging from microclimates and soil types to transportation and distribution-related infrastructure.\nAs regions across the world leverage public food procurement to meet a combination of climate, health, community development, and economic goals, these policies and programs need to be aware of the trade-offs and co-benefits their policies and programs will create. Having more robust data about the economic, environmental, and social-cultural tradeoffs of the program can help bolster support to implement good food policies.\nThe City Food Policy Project brings together researchers, policy practitioners, and food systems stakeholders to:\n\nUnderstand the impacts, or potential tradeoffs, associated with city food policies\nDevelop policy instruments that inform how cities weigh and implement values-based food policies\n\nThis book contains information and links to all of the data used in this project as well as all project outputs. The goal is to create a framework for our research to be reproducible and to be used to conduct similar research in other cities across the world.\nThe chapters in the book are arranged…",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "CityFoodPolicy",
+    "section": "License",
+    "text": "License\nThis website is (and will always be) free to use, and is licensed under the Creative Commons Attribution 4.0 International License.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#thank-you-to-our-funders-and-partners",
+    "href": "index.html#thank-you-to-our-funders-and-partners",
+    "title": "CityFoodPolicy",
+    "section": "Thank you to our funders and partners",
+    "text": "Thank you to our funders and partners",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "cityfoodpolicies.html",
+    "href": "cityfoodpolicies.html",
+    "title": "City food policies to meet sustainable development goals",
+    "section": "",
+    "text": "International public food procurement",
+    "crumbs": [
+      "City food policies to meet sustainable development goals"
+    ]
+  },
+  {
+    "objectID": "cityfoodpolicies.html#u.s.-public-food-procurment",
+    "href": "cityfoodpolicies.html#u.s.-public-food-procurment",
+    "title": "City food policies to meet sustainable development goals",
+    "section": "U.S. public food procurment",
+    "text": "U.S. public food procurment",
+    "crumbs": [
+      "City food policies to meet sustainable development goals"
+    ]
+  },
+  {
+    "objectID": "cityfoodpolicies.html#new-york-city-public-food-procurment",
+    "href": "cityfoodpolicies.html#new-york-city-public-food-procurment",
+    "title": "City food policies to meet sustainable development goals",
+    "section": "New York City public food procurment",
+    "text": "New York City public food procurment\n\nNew York City agency specific procurment information\nthis is where the NYC data overview, this is what NYC has on their dashboard, overall trends in purchasing",
+    "crumbs": [
+      "City food policies to meet sustainable development goals"
+    ]
+  },
+  {
+    "objectID": "research_question.html",
+    "href": "research_question.html",
+    "title": "Research question",
+    "section": "",
+    "text": "How did we choose our commodities",
+    "crumbs": [
+      "Research question"
+    ]
+  },
+  {
+    "objectID": "research_question.html#how-did-we-choose-our-commodities",
+    "href": "research_question.html#how-did-we-choose-our-commodities",
+    "title": "Research question",
+    "section": "",
+    "text": "New York City data\nThis is where we put all of the data collected by Rebecca New York state ag data (Census of Ag, etc.)\nSelected food policy actions Aiden put this together and Dana/Michael have a nice visual to add\nNew York City legal framework (Aiden)\nNYC baseline purchasing by food policy action This is what Rebecca is currently working on",
+    "crumbs": [
+      "Research question"
+    ]
+  },
+  {
+    "objectID": "nys_supply_chains.html",
+    "href": "nys_supply_chains.html",
+    "title": "New York State Supply Chains",
+    "section": "",
+    "text": "Beef",
+    "crumbs": [
+      "New York State Supply Chains"
+    ]
+  },
+  {
+    "objectID": "nys_supply_chains.html#beef",
+    "href": "nys_supply_chains.html#beef",
+    "title": "New York State Supply Chains",
+    "section": "",
+    "text": "Secondary data\n\n\nStakeholder engagment and validation\nThis is where all the focus group Survey instrument will be referenced and in an appendix #### Causal loop diagram This will either be a link or an image, whatever is best #### Focus group",
+    "crumbs": [
+      "New York State Supply Chains"
+    ]
+  },
+  {
+    "objectID": "nys_supply_chains.html#dry-beans",
+    "href": "nys_supply_chains.html#dry-beans",
+    "title": "New York State Supply Chains",
+    "section": "Dry beans",
+    "text": "Dry beans",
+    "crumbs": [
+      "New York State Supply Chains"
+    ]
+  },
+  {
+    "objectID": "nys_supply_chains.html#greens",
+    "href": "nys_supply_chains.html#greens",
+    "title": "New York State Supply Chains",
+    "section": "Greens",
+    "text": "Greens",
+    "crumbs": [
+      "New York State Supply Chains"
+    ]
+  },
+  {
+    "objectID": "modeling_approach.html",
+    "href": "modeling_approach.html",
+    "title": "Modeling approach",
+    "section": "",
+    "text": "Food policy actions",
+    "crumbs": [
+      "Modeling approach"
+    ]
+  },
+  {
+    "objectID": "drybeans/farmgate.html",
+    "href": "drybeans/farmgate.html",
+    "title": "2  Farmgate cost of production and prices received",
+    "section": "",
+    "text": "2.1 Cost of production\nWe estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. Prices received by producer on the commodity market are based on price data from NASS and prices received on the differentiated market are based on interview data.\nUsing the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.\nTo understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of $525 per acre.\nWe also need a cost of production for bean producers outside of New York, as those are the producers currently supplying the New York City beans. Based on discussions with Michael, most of the beans come from North Dakota, so we base our cost of production on an enterprise budget from North Dakota. We also include the other crop budgets we could find for comparison/to provide range:\nConclusions We will use the cost of production data from New York combined with Census of Agriculture data to estimate cost of production for different types of operations. For those outside of NY, we will provide a range based on the enterprise budgets we were able to find.\nFrom the Census of Agriculture, we have an average dry bean yield in NY of 20.5 CWT per acre to convert to production cost per lb.\nThe New York cost of production per acre is based on June’s assumption.",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Farmgate cost of production and prices received</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/farmgate.html#cost-of-production",
+    "href": "drybeans/farmgate.html#cost-of-production",
+    "title": "2  Farmgate cost of production and prices received",
+    "section": "",
+    "text": "North Dakota, 2024\n\nCost per acre: $434.05\n\nWyoming\n\nCost per acre: $598.70, cost per CWT $23.95\n\nColorado\n\nCost per acre: $454.57, cost per CWT $113.64\n\nTexas\n\nCost per acre: $400\n\n\n\n\n\n\n2.1.1 NYS producers\n\n\n2.1.2 Outside NYS producers\n\nNorth Dakota: 434.05\nWyoming: 598.70\nColorado: 454.57\nTexas: 400\n\n\n\n2.1.3 Soybeans\nWe use Census of Agriculture data and keep only those producers with soybean sales. Because we only have soybean producers, then the total cost per acre is for soybeans only and we don’t need to use a crop budget.\nIn NY there are not enough farms in some categories. So we modify that NY data that we have up or down based on the national numbers.\nConventional soybean producers in NY have 50% higher production costs than compared to the US. We take the numbers we have by scale, MWBE, organic and increase them by 50%.\nCrop budgets for comparison:\n\nOhio in 2022\nConventional: 761/acre.\nThere is no data for organic until 2024, which is 946/acre. For comparison, conventional soy in 2024 was 754/acre.\nLouisiana in 2022\n454/acre\nAlabama in 2025\n471/acre",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Farmgate cost of production and prices received</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/farmgate.html#prices",
+    "href": "drybeans/farmgate.html#prices",
+    "title": "2  Farmgate cost of production and prices received",
+    "section": "2.2 Prices",
+    "text": "2.2 Prices\nWe use USDA NASS Crop values for Field and Miscellaneous Crops 2022-2024. I could not find data for New York specifically, 2019-2021, 2017-2018, and 2014-2016.\nAll data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans. For the model, they want everything in terms of killograms, so we convert to dollars per kg.\n\n2.2.1 NASS prices\n\n\n2.2.2 Convert to lbs/kgs.\nAll data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans.\nWe convert everything to price per killogram, as required by the model and price per lb.\nDry beans 1 cwt = 100 pounds 1 pound = 0.45359 kg 1 cwt = 45.359 kg\nSoybeans 1 bushel of soybeans = 60 pounds (this is the standard weight) 1 pound = 0.45359 kg 1 bushel of soybeans = 60 × 0.45359 = 27.216 kg\n\n\n2.2.3 PPI\nWe present data in 2024 prices used the St. Louis Fed, Producer Price Index by Commodity for soybeans and dry beans.\nThe price index for dry beans starts in 2015, we use the 2015 value for 2014.\n\n\n2.2.4 Differentiated price\nWe use data from the interviews to understand differentiated prices\nNY Bean: Breakdown on a 50lb bag: Grower receives $52; Cleaner $5; $57 price out the door",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Farmgate cost of production and prices received</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/model_data_documentation.html",
+    "href": "drybeans/model_data_documentation.html",
+    "title": "3  Model data",
+    "section": "",
+    "text": "3.1 Supply Chain Definitions",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Model data</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/model_data_documentation.html#supply-chain-definitions",
+    "href": "drybeans/model_data_documentation.html#supply-chain-definitions",
+    "title": "3  Model data",
+    "section": "",
+    "text": "Land - Land is used as a production import for growing crops as well as for drive rows and buildings.\nLabor - Both hired and family labor is used to produce dry beans.\nFarm Inputs - These include seeds, fertilizer, chemical inputs, machinery, gasoline, and custom hired processes for production (for example: renting a no-till drill for planting)\nFarm Production - The act of growing the product on-farm. From planting to harvesting. This does not include cleaning or bagging.\nCleaner Aggregator - A business that cleans and sorts dry beans. They can be owned by a farm or a cooperative of a group of farms. They can also be independent of any production. They often purchase by truckload and sell in smaller quantities (25 or 100 pound units) or sell by container for beans headed to export markets. They operate by either buying the harvested beans and selling them once cleaned or by charging a fee for cleaning and storage. The focus group will illuminate which is more common in New York.\nOn Farm Cleaning/Sorting/Packing - Often classified as an independent business for insurance purposes, these operations will clean, sort, and pack the beans they grow.\nPrimary Processor - This includes businesses that use the cleaned beans as the input. Examples include canning beans, creating bean flour, and automated packaging into retail bags.\nSecondary Processor - This is a secondary stage of processing beans into products. These use beans from primary processors as inputs into their products. These include using cooked beans or bean flour to create a new product.\nWholesale - A business selling a product made by someone else. They can sell items from various stages of the supply chain.\nDropship/ Broker - A business that facilitates the sales of beans but never physically takes control of the products they are selling.\nExport Markets - Selling beans to international markets. Often through the port in Toronto.\nInstitutions - A purchaser of bean products from various sources. They often buy multiple products in large quantities through a wholesaler.\nRetail - Businesses that sell to consumers. These include grocery stores, food businesses that sell to consumers, and restaurants.\nConsumer - Individuals who purchase bean products for immediate consumption (from restaurants) or for home use.",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Model data</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html",
+    "href": "drybeans/institutional_purchasing_NYC.html",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "",
+    "text": "4.1 Import data\nWe use data from NYC Food Policy, Good Food Purchasing data from 2019-2023, we download the full purchasing data set.\nWe want mean/sd/median on weight (in lbs.) and price ($/lb.) for dry beans by form (canned, dried, frozen) by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.\nHere we import data and define variables.",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html#define-variables",
+    "href": "drybeans/institutional_purchasing_NYC.html#define-variables",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "4.2 Define variables",
+    "text": "4.2 Define variables",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html#understand-missing-total-weight-data",
+    "href": "drybeans/institutional_purchasing_NYC.html#understand-missing-total-weight-data",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "4.2 Understand missing total weight data",
+    "text": "4.2 Understand missing total weight data\nThe missing data does have the number of units, but does not have weight in lbs. We can use the information provided about the product and estimate how much the product weighed and estimate a total weight.\nDepartment of Education has a large purchase that lists number of unit. Units are #10 cans, we assume they each weight 6 lbs 15 oz (111 oz).\nFor now, we are not going to take this step, but can in the future if needed.",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html#summary-stats",
+    "href": "drybeans/institutional_purchasing_NYC.html#summary-stats",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "4.3 Summary stats",
+    "text": "4.3 Summary stats\nRemoved outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).\nData are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data.\n\n\n\nPrice per pound for dried and canned beans purchased by New York City in 2022\n\n\nAgency\nForm\nMean\nSD\n\n\n\n\nAdministration for Children's Services\nCanned\n0.46\n0.02\n\n\nAdministration for Children's Services\nDried\n1.48\n0.28\n\n\nDepartment for the Aging\nCanned\n0.81\n0.42\n\n\nDepartment of Correction\nDried\n1.26\n0.50\n\n\nDepartment of Education\nCanned\n0.47\n0.21\n\n\nDepartment of Homeless Services\nCanned\n0.65\n0.09\n\n\nDepartment of Homeless Services\nDried\n1.32\n0.39\n\n\nHealth + Hospitals\nCanned\n0.72\n0.08\n\n\nHealth + Hospitals\nDried\n1.31\n0.28",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html#price-per-pound-for-dried-and-canned-beans-purchased-by-new-york-city-in-2022",
+    "href": "drybeans/institutional_purchasing_NYC.html#price-per-pound-for-dried-and-canned-beans-purchased-by-new-york-city-in-2022",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "4.5 Price per pound for dried and canned beans purchased by New York City in 2022",
+    "text": "4.5 Price per pound for dried and canned beans purchased by New York City in 2022\n\n\n\n\n\nAgency\nForm\nMean\nSD\n\n\n\n\nAdministration for Children's Services\nCanned\n0.46\n0.02\n\n\nAdministration for Children's Services\nDried\n1.48\n0.28\n\n\nDepartment for the Aging\nCanned\n0.81\n0.42\n\n\nDepartment of Correction\nDried\n1.26\n0.50\n\n\nDepartment of Education\nCanned\n0.47\n0.21\n\n\nDepartment of Homeless Services\nCanned\n0.65\n0.09\n\n\nDepartment of Homeless Services\nDried\n1.32\n0.39\n\n\nHealth + Hospitals\nCanned\n0.72\n0.08\n\n\nHealth + Hospitals\nDried\n1.31\n0.28",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "drybeans/institutional_purchasing_NYC.html#save",
+    "href": "drybeans/institutional_purchasing_NYC.html#save",
+    "title": "4  Institutional purchasing in New York state",
+    "section": "4.6 Save",
+    "text": "4.6 Save",
+    "crumbs": [
+      "Dry beans",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Institutional purchasing in New York state</span>"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html",
+    "href": "beef/beef.html",
+    "title": "Beef",
+    "section": "",
+    "text": "Supply chain overview",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#agricultural-production",
+    "href": "beef/beef.html#agricultural-production",
+    "title": "Beef",
+    "section": "Agricultural production",
+    "text": "Agricultural production\n\nFarm inputs and production costs",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#processing",
+    "href": "beef/beef.html#processing",
+    "title": "Beef",
+    "section": "Processing",
+    "text": "Processing",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#distribution",
+    "href": "beef/beef.html#distribution",
+    "title": "Beef",
+    "section": "Distribution",
+    "text": "Distribution",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#markets",
+    "href": "beef/beef.html#markets",
+    "title": "Beef",
+    "section": "Markets",
+    "text": "Markets",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#estimated-margins",
+    "href": "beef/beef.html#estimated-margins",
+    "title": "Beef",
+    "section": "Estimated margins",
+    "text": "Estimated margins",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#consumption",
+    "href": "beef/beef.html#consumption",
+    "title": "Beef",
+    "section": "Consumption",
+    "text": "Consumption",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "beef/beef.html#institutional-purchasing-in-new-york-state",
+    "href": "beef/beef.html#institutional-purchasing-in-new-york-state",
+    "title": "Beef",
+    "section": "Institutional purchasing in New York state",
+    "text": "Institutional purchasing in New York state",
+    "crumbs": [
+      "Beef",
+      "Beef"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html",
+    "href": "greens/greens.html",
+    "title": "Greens",
+    "section": "",
+    "text": "Supply chain overview",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#agricultural-production",
+    "href": "greens/greens.html#agricultural-production",
+    "title": "Greens",
+    "section": "Agricultural production",
+    "text": "Agricultural production\n\nFarm inputs and production costs",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#processing",
+    "href": "greens/greens.html#processing",
+    "title": "Greens",
+    "section": "Processing",
+    "text": "Processing",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#distribution",
+    "href": "greens/greens.html#distribution",
+    "title": "Greens",
+    "section": "Distribution",
+    "text": "Distribution",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#markets",
+    "href": "greens/greens.html#markets",
+    "title": "Greens",
+    "section": "Markets",
+    "text": "Markets",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#estimated-margins",
+    "href": "greens/greens.html#estimated-margins",
+    "title": "Greens",
+    "section": "Estimated margins",
+    "text": "Estimated margins",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#consumption",
+    "href": "greens/greens.html#consumption",
+    "title": "Greens",
+    "section": "Consumption",
+    "text": "Consumption",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  },
+  {
+    "objectID": "greens/greens.html#institutional-purchasing-in-new-york-state",
+    "href": "greens/greens.html#institutional-purchasing-in-new-york-state",
+    "title": "Greens",
+    "section": "Institutional purchasing in New York state",
+    "text": "Institutional purchasing in New York state",
+    "crumbs": [
+      "Greens",
+      "Greens"
+    ]
+  }
+]

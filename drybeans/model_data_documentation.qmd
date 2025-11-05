@@ -1,0 +1,110 @@
+---
+format: html
+---
+
+# Model data
+
+```{r}
+
+library(DiagrammeR)
+
+mermaid('
+           graph LR
+           A[Organic NYS dry bean farms] --> E[Cleaner/Aggregator]
+           B[Conventional NYS dry bean farms] --> E
+           C[Organic out-of-state drybean farms] --> E
+           D[Conventional out-of-state drybean farms] --> E
+           C --> F[Out-of-state cleaner/aggregator]
+           D --> F[Out-of-state cleaner/aggregator]
+           G[Organic NYS soybean farms] 
+           H[Conventional NYS soybean farms]  
+           
+           click A "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#cost-of-production" "Data"
+           click B "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#cost-of-production" "Data"
+           click C "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#outside-nys-producers" "Data"
+           click D "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#outside-nys-producers" "Data"
+           click G "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#soybeans" "Data"
+           click H "https://allison-bauman.quarto.pub/cityfoodpolicy/drybeans/farmgate.html#soybeans" "Data"
+           ')
+
+```
+
+
+
+```{r}
+
+library(DiagrammeR)
+
+mermaid('
+           graph LR
+           A[Land] --> D[Farm Production]
+           B[Labor ]--> D
+           C[Farm Inputs] --> D
+           click A "https://github.com/FoodSystemsModeling/CityFoodPolicy" "Data"
+           click B "https://allison-bauman.quarto.pub/cityfoodpolicy/code/drybeans/data.html"
+           ')
+```
+
+```{r}
+
+mermaid('
+graph LR;
+  A(Land)--> D(Farm <br/> Production)
+  B(Labor)-->D
+  C(Farm <br/> Inputs)-->D
+  D-->E(On Farm <br/> Cleaning/ <br/> Sorting/Packing)
+  D-->F(Cleaner <br/> Aggregator)
+  F-->G(Primary <br/> Processor)
+  F-->H(Wholesale)
+  G-->H
+  G-->I(Secondary <br/> Processor)
+  I-->H
+  H-->J(Distributor)
+  J-->K(Retail/ <br/> Restaurants)
+  J-->L(Institutions)
+  K-->M(Consumer)
+  D-->N(Dropship <br/> Broker)
+  N-->O(Export <br/> Markets)
+  G-->K
+  G-->L
+  
+
+  click A "https://github.com/FoodSystemsModeling/CityFoodPolicy"
+  click B "https://allison-bauman.quarto.pub/cityfoodpolicy/code/drybeans/data.html"
+  
+  style A fill:#fff, stroke:#000
+  style B fill:#fff, stroke:#000
+  style C fill:#fff, stroke:#000
+  style D fill:#fff, stroke:#000
+  style F fill:#fff, stroke:#000
+  style G fill:#fff, stroke:#000
+  style H fill:#fff, stroke:#000
+  style I fill:#fff, stroke:#000
+  style J fill:#fff, stroke:#000
+  style L fill:#fff, stroke:#000
+  
+  style E fill:#c4e1f3, stroke:#000
+  style K fill:#c4e1f3, stroke:#000
+  style N fill:#c4e1f3, stroke:#000
+  style O fill:#c4e1f3, stroke:#000
+  style M fill:#c4e1f3, stroke:#000
+  ')
+
+```
+
+## Supply Chain Definitions
+
+-   **Land** - Land is used as a production import for growing crops as well as for drive rows and buildings.
+-   **Labor** - Both hired and family labor is used to produce dry beans.
+-   **Farm Inputs** - These include seeds, fertilizer, chemical inputs, machinery, gasoline, and custom hired processes for production (for example: renting a no-till drill for planting)
+-   **Farm Production** - The act of growing the product on-farm. From planting to harvesting. This does not include cleaning or bagging.
+-   **Cleaner Aggregator** - A business that cleans and sorts dry beans. They can be owned by a farm or a cooperative of a group of farms. They can also be independent of any production. They often purchase by truckload and sell in smaller quantities (25 or 100 pound units) or sell by container for beans headed to export markets. They operate by either buying the harvested beans and selling them once cleaned or by charging a fee for cleaning and storage. The focus group will illuminate which is more common in New York.
+-   **On Farm Cleaning/Sorting/Packing** - Often classified as an independent business for insurance purposes, these operations will clean, sort, and pack the beans they grow.
+-   **Primary Processor** - This includes businesses that use the cleaned beans as the input. Examples include canning beans, creating bean flour, and automated packaging into retail bags.
+-   **Secondary Processor** - This is a secondary stage of processing beans into products. These use beans from primary processors as inputs into their products. These include using cooked beans or bean flour to create a new product.
+-   **Wholesale** - A business selling a product made by someone else. They can sell items from various stages of the supply chain.
+-   **Dropship/ Broker** - A business that facilitates the sales of beans but never physically takes control of the products they are selling.
+-   **Export Markets** - Selling beans to international markets. Often through the port in Toronto.
+-   **Institutions** - A purchaser of bean products from various sources. They often buy multiple products in large quantities through a wholesaler.
+-   **Retail** - Businesses that sell to consumers. These include grocery stores, food businesses that sell to consumers, and restaurants.
+-   **Consumer** - Individuals who purchase bean products for immediate consumption (from restaurants) or for home use.

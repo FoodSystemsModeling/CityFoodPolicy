@@ -5,3 +5,5 @@
 ignore/
 .quarto/
 *.DS_Store
+
+/.quarto/

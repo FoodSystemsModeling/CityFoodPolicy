@@ -1,0 +1,334 @@
+---
+title: "Census of Agriculture - General"
+format: html
+editor: visual
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE)
+```
+
+In this file, we do all of the general coding related to the Census of Agriculture data. This includes creating new variables, renaming existing variables, and matching farms across time to create a variable for operations that did and did not survive.
+
+We will also create a metadata file with variable names, variable descriptions, and calculation (when needed).
+
+Weights for each data set: - 2017: fin_dse_weight - 2012: k1198 - 2007: k1198
+
+## Import data
+
+We import each year into a separate data frame and convert all NA's to zero upon guidance from Virginia Harris (NASS). Lastly, combine all data into one large dataframe, where zeros will be true zeros and NA's will be for variables not included in the survey.
+
+```{r}
+library(tidyverse)
+library(markdown)
+library(janitor)
+
+# Import data, add year, define weight, convert NAs to zero 
+coa07 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Census_2007.csv", 
+                  col_types = cols(.default = col_number())) %>%
+  clean_names() %>%
+  mutate(year = 2007, 
+         weight = k1198) %>% 
+  mutate(across(everything(), 
+                ~replace_na(.x, 0)))
+
+coa12 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Census_2012.csv", 
+                  col_types = cols(.default = col_number())) %>%
+  clean_names() %>%
+  mutate(year = 2012, 
+         weight = k1198) %>% 
+  mutate(across(everything(), 
+                ~replace_na(.x, 0)))
+
+coa17 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Census_2017.csv", 
+                  col_types = cols(.default = col_number())) %>%
+  clean_names() %>%
+  mutate(year = 2017, 
+         weight = fin_dse_weight) %>%
+  mutate(across(everything(), 
+                ~replace_na(.x, 0)))
+
+# Bind data
+coa <- bind_rows(coa07, coa12, coa17)
+rm(coa07, coa12, coa17)
+
+# Create state and county fips 
+coa <- coa %>% 
+  mutate(
+    state_fips = as.character(fips), 
+    f_county = as.character(f_county), 
+    state_fips = str_pad(state_fips, side = "left", pad = "0", width = 2), 
+    f_county = str_pad(f_county, side = "left", pad = "0", width = 3), 
+    fips = str_c(state_fips, f_county, sep = "")) %>% 
+  select(!f_county)
+    
+```
+## Data testing to make sure NA/0's are correct 
+ADD
+
+## Define regional variables
+```{r}
+
+# Import state name data
+state_fips_data <- usmap::us_map(regions = "state") %>% 
+  select(fips:full) %>% 
+  distinct() %>% 
+  filter(abbr!="DC") %>% rename(
+    state_fips = fips, 
+    state_abbr = abbr, 
+    state_name = full)
+
+# Join coa with state name data
+coa <- left_join(coa, state_fips_data, by = "state_fips")
+rm(state_fips_data)
+
+# Define census regions and Census divisions
+# Create census region and census division variables 
+coa <- coa %>% mutate(
+  census_divisions = case_when(
+    state_fips=="53" | state_fips=="41" | state_fips=="06" |
+      state_fips=="02" | state_fips=="15" ~ "Pacific", 
+   state_fips=="30" | state_fips=="16" | state_fips=="56" | 
+     state_fips=="32" | state_fips=="49" | state_fips=="08" |
+     state_fips=="04" | state_fips=="35" ~ "Mountain", 
+   state_fips== "38" | state_fips== "27" | state_fips== "46" |
+     state_fips=="31" | state_fips=="19" | state_fips=="20" |
+     state_fips=="29" ~ "West North Central", 
+   state_fips=="55" | state_fips=="26" | state_fips=="17" | 
+     state_fips=="18" | state_fips=="39" ~ "East North Central", 
+   state_fips=="40" | state_fips=="05" | state_fips=="48" | 
+     state_fips=="22" ~ "West South Central", 
+   state_fips=="21" | state_fips=="47" | state_fips=="28" | 
+     state_fips=="01" ~ "East South Central", 
+   state_fips=="54" | state_fips=="51" | state_fips=="24" | 
+     state_fips=="10" | state_fips=="37" | state_fips=="45" | 
+     state_fips=="13" | state_fips=="12" ~ "South Atlantic", 
+   state_fips=="36" | state_fips=="42" | state_fips=="34" ~ "Middle Atlantic", 
+   state_fips=="23" | state_fips=="50" | state_fips=="33" | 
+     state_fips=="25" | state_fips=="09" | state_fips=="44" ~ "New England"),
+  census_divisions = fct_relevel(census_divisions, "Pacific", "Mountain", "West North Central", "East North Central", "West South Central", "East South Central", "South Atlantic", "Middle Atlantic", "New England"),
+  census_regions = case_when(
+    census_divisions == "Pacific" | census_divisions=="Mountain" ~ "West", 
+    census_divisions=="West North Central" | 
+      census_divisions=="East North Central" ~ "Midwest", 
+    census_divisions=="West South Central" | 
+      census_divisions=="East South Central" | 
+      census_divisions=="South Atlantic" ~ "South", 
+    census_divisions=="Middle Atlantic" | 
+      census_divisions=="New England" ~ "Northeast"), 
+  census_regions = fct_relevel(census_regions, "West", "Midwest", "South", "Northeast")) 
+
+
+# Define RUCC groupings
+rucc_2013 <- readxl::read_xls("P:/pr-usda-nass-jablonski-csu23-coaarmslf/derivative_data_Jablonski_CSU_COA20231025/ruralurbancodes2013.xls") %>% 
+  clean_names() %>% 
+  select(fips, rucc_2013)
+
+coa <- coa %>% 
+  left_join(rucc_2013) %>%
+  mutate(
+    metro = ifelse(rucc_2013<=3, 1, 0), 
+    metro_adj = ifelse(rucc_2013==4 | rucc_2013==6 | rucc_2013==8, 1, 0), 
+    rural = ifelse(rucc_2013==5 | rucc_2013==7 | rucc_2013==9, 1, 0))
+
+rm(rucc_2013)
+```
+
+## Local food market channels 
+Here we define local food market channels based on reported positive sales in a category. 
+
+```{r}
+coa <- coa %>% 
+  mutate(
+    local = case_when(
+      k4160>0 | k2752>1 ~ 1, 
+      TRUE ~ 0))
+```
+
+
+## Financial variables
+
+Newly defined financial variables include: 
+
+  * percent of acres operated and leased acres that are owned
+  * Total governments payments (k684) is not available in 2007 and must be computed.
+    * k684 = k685 (amount received for participation in CRP, WRP, FWP, CREP)
+                + k1422 (amount received from all other federal ag program payments excluding insurance)
+    * In 2007, the questions are asked differently, but there is a k685 and k1422 variable in the data set
+  * organic is different across survey years, so new variable is defined as 'organic' so comparable across years
+  * ROA is defined as (gross cash farm income - operating expense + interest expense)/total assets  
+  * operating profit margin is defined as (gross cash farm income - operating expense + interest expense)/gross cash farm income
+  * Land tenure variables include
+    * share of operated that is rented in = rented in/operated
+    * share of operated that is owned = 1 - share of operated land that is rented in
+    * share of owned that is rented out = rented out/owned
+    * share of owned that is operated = 1 - share of owned that is rented out
+  * OPM zones (low risk, medium risk, high risk) based on the Hoppe farm typology ERS report
+
+
+```{r}
+coa <- coa %>% 
+  mutate(
+    k684 = k685 + k1422,
+    assets = k996 + k997 + k943 - k998, 
+    interest_percent_assets = (k1515 + k1516)/assets,
+    interest_percent_acres = (k1515 + k1516)/k46,
+    roa = (gcfi - exp + k1513 + k1515)/(k996 + k997 + k943 - k998),
+    roa_crit_zone = ifelse(roa<0.01, 1, 0),
+    opm = (gcfi - exp + k1513 + k1515)/gcfi,
+    opm = ifelse(is.infinite(opm)==TRUE, NA, opm),
+    opm_crit_zone = ifelse(opm<0.1, 1, 0), 
+    gov_percent_gcfi = ifelse(gcfi==0, 0, k684/(gcfi/1000)),
+    gov_payment_intensity = ifelse(k684==0, 0, k684/(k684+tvp)),
+    cropins_percent_acres = k1067/k46, 
+    rented_in_operated = rlif/k46, # share of operated land that is rented in
+    owned_operated = k43/k46, # share of operated land that is owned
+    owner = ifelse(owned_operated >=0.5, 1, 0), # owner==1 means they own at least 50% of the land they operate
+    tenure_fct = case_when(
+      k43 >= k46 ~ "Full owner", 
+      k43 >0 & k43 < k46 ~ "Part owner", 
+      k43 == 0 ~ "Full tenant"), 
+    fullowner = ifelse(tenure_fct=="Full owner", 1, 0), 
+    partowner = ifelse(tenure_fct=="Part owner", 1, 0), 
+    fulltenant = ifelse(tenure_fct=="Full tenant", 1, 0),
+    op_expense_ratio = ifelse(gcfi==0, NA, (exp - k1513 - k1515)/gcfi),
+    op_expense_ratio_crit_zone = ifelse(op_expense_ratio>0.8, 1, 0),
+    pos_profit = ifelse(gcfi - exp > 0, 1, 0), 
+    opm_zone = case_when(
+      opm < 0.10 ~ "High risk",
+      opm >= 0.10 & opm <= 0.25 ~ "Medium risk",
+      opm >0.25 ~ "Low risk"),
+    opm_zone = factor(opm_zone, levels = c("High risk", "Medium risk", "Low risk")), 
+    infi = gcfi - exp)
+
+```
+
+## Farm characteristics
+
+Commodities are based on the NASS created variable FARMTYPE. We collapse some of the categories to have larger categorizations. 
+  
+```{r}
+
+# Scale
+## by GCFI
+coa <- coa %>% 
+  mutate(
+    sales_class = case_when(
+      gcfi <75000 ~ "$0 to $74,999",
+      gcfi >=75000 & gcfi <350000 ~ "$75,000 to $349,999", 
+      gcfi >=350000 & gcfi <1000000 ~ "$350,000 to $999,999", 
+      gcfi >=1000000 ~ "$1,000,000 or more"), 
+    sales_class = factor(sales_class, levels = (c("$0 to $74,999", "$75,000 to $349,999", "$350,000 to $999,999", "$1,000,000 or more"))), 
+    gcfi_0_75 = ifelse(sales_class=="$0 to $74,999", 
+                        1, 0), 
+    gcfi_75_350 = ifelse(sales_class=="$75,000 to $349,999", 
+                          1, 0), 
+    gcfi_350_1M = ifelse(sales_class=="$350,000 to $999,999", 
+                          1, 0), 
+    gcfi_over_1M = ifelse(sales_class=="$1,000,000 or more", 
+                           1, 0))
+
+# create farm size by acres operated categories
+coa <- coa %>% 
+  mutate(
+    acres_class = case_when(
+      k46>0 & k46<10 ~ "1 to 9", 
+      k46>=10 & k46<50 ~ "10 to 49", 
+      k46>=50 & k46<180 ~ "50 to 179", 
+      k46>=180 & k46<500 ~ "180 to 499", 
+      k46>=500 & k46<1000 ~ "500 to 999", 
+      k46>=1000 & k46<2000 ~ "1,000 to 1,999", 
+      k46>=2000 ~ "2,000 or more"), 
+    acres_class = factor(acres_class, levels = c("1 to 9", "10 to 50","50 to 179","180 to 499","500 to 999","1,000 to 1,999","2,000 or more")))
+
+
+# Primary commodity
+coa <- coa %>% mutate(
+  fieldcrop = ifelse(farmtype==1 | farmtype==2 | farmtype==3, 1, 0), 
+  fruitveg = ifelse(farmtype==4 | farmtype==5, 1, 0), 
+  othercrops = ifelse(farmtype==6 | farmtype==7 | farmtype==8, 1, 0), 
+  livestock = ifelse(farmtype==9 | farmtype==11 | farmtype==12, 1, 0), 
+  dairy = ifelse(farmtype==10, 1, 0), 
+  poultry = ifelse(farmtype==14, 1, 0),
+  otheranimal = ifelse(farmtype==13 | farmtype==15 | farmtype==16, 1, 0), 
+  all_crop = ifelse(fieldcrop==1 | fruitveg==1 | othercrops==1, 1, 0), 
+  all_animal = ifelse(livestock==1 | dairy==1 | poultry==1 | otheranimal==1, 1, 0), 
+    primary_commodity = case_when(
+    fieldcrop ==1 ~ "Field crop", 
+    fruitveg==1 ~ "Fruit/Veg", 
+    othercrops ==1 ~ "Other crops", 
+    livestock ==1 ~ "Livestock", 
+    dairy ==1 ~ "Dairy", 
+    poultry ==1 ~ "Poultry",
+    otheranimal==1 ~ "Other animal"), 
+  primary_commodity = fct_relevel(primary_commodity, "Field crop","Fruit/Veg","Other crops","Livestock","Dairy", "Poultry","Other animal"))
+
+
+# Define crop insurance variable by crop and a categorical gov. payments variable
+coa <- coa  %>% mutate(
+  crop_insurance = ifelse(k1067>0, 1, 0), 
+  crop_ins_fieldcrop = ifelse(fieldcrop ==1, crop_insurance, NA), 
+  crop_ins_fruitveg = ifelse(fruitveg==1, crop_insurance, NA), 
+  crop_ins_othercrops = ifelse(othercrops ==1, crop_insurance, NA),
+  crop_ins_livestock  = ifelse(livestock ==1, crop_insurance, NA), 
+  crop_ins_dairy = ifelse(dairy ==1, crop_insurance, NA), 
+  crop_ins_poultry = ifelse(poultry ==1, crop_insurance, NA), 
+  crop_ins_otheranimal = ifelse(otheranimal==1, crop_insurance, NA),
+    crop_ins_primary_commodity = case_when(
+    crop_ins_fieldcrop==1 ~ "Field crop", 
+    crop_ins_fruitveg==1 ~ "Fruit/veg", 
+    crop_ins_othercrops==1 ~ "Other crops",
+    crop_ins_livestock==1 ~ "Livestock", 
+    crop_ins_dairy ==1 ~ "Dairy", 
+    crop_ins_poultry ==1 ~ "Poultry", 
+    crop_ins_otheranimal == 1 ~ "Other animal"),
+  gov_payments_cat = ifelse(k684>0, 1, 0))
+
+
+# create beginning based on ANY operation for 2012 and 2017, with a _alt at the end of the variables 
+coa <- coa %>% 
+  mutate(
+    number_operators = case_when(
+    k1584>0 & k1595>0 & k1627> 0 ~ 4,
+    k1584>0 & k1595>0 ~ 3, 
+    k1584>0 ~ 2, 
+    (year==2017 & k1584==0 & k1595==0 & k1627==0) | 
+    (year!=2017 & k1584==0 & k1595==0) ~ 1),
+    op1_beg_alt = ifelse(
+      year == 2017 & (2018 - k2834 <=10) | 
+      year == 2012 & (2013 - k1834 <= 10), 1, 0), 
+    op2_beg_alt = ifelse(
+      year == 2017 & (2018 - k1851 <=10) |
+      year == 2012 & (2013 - k1851 <=10), 1, 0), 
+    op3_beg_alt = ifelse(
+      year ==2017 & (2018 - k1871 <=10) | 
+      year ==2012 & (2013 - k1871 <=10),  1, 0), 
+    op4_beg_alt = ifelse(
+      year==2017 & (2018 - k1628 <=10), 1, 0), 
+    total_beg_alt = op1_beg_alt + op2_beg_alt + op3_beg_alt + op4_beg_alt, 
+    all_beg_alt = ifelse(
+      (number_operators==4 & total_beg_alt==4) | 
+      (number_operators==3 & total_beg_alt==3) | 
+      (number_operators==2 & total_beg_alt==2) | 
+      (number_operators==1 & total_beg_alt==1), 1, 0),
+    any_beg_alt = ifelse(total_beg_alt !=0 & (total_beg_alt < number_operators), 1, 0), 
+    not_beg_alt = ifelse(all_beg_alt == 0 & any_beg_alt ==0, 1, 0), 
+    all_beg_alt = ifelse(year==2007, NA, all_beg_alt),
+    any_beg_alt = ifelse(year==2007, NA, any_beg_alt), 
+    not_beg_alt = ifelse(year==2007, NA, not_beg_alt), 
+    beginning_alt = case_when(
+      all_beg_alt ==1 ~ "All beginning", 
+      any_beg_alt ==1 ~ "Any beginning", 
+      not_beg_alt ==1 ~ "Established"))
+
+```
+
+# Save final data frames
+
+```{r}
+
+save(coa, file = "data_processed/coa.RData")
+
+```

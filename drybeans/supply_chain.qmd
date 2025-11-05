@@ -1,0 +1,14 @@
+---
+title: "Supply Chain Overview"
+format: html
+editor: visual
+echo: false
+---
+
+```{r}
+#| label: drybeans_supply_chain
+#| out-width: "100%"
+
+knitr::include_graphics("../images/dried-bean-supply-chain_v3-02.jpg")
+
+```

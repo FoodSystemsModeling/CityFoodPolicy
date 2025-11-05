@@ -1,0 +1,1658 @@
+---
+title: "Dry Bean Focus group - Census of Agriculture data"
+format: 
+  html:
+    toc: true
+    number-sections: true
+  docx:
+    toc: true
+    number-sections: true
+editor: visual
+prefer-html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE)
+```
+
+## Data description
+
+We use the 2017 restricted access farm-level data from the Census of Agriculture. The sample of producers are those with positive value of sales in Dry Beans Harvested (Excl Chickpeas and Limas). Dry lima beans nor lentils are included. We intended to include chickpeas, but there are no harvested acres in the region. Because this focus group is taking place in Winter of 2024, discussing the prior planting period, we inflation adjust all variables expressed as dollars in 2023 dollars using the [U.S. Bureau of Labor Statistics, CPI Inflation Calculator](https://www.bls.gov/data/inflation_calculator.htm) for January 2017 to January 2023 (1.23).
+
+We include three regional definitions:
+
+1)  New York
+2)  Middle Atlantic (New Jersey, New York, Pennsylvania)
+3)  Northeast (Connecticut, Maine, Massachusetts, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, Vermont)
+
+Data is grouped by:
+
+1)  Operations with local food sales
+2)  Operations with organic production (defined as reporting a positive value for cropland or pastureland treated with organic fertilizer)
+3)  All producers
+
+Tables:
+
+-   Average producer summary statistics
+-   Variable expenses
+-   Production and management practices
+
+```{r}
+
+## Import data
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(scales)
+
+# Turn off scientific notation 
+options(scipen = 999)
+
+# Import summary stats gathered from 2017 restricted access COA data
+# Bind all sheets into one data frame
+file_path <- "data_processed/2024-02-06.COA_dry_beans.xlsx"
+sheet_names <- excel_sheets(file_path)
+
+df <- map_df(sheet_names,function(sheet_name) {
+  df <- read_excel(file_path, sheet = sheet_name) 
+  df <- df %>% 
+    mutate(region = sheet_name, 
+           region = str_remove_all(region, "sum_df_|_organic"))
+return(df)
+}) 
+
+# Rename variable 
+df <- df %>% 
+  rename(variable_name = variable)
+
+# Replace (D) with NA 
+df <- df %>% 
+  mutate(
+    value = case_when(
+      value == "(D)" ~ NA, 
+      TRUE ~ as.numeric(value)))
+
+# Convert all dollar amounts to 2023 dollars (x 1.23)
+df <- df %>% 
+  mutate(
+    value = case_when(
+      variable_name %in% c("gcfi", "tvp", "infi",
+                           "fert", "seedp", "animalpurchase", 
+                  "feed", "fuelo", "util", "mainr", "labor", 
+                  "cwork", "otherexp", "totvarexp_alt") | 
+        str_detect(variable_name, "_sales$") ~ value * 1.23, 
+    TRUE ~ value))
+
+# Add meta data file 
+meta_df <- df %>% 
+  group_by(variable_name) %>% 
+  count() %>% 
+  select(-n)
+  
+# Add variable description and definition 
+meta_df <- meta_df %>%
+  mutate(
+    variable_description = case_when(
+      variable_name == "animalpurchase" ~ "Breeding stock, other livestock purchased or leased", 
+      variable_name %in% c("animalpurchase_alt_pct", "animalpurchase_pct") ~ "Breeding stock, other livestock purchased or leased as a percent of total variable expense", 
+      variable_name == "beginning_alt_dummy" ~ "At least one operator with less than 10 years experience (0/1)", 
+      variable_name == "berry_sales" ~ "Total berry sales", 
+      variable_name == "corn_grain_sales" ~ "Field Corn for Grain Harvested Value of Sales", 
+      variable_name == "corn_silage_sales" ~ "Field Corn for Silage Harvested Value of Sales", 
+      variable_name == "cover_crop_acres" ~ "Cropland acres planted to a cover crop", 
+      variable_name == "cover_crop_acres_pct_cropland" ~ "Cropland acres planted to a cover crop as a percent of total cropland", 
+      variable_name == "crlnd" ~ "Total cropland", 
+      variable_name == "crop" ~ "Total cropland harvested", 
+      variable_name == "crop_insurance" ~ "Operation has acres covered under any crop insurance policy (0/1)", 
+      variable_name == "cropland_acres_fertilized" ~ "Cropland and pastureland treated with organic fertilizer, acres", 
+      variable_name == "cropland_acres_fertilized_pct_cropland" ~ "Cropland and pastureland treated with organic fertilizer, as a percent of total cropland", 
+      variable_name == "cwork" ~ "Customwork expense", 
+      variable_name %in% c("cwork_alt_pct", "cwork_pct") ~ "Customwork as a percent of total variable expense", 
+      variable_name == "cwt_drybeans" ~ "Dry Beans Harvested (cwt)", 
+      variable_name == "dairy" ~ "Primary commodity: Dairy", 
+      variable_name == "drybean_sales" ~ "Dry Beans Harvested Value of Sales", 
+      variable_name == "drybean_sales_percent_tvp" ~ "Dry Beans Harvested Value of Sales as a percent of total value of sales",
+      variable_name == "feed" ~ "Feed expense", 
+      variable_name %in% c("feed_alt_pct", "feed_pct") ~ "Feed expense as a percent of total variable expense", 
+      variable_name == "fert" ~ "Fertilizer expense", 
+      variable_name %in% c("fert_alt_pct", "fert_pct") ~ "Fertilizer expense as a percent of total variable expense", 
+      variable_name == "fieldcrop" ~ "Primary commodity: Field crop", 
+      variable_name == "fruitveg" ~ "Primary commodity: Fruits and vegetables", 
+      variable_name == "fruitveg_sales" ~ "Total Vegetables, Potatoes, and Melons, Fruit & Nut, and Berry Sales", 
+      variable_name == "fuelo" ~ "Gas, fuel, oil expense",   
+      variable_name %in% c("fuelo_alt_pct", "fuelo_pct") ~ "Gas, fuel, oil expense as a percent of total variable expense", 
+      variable_name == "fullowner" ~ "Operation owns all land they operate", 
+      variable_name == "fulltenant" ~ "Operations rents all land they operate", 
+      variable_name == "gcfi" ~ "Gross cash farm income (GCFI)", 
+      variable_name == "gcfi_0_75" ~ "GCFI < $75,000", 
+      variable_name == "gcfi_75_350" ~ "GCFI $75,000 to $349,999",
+      variable_name == "gcfi_350_1M" ~ "GCFI $350,000 to $999,999",
+      variable_name == "gcfi_over_1M" ~ "GCFI $1M or more", 
+      variable_name == "gov_payments_cat" ~ "Operation recieves government payments (0/1)" ,
+      variable_name == "harvested_acres_corn" ~ "Field Corn for Grain Harvested, Acres",
+      variable_name == "harvested_acres_corn_pct_cropland" ~ "Field Corn for Grain Harvested, Acres as a percent of total crop acres",
+      variable_name == "harvested_acres_drybeans" ~ "Dry Beans Harvested, Acres", 
+      variable_name == "harvested_acres_drybeans_pct_cropland" ~ "Dry Beans Harvested, Acres, as a percent of total crop acres", 
+      variable_name == "harvested_acres_fruitveg" ~ 
+        "Vegetables, Potatoes, and Melons, Fruit & Nut, and Berry harvested, acres", 
+      variable_name == "harvested_acres_fruitveg_pct_cropland" ~ "Vegetables, Potatoes, and Melons, Fruit & Nut, and Berry harvested, acres, as a percent of total crop acres",
+      variable_name == "harvested_acres_hay" ~ "Acres Hay Harvested", 
+      variable_name == "harvested_acres_soybeans" ~ "Soybeans Harvested, Acres", 
+      variable_name == "harvested_acres_soybeans_pct_cropland" ~ "Soybeans Harvested, Acres, as a percent of total crop acres",
+      variable_name == "harvested_acres_wheat" ~ "Wheat Harvested, Acres", 
+      variable_name == "harvested_acres_wheat_pct_cropland" ~ "Wheat Harvested, Acres, as a percent of total crop acres", 
+      variable_name == "hay_sales" ~ "Total Hay & Forage Crops Sales", 
+      variable_name == "infi" ~ "Net farm income", 
+      variable_name == "intensive_till_acres" ~ "Intensive till acres", 
+      variable_name == "intensive_till_acres_pct_cropland" ~ "Intensive till acres, as a percent of total crop acres",
+      variable_name == "k46" ~ "Total acres operated", 
+      variable_name == "labor" ~ "Hired and contract labor expense",
+      variable_name %in% c("labor_alt_pct", "labor_pct") ~ "Hired and contract labor expense as a percent of total variable expense", 
+      variable_name == "livestock" ~ "Primary commodity: Livestock", 
+      variable_name == "mainr" ~ "Repairs and maintenance expense", 
+      variable_name %in% c("mainr_alt_pct", "mainr_pct") ~ "Repairs and maintenance expense as a percent of total variable expense",
+      variable_name == "manure_acres" ~ "Acres on which manure was applied", 
+      variable_name == "manure_acres_pct_cropland" ~ "Acres on which manure was applied as a percnet of total cropland",
+      variable_name == "no_till_acres" ~ "No till acres", 
+      variable_name == "no_till_acres_pct_cropland" ~ "No till acres as a percent of total cropland",
+      variable_name == "opm" ~ "Operating profit margin", 
+      variable_name == "organic" ~ "Operation has cropland and pastureland treated with organic fertilizer (0/1)",
+      variable_name == "organic_fertilizer_acres" ~ "Cropland and pastureland treated with organic fertilizer", 
+      variable_name == "organic_fertilizer_acres_pct_cropland" ~ "Cropland and pastureland treated with organic fertilizer as a percent of total cropland",
+      variable_name == "otheranimal" ~ "Primary commodity: Other animal", 
+      variable_name == "othercrops" ~ "Primary commodity: Other crops", 
+      variable_name == "otherexp" ~ "Other production expenses (Include storage and warehousing, marketing expenses, insurance, etc. Exclude health insurance premiums and payroll taxes)", 
+      variable_name == "otherexp_alt_pct" ~ "Other production expenses (Include storage and warehousing, marketing expenses, insurance, etc. Exclude health insurance premiums and payroll taxes) as a percent of total variable expense", 
+      variable_name == "partowner" ~ "Operation owns a portion and rents a portion part of the land they operate", 
+      variable_name == "pasture_acres" ~ "Total Acres of Pastureland", 
+      variable_name == "poultry" ~ "Primary commodity: Poultry", 
+      variable_name == "reduced_till_acres" ~ "Reduced till acres", 
+      variable_name == "reduced_till_acres_pct_cropland" ~ "Reduced till acres as a percent of total cropland",
+      variable_name == "roa" ~ "Return on assets", 
+      variable_name == "seedp" ~ "Seeds and plants expense", 
+      variable_name %in% c("seedp_alt_pct", "seedp_pct") ~ "Seeds and plants expense as a percent of total variable expense", 
+      variable_name %in% c("totvarexp", "totvarexp_alt") ~ "Total variable expense", 
+      variable_name == "tvp" ~ "Total value of products sold", 
+      variable_name == "util" ~ "Utilities expense", 
+      variable_name %in% c("util_alt_pct", "util_pct") ~ "Utilities expense as a percent of total variable expense",
+      variable_name == "veg_sales" ~ "Total Vegetables, Potatoes, and Melons (Excl Veg Seeds & Transplants) Sales", 
+      variable_name == "wheat_sales" ~ "Total Wheat Sales", 
+      variable_name == "yield_acre_drybeans" ~ "Dry Beans yield per acre (cwt)"))
+ 
+# Add chemical to meta data 
+meta_chem <- tibble(
+  variable_name = c("chem", "chem_alt_pct"), 
+  variable_description = c("Chemical expense", "Chemical expense as a percent of total variable expense"))     
+
+meta_df <- bind_rows(meta_df, meta_chem)
+rm(meta_chem)
+```
+
+\newpage
+
+## Average producer summary statistics - New York
+
+```{r}
+
+# Select variables of interest 
+var_list <- c("gcfi", "k46", 
+             "harvested_acres_drybeans",
+             "harvested_acres_drybeans_pct_cropland",
+             "drybean_sales", "drybean_sales_percent_tvp",
+             "cwt_drybeans", "yield_acre_drybeans",
+             "harvested_acres_corn_pct_cropland", 
+             "harvested_acres_fruitveg_pct_cropland", 
+             "harvested_acres_soybeans_pct_cropland", 
+             "harvested_acres_wheat_pct_cropland", 
+             "livestock", "fieldcrop", "dairy", 
+             "poultry", "othercrops", "fruitveg", "otheranimal", 
+             "crop_insurance", "gov_payments_cat", 
+             "fullowner", "fulltenant", "partowner")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list)
+
+# Keep only mean values and region = NY and subgroups of interest
+sum <- sum %>% 
+  filter(statistic == "mean" & 
+           region == "NY" & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+
+# Add meta data and keep columns of interest 
+sum <- sum %>% 
+  select(!c(statistic, region, n)) %>%
+  left_join(meta_df) 
+
+# Re-order data 
+sum <- sum %>% 
+  mutate(
+    variable_name = factor(variable_name), 
+    variable_name = fct_relevel(variable_name, var_list)) 
+
+# Summary table for local, organic, all producers 
+sum <- sum %>% 
+  mutate(
+    value = case_when(
+      is.na(value) ~ "(D)",
+      value > 1 ~ prettyNum(value, big.mark = ",", digits = 2), 
+      value <= 1 ~ percent(value, accuracy = 1.0))) %>%
+  pivot_wider(
+    names_from = groupbyvar, 
+    values_from = value) %>% 
+  rename(Variable = variable_description, 
+         `Local (n=24)` = local, 
+         `Organic (n=9)` = organic, 
+         `All (n=91)` = `all operations`) %>% 
+  arrange(variable_name) %>% 
+  select(!variable_name) %>% 
+  relocate(`All (n=91)`, .after = last_col())
+
+# Separate tables for local, organic and all 
+sum_local <- sum %>% 
+  select(Variable, `Local (n=24)`) %>% 
+  rename(Average = `Local (n=24)`)
+
+sum_organic <- sum %>% 
+  select(Variable, `Organic (n=9)`) %>% 
+  rename(Average = `Organic (n=9)`)
+
+sum_all <- sum %>% 
+  select(Variable, `All (n=91)`) %>% 
+  rename(Average = `All (n=91)`)
+
+```
+
+### Summary statistics
+
+```{r sum_local_organic_all}
+kable(sum) %>% 
+  kable_styling() %>%
+  footnote(general = "All dollar amounts are inflation adjusted to 2023 dollars")
+```
+
+\newpage
+
+### Summary statistics - Local Food Operations
+
+```{r sum_local}
+kable(sum_local) %>% 
+  kable_styling() %>%
+  footnote(general = "All dollar amounts are inflation adjusted to 2023 dollars")
+```
+
+\newpage
+
+### Summary statistics - Organic Operations
+
+```{r sum_organic}
+kable(sum_organic) %>% 
+  kable_styling() %>%
+  footnote(general = "All dollar amounts are inflation adjusted to 2023 dollars")
+```
+
+\newpage
+
+### Summary statistics - All Operations
+
+```{r sum_all}
+kable(sum_all) %>% 
+  kable_styling() %>%
+  footnote(general = "All dollar amounts are inflation adjusted to 2023 dollars")
+```
+
+\newpage
+
+### Percent of New York dry-bean operations by scale (gross cash farm income)
+
+```{r gcfi_bar, fig.align="center", fig.width=7, fig.height=6, out.width="100%"}
+## GCFI stacked bar chart 
+gcfi_cat <- df %>% 
+  filter(str_detect(variable_name, "gcfi_") & 
+           statistic == "mean" & 
+           region == "NY" & 
+           groupbyvar %in% c("local", "organic", "all operations")) %>% 
+  mutate(
+    groupbyvar = case_when(
+      groupbyvar == "local" ~ "Local\n(n=24)", 
+      groupbyvar == "organic" ~ "Organic\n(n=9)", 
+      groupbyvar == "all operations" ~ "All\n(n=91)"), 
+    value = case_when(
+      is.na(value) ~ 1-0.44444444 - 0.44444444, 
+      TRUE ~ value), 
+    value = round(value, 2), 
+    groupbyvar = str_to_title(groupbyvar)) %>% 
+  select(variable_name, value, groupbyvar) %>% 
+  left_join(meta_df) %>% 
+ mutate(variable_description = factor(variable_description, 
+                                       levels = c("GCFI $1M or more", 
+                                                  "GCFI $350,000 to $999,999",
+                                                  "GCFI $75,000 to $349,999",
+                                                  "GCFI < $75,000")))
+# Plot          
+ggplot(gcfi_cat, aes(fill = variable_description, 
+                      x = groupbyvar, 
+                      y = value)) + 
+  geom_bar(position = "stack", stat = "identity") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949")) + 
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank()) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) + 
+  labs(y = "Percent of operations") + 
+  geom_text(aes(label = scales::percent(value)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3.5, color = "white") 
+  
+```
+
+## Variable expenses
+
+```{r}
+rm(sum, sum_all, sum_organic, sum_local)
+
+# Select variables of interest 
+var_list <- c("fert", "seedp", "animalpurchase", "feed", "fuelo", 
+              "util", "mainr", "labor", "cwork", "otherexp", 
+              "totvarexp_alt",
+              "fert_alt_pct", "seedp_alt_pct", 
+              "animalpurchase_alt_pct", "feed_alt_pct", 
+              "fuelo_alt_pct", "util_alt_pct", 
+              "mainr_alt_pct", "labor_alt_pct", 
+              "cwork_alt_pct", "otherexp_alt_pct")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list)
+
+# Keep only mean values and subgroups of interest
+sum <- sum %>% 
+  filter(statistic == "mean" & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+  
+# Join missing chemical data 
+chem <- read_xlsx("data_processed/chem.xlsx")
+sum <- sum %>% 
+  bind_rows(chem)
+rm(chem)
+
+# Add meta data and keep columns of interest 
+sum <- sum %>% 
+  select(!c(statistic)) %>%
+  left_join(meta_df) 
+
+# N by group 
+n <- sum %>% 
+  group_by(groupbyvar, region) %>% 
+  summarise(n =first(n)) %>% 
+  pivot_wider(
+    names_from = groupbyvar, 
+    values_from = n) %>% 
+  mutate(
+    percent_local = 
+      paste0("(", percent(local/`all operations`, accuracy = 1), ")"), 
+    percent_organic = 
+      paste0("(",percent(organic/`all operations`, accuracy = 1), ")"), 
+    region = case_when(
+      region == "midatlantic" ~ "Mid-Atlantic", 
+      region == "northeast" ~ "Northeast", 
+      TRUE ~ region),
+    local = as.character(local), 
+    organic = as.character(organic), 
+    local = str_c(local, percent_local, sep = " "), 
+    organic = str_c(organic, percent_organic, sep = " ")) %>%
+  rename(
+    Region = region, 
+    Local = local, 
+    Organic = organic, 
+    `All operations` = `all operations`) %>%
+  select(Region, Local, Organic, `All operations`) 
+
+# Summary table with all three regions 
+sum_regions <- sum %>% 
+  select(-n, -variable_name) %>% 
+  pivot_wider(
+    names_from = region, 
+    values_from = value) %>%
+  mutate(across(c(NY, midatlantic, northeast),
+               ~case_when(
+                  is.na(.) ~ "(D)",
+                  . > 1 ~ prettyNum(., big.mark = ",", digits = 2), 
+                  . <= 1 ~ percent(., accuracy = 1.0))))  
+
+# Summary table for all regions with min/max as min/max across regional definitions
+sum <- sum %>% 
+  select(-n) %>% 
+  group_by(groupbyvar, variable_name) %>% 
+  summarise(Minimum = min(value), 
+            Maximum = max(value)) %>% 
+  ungroup() 
+
+# Join with variable names 
+sum <- sum %>% 
+  left_join(meta_df) 
+
+# Select columns of interest and reformat values
+sum <- sum %>% 
+  select(groupbyvar, variable_description, Minimum, Maximum) %>% 
+  mutate(across(Minimum:Maximum, 
+                ~case_when(
+                  is.na(.) ~ "(D)",
+                  . > 1 ~ prettyNum(., big.mark = ",", digits = 2), 
+                  . <= 1 ~ str_c("(", percent(., accuracy = 1.0), ")"))))   
+
+# Remove percent variable description 
+sum <- sum %>% 
+  mutate(
+    variable_description = case_when(
+      str_detect(variable_description, "percent") ~ "", 
+      TRUE ~ variable_description))
+
+# Change variable description 
+sum <- sum %>% 
+  rename(Variable = variable_description)
+
+# Create tables for organic, local and all 
+sum_all <- sum %>% 
+  filter(groupbyvar == "all operations") %>% 
+  select(!groupbyvar)
+  
+sum_local <- sum %>% 
+  filter(groupbyvar == "local") %>% 
+  select(!groupbyvar)
+
+sum_organic <- sum %>% 
+  filter(groupbyvar == "organic") %>% 
+  select(!groupbyvar)
+
+```
+
+### Observations by region
+
+```{r n}
+kable(n, align =  "l")
+```
+
+\newpage
+
+### Variable expenses - Local Food Operations
+
+```{r exp_local}
+kable(sum_local) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Expenses are are inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Variable expenses - Organic Operations
+
+```{r exp_organic}
+kable(sum_organic) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Expenses are are inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Variable expenses - All Operations
+
+```{r exp_all_exp}
+kable(sum_all) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Expenses are are inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Variable expenses - Organic, Local, All across all regions
+
+```{r exp_all_regions}
+kable(sum_regions)
+```
+
+```{r}
+
+# Create a stacked bar chart of variable expenses as a percent of total variable expense for local, organic, and all operations separately
+
+# Select variables of interest 
+var_list <- c("fert_alt_pct", "seedp_alt_pct", 
+              "animalpurchase_alt_pct", "feed_alt_pct", 
+              "fuelo_alt_pct", "util_alt_pct", 
+              "mainr_alt_pct", "labor_alt_pct", 
+              "cwork_alt_pct", "otherexp_alt_pct")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list & 
+           statistic %in% c("mean") & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+
+# Pivot wider to calculate chemical expense 
+sum <- sum %>% 
+  pivot_wider(
+    names_from = variable_name, 
+    values_from = value)
+
+# Create total and chemical expense and pivot back to long
+sum <- sum %>% 
+  mutate(total = 
+           rowSums(select(., fert_alt_pct:otherexp_alt_pct)), 
+         chem_alt_pct = case_when(
+           statistic == "mean" ~ 1-total, 
+           TRUE ~ NA)) %>% 
+  select(-total) %>%
+  pivot_longer(
+    cols = !c(groupbyvar, statistic, n, region),
+    names_to = "variable_name", 
+    values_to = "value")
+
+# Join with variable names 
+sum <- sum %>% 
+  left_join(meta_df) 
+
+# Shorten names and values
+sum <- sum %>% 
+  mutate(
+    variable_description = 
+      str_remove_all(variable_description, 
+                     "as a percent of total variable expense|expense"), 
+    variable_description = case_when(
+      variable_name == "animalpurchase_alt_pct" ~ "Livestock", 
+      variable_name == "otherexp_alt_pct" ~ "Other",
+      variable_name == "labor_alt_pct" ~ "Labor",
+      variable_name == "mainr_alt_pct" ~ "Repairs, maintenance",
+      TRUE ~ variable_description), 
+    value = round(value, 2))
+
+# Create a dataframe for organic, local and nonlocal
+sum_local <- sum %>% 
+  filter(groupbyvar == "local") %>% 
+  select(region, variable_description, value) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York\n(19)", 
+      region == "midatlantic" ~ "Mid-Atlantic\n (24)", 
+      region == "northeast" ~ "Northeast\n(42)"), 
+    region = factor(region, 
+                    levels = c("New York\n(19)", 
+                               "Mid-Atlantic\n (24)",
+                               "Northeast\n(42)"))) 
+                               
+sum_organic <- sum %>% 
+  filter(groupbyvar == "organic") %>% 
+  select(region, variable_description, value) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York\n(9)", 
+      region == "midatlantic" ~ "Mid-Atlantic\n (11)", 
+      region == "northeast" ~ "Northeast\n(17)"), 
+    region = factor(region, 
+                    levels = c("New York\n(9)", 
+                               "Mid-Atlantic\n (11)", 
+                               "Northeast\n(17)")))
+
+sum_all <- sum %>% 
+  filter(groupbyvar == "all operations") %>% 
+  select(region, variable_description, value) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York\n(91)", 
+      region == "midatlantic" ~ "Mid-Atlantic\n (99)", 
+      region == "northeast" ~ "Northeast\n(127)"), 
+    region = factor(region, 
+                    levels = c("New York\n(91)", 
+                               "Mid-Atlantic\n (99)",
+                               "Northeast\n(127)")))
+```
+
+\newpage
+
+### Variable expenses for local dry bean producers as a percent of total variable expense
+
+```{r expense_local_stacked_bar, fig.align="center", fig.width=7, fig.height=6, out.width="100%"}
+# Local plot    
+ggplot(sum_local, aes(fill = variable_description, 
+                      x = region, 
+                      y = value)) + 
+  geom_bar(position = "stack", stat = "identity") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949",
+                               "#D47500", "#EF4035", "#F8981D", "#6EB43F", 
+                               "#006699", "#222222", "#4B7B2B")) + 
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank()) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) + 
+  labs(y = "Percent of total variable expense") +
+  geom_text(aes(label = label_percent(accuracy = 1)(value)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3.5, color = "white") 
+
+```
+
+\newpage
+
+### Average variable expenses for organic dry bean producers as a percent of total variable expense
+
+```{r expense_organic_stacked_bar, fig.align="center", fig.width=7, fig.height=6, out.width="100%"}
+
+# Organic plot
+ggplot(sum_organic, aes(fill = variable_description, 
+                      x = region, 
+                      y = value)) + 
+  geom_bar(position = "stack", stat = "identity") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949",
+                               "#D47500", "#EF4035", "#F8981D", "#6EB43F", 
+                               "#006699", "#222222", "#4B7B2B")) + 
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank()) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) + 
+  labs(y = "Percent of total variable expense") +
+  geom_text(aes(label = label_percent(accuracy = 1)(value)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3.5, color = "white") 
+```
+
+\newpage
+
+### Average variable expenses for dry bean producers as a percent of total variable expense
+
+```{r expense_all_stacked_bar, fig.align="center", fig.width=7, fig.height=6, out.width="100%"}
+# All operations plot 
+ggplot(sum_all, aes(fill = variable_description, 
+                      x = region, 
+                      y = value)) + 
+  geom_bar(position = "stack", stat = "identity") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949",
+                               "#D47500", "#EF4035", "#F8981D", "#6EB43F", 
+                               "#006699", "#222222", "#4B7B2B")) + 
+  theme(legend.title = element_blank(),
+        axis.title.x = element_blank()) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) + 
+  labs(y = "Percent of total variable expense") +
+  geom_text(aes(label = label_percent(accuracy = 1)(value)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3.5, color = "white") 
+
+```
+
+```{r}
+
+# Create a bar chart of variable expenses including an error bar for local, organic, and all operations separately
+
+# Select variables of interest 
+var_list <- c("fert", "seedp", "animalpurchase", 
+              "feed", "fuelo", "util", "mainr", 
+              "labor", "cwork", "otherexp")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list & 
+           statistic %in% c("mean", "se") & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+
+# Join with variable names 
+sum <- sum %>% 
+  left_join(meta_df) 
+
+# Shorten names and values and factor regions
+sum <- sum %>% 
+  mutate(
+    variable_description = 
+      str_remove_all(variable_description, 
+                     "as a percent of total variable expense| expense"), 
+    variable_description = case_when(
+      variable_name == "animalpurchase" ~ "Livestock", 
+      variable_name == "otherexp" ~ "Other",
+      variable_name == "labor" ~ "Labor",
+      variable_name == "mainr" ~ "Repairs, maintenance",
+      TRUE ~ variable_description), 
+    value = round(value, 0)) %>% 
+  select(-variable_name, -n)
+
+# Add a column for mean and one for se 
+sum <- sum %>% 
+  pivot_wider(
+    names_from = statistic, 
+    values_from = value)
+
+# If mean is NA, also make SE NA, these values not included in figure and added in a footnote, remove customwork as it's NA for all regions 
+sum <- sum %>% 
+  mutate(
+    se = case_when(
+      is.na(mean) ~ NA, 
+      TRUE ~ se)) %>% 
+  filter(variable_description != "Customwork")
+
+# Create a dataframe for organic, local and nonlocal
+sum_local <- sum %>% 
+  filter(groupbyvar == "local") %>% 
+  select(-groupbyvar) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York (19)", 
+      region == "midatlantic" ~ "Mid-Atlantic (24)", 
+      region == "northeast" ~ "Northeast (42)"), 
+    region = factor(region, 
+                    levels = c("New York (19)", 
+                               "Mid-Atlantic (24)",
+                               "Northeast (42)"))) 
+                               
+sum_organic <- sum %>% 
+  filter(groupbyvar == "organic") %>% 
+  select(-groupbyvar) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York (9)", 
+      region == "midatlantic" ~ "Mid-Atlantic (11)", 
+      region == "northeast" ~ "Northeast (17)"), 
+    region = factor(region, 
+                    levels = c("New York (9)", 
+                               "Mid-Atlantic (11)", 
+                               "Northeast (17)")))
+
+sum_all <- sum %>% 
+  filter(groupbyvar == "all operations") %>% 
+  select(-groupbyvar) %>%
+  mutate(
+    region = case_when(
+      region == "NY" ~ "New York (91)", 
+      region == "midatlantic" ~ "Mid-Atlantic (99)", 
+      region == "northeast" ~ "Northeast (127)"), 
+    region = factor(region, 
+                    levels = c("New York (91)", 
+                               "Mid-Atlantic (99)",
+                               "Northeast (127)")))
+```
+
+\newpage
+
+### Average variable expenses for local dry bean producers
+
+```{r expense_local_bar, fig.align="left", fig.width=7, fig.height=6, out.width="100%"}
+
+# Horizontal barplot - Local
+ggplot(sum_local, aes(x = mean, 
+                      y = variable_description, 
+                      fill = region)) + 
+  geom_bar(stat = "identity", 
+           position = position_dodge(0.7),
+           width = 0.7) +
+  geom_errorbar(aes(x= se, 
+                    xmin = mean - se, 
+                    xmax = mean + se),
+                position = position_dodge(0.7), 
+                width = 0.2, color = "grey40") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949")) + 
+  scale_x_continuous(labels = dollar_format(accuracy = 1)) + 
+  labs(x = "Expense", 
+       y = "", 
+       caption = "Notes: Expenses not included due to disclosure issues include chemical \nfor all regions, customwork, labor for New York and Midatlantic, and \nfeed for New York.\nError bars indicate the variability of expenses.\nAll expenses are in 2023 dollars.") +   
+  theme(legend.title = element_blank(), 
+        plot.caption = element_text(hjust = 0)) 
+
+```
+
+### Average variable expenses for organic dry bean producers
+
+```{r expense_organic_bar, fig.align="left", fig.width=7, fig.height=6, out.width="100%"}
+
+# Horizontal barplot - organic
+ggplot(sum_organic, aes(x = mean, 
+                      y = variable_description, 
+                      fill = region)) + 
+  geom_bar(stat = "identity", 
+           position = position_dodge(0.7),
+           width = 0.7) +
+  geom_errorbar(aes(x= se, 
+                    xmin = mean - se, 
+                    xmax = mean + se),
+                position = position_dodge(0.7), 
+                width = 0.2, color = "grey40") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949")) + 
+  scale_x_continuous(labels = dollar_format(accuracy = 1)) + 
+  labs(x = "Expense", 
+       y = "", 
+       caption = "Notes: Expenses not included due to disclosure issues include customwork, \nfertilizer, seeds and plants, and chemicals not included in any region, \nand other not included in New York or Mid-Atlantic.\nError bars indicate the variability of expenses.\nAll expenses are in 2023 dollars.") +   
+  theme(legend.title = element_blank(), 
+        plot.caption = element_text(hjust = 0)) 
+
+```
+
+### Average variable expenses for dry bean producers
+
+```{r expense_all_bar, fig.align="left", fig.width=7, fig.height=6, out.width="100%"}
+
+# Horizontal barplot - All
+ggplot(sum_all, aes(x = mean, 
+                      y = variable_description, 
+                      fill = region)) + 
+  geom_bar(stat = "identity", 
+           position = position_dodge(0.7),
+           width = 0.7) +
+  geom_errorbar(aes(x= se, 
+                    xmin = mean - se, 
+                    xmax = mean + se),
+                position = position_dodge(0.7), 
+                width = 0.2, color = "grey40") + 
+  scale_fill_manual(values = c("#B31B1B", "#9FAD9F", "#A2998B", "#073949")) + 
+  scale_x_continuous(labels = dollar_format(accuracy = 1)) + 
+  labs(x = "Expense", 
+       y = "", 
+       caption = "Notes: Expenses not included due to disclosure issues include chemicals \nfor all regions.\nError bars indicate the variability of expenses.\nAll expenses are in 2023 dollars.") +   
+  theme(legend.title = element_blank(), 
+        plot.caption = element_text(hjust = 0)) 
+
+```
+
+\newpage
+
+## Profitability
+
+We present data on return on assets, net farm income, and operating profit margin.
+
+-   Return on assets (ROA) = (gross cash farm income - total expenditures + interest expense)/total assets
+
+-   Operating profit margin (OPM) = (gross cash farm income - total expenditures + interest expense)/gross cash farm income
+
+-   Net farm income (NFI) = gross cash farm income - total expenditures
+
+-   Gross cash farm income = total sales + contract income + government payments + income from ag related sources - landlord's share of total sales
+
+-   Total assets = all land and buildings owned + all land and buildings leased from others + current value of machinery and equipment - land and buildings leased to others
+
+-   Total expenditures = sum of contractor total production expense + operator and landlord total production expenses
+
+```{r}
+
+# Select variables of interest 
+var_list <- c("roa", "infi", "opm")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list)
+
+# Keep only mean values and subgroups of interest
+sum <- sum %>% 
+  filter(statistic == "mean" & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+
+# Add meta data and keep columns of interest 
+sum <- sum %>% 
+  select(!c(statistic)) %>%
+  left_join(meta_df) 
+
+# Summary table with all three regions 
+sum_regions <- sum %>% 
+  select(-n, -variable_name) %>% 
+  pivot_wider(
+    names_from = region, 
+    values_from = value) %>%
+  mutate(across(c(NY, midatlantic, northeast),
+               ~case_when(
+                  is.na(.) ~ "(D)",
+                  . > 1 ~ prettyNum(., big.mark = ",", digits = 2), 
+                  . <= 1 ~ percent(., accuracy = 1.0))))  
+  
+
+# Summary table for all regions with min/max as min/max across regional definitions
+sum <- sum %>% 
+  select(-n) %>% 
+  group_by(groupbyvar, variable_name) %>% 
+  summarise(Minimum = min(value), 
+            Maximum = max(value)) %>% 
+  ungroup() 
+
+# Join with variable names 
+sum <- sum %>% 
+  left_join(meta_df) 
+
+# Select columns of interest and reformat values
+sum <- sum %>% 
+  select(groupbyvar, variable_description, Minimum, Maximum) %>% 
+  mutate(across(Minimum:Maximum, 
+                ~case_when(
+                  is.na(.) ~ "(D)",
+                  . > 1 ~ prettyNum(., big.mark = ",", digits = 2), 
+                  . <= 1 ~ percent(., accuracy = 1.0))))   
+  
+# Change variable description 
+sum <- sum %>% 
+  rename(Variable = variable_description)
+
+# Create tables for organic, local and all 
+sum_all <- sum %>% 
+  filter(groupbyvar == "all operations") %>% 
+  select(!groupbyvar)
+  
+sum_local <- sum %>% 
+  filter(groupbyvar == "local") %>% 
+  select(!groupbyvar)
+
+sum_organic <- sum %>% 
+  filter(groupbyvar == "organic") %>% 
+  select(!groupbyvar)
+
+```
+
+### Profitability - Local Food Operations
+
+```{r profitability_local}
+kable(sum_local) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Net farm income is inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+
+```
+
+\newpage
+
+### Profitability - Organic Operations
+
+```{r profitability_organic}
+kable(sum_organic) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Net farm income is inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Profitability - All Operations
+
+```{r profitability_all_exp}
+kable(sum_all) %>% 
+  kable_styling() %>%
+  footnote(general = "The minimum/maximum columns are the min/max of each variable for the three regions (NY, Mid-Atlantic, and Northest). Net farm income is inflation adjusted to 2023 dollars. (D) denotes data was not released due to disclosure issues.")
+```
+
+### Profitability - Organic, Local, All across all regions
+
+```{r profitability_all_regions}
+kable(sum_regions)
+```
+
+\newpage
+
+## Production and management practices
+
+We present data on acres with a cover crop, no-till acres, reduced till acres, and intensive till acres.
+
+-   A cover crop is a crop planted primarily to manage soil erosion, soil fertility, soil quality, water, weeds, pests, and diseases on non-CRP acres.
+-   No-till farming practices is cropland used for production from year to year without disturbing the soil through tillage other than planting.
+-   Reduced tillage leaves between 15% and 30% residue cover on the soil of small grain residue to conserve moisture and prevent erosion. This may involve the use of a chisel plow, field cultivators, or other implements.
+-   Intensive tillage leaves less than 15% of crop residue of small grain residue. This type of tillage is often referred to as conventional tillage. Intensive tillage often involves multiple operations with implements such as a mold board, disk, and/or chisel plow.
+
+```{r}
+
+# Select variables of interest 
+var_list <- c("cover_crop_acres", "cover_crop_acres_pct_cropland", 
+              "no_till_acres", "no_till_acres_pct_cropland", 
+              "reduced_till_acres", "reduced_till_acres_pct_cropland",
+              "intensive_till_acres", "intensive_till_acres_pct_cropland")
+
+sum <- df %>% 
+  filter(variable_name %in% var_list)
+
+# Keep only mean values and subgroups of interest
+sum <- sum %>% 
+  filter(statistic == "mean" & 
+           groupbyvar %in% c("local", "organic", "all operations"))
+
+# Add meta data and keep columns of interest 
+sum <- sum %>% 
+  select(!c(statistic)) %>%
+  left_join(meta_df) 
+
+# N by group 
+n <- sum %>% 
+  group_by(groupbyvar, region) %>% 
+  summarise(n =first(n))
+
+# Summary table for all regions with min/max as min/max across regional definitions
+sum <- sum %>% 
+  select(-n) %>% 
+  group_by(groupbyvar, variable_name) %>% 
+  summarise(Minimum = min(value), 
+            Maximum = max(value)) %>% 
+  ungroup() 
+
+# Join with variable names 
+sum <- sum %>% 
+  left_join(meta_df) 
+
+# Select columns of interest and reformat values
+sum <- sum %>% 
+  select(groupbyvar, variable_description, Minimum, Maximum) %>% 
+  mutate(across(Minimum:Maximum, 
+                ~case_when(
+                  is.na(.) ~ "(D)",
+                  . > 1 ~ prettyNum(., big.mark = ",", digits = 2), 
+                  . <= 1 ~ percent(., accuracy = 1.0))))   
+  
+# Change variable description 
+sum <- sum %>% 
+  rename(Variable = variable_description)
+
+# Create tables for organic, local and all 
+sum_all <- sum %>% 
+  filter(groupbyvar == "all operations") %>% 
+  select(!groupbyvar)
+  
+sum_local <- sum %>% 
+  filter(groupbyvar == "local") %>% 
+  select(!groupbyvar)
+
+sum_organic <- sum %>% 
+  filter(groupbyvar == "organic") %>% 
+  select(!groupbyvar)
+
+```
+
+\newpage
+
+### Variable expenses - Local Food Operations
+
+```{r prod_local}
+kable(sum_local) %>% 
+  kable_styling() %>%
+  footnote(general = "(D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Variable expenses - Organic Operations
+
+```{r prod_organic}
+kable(sum_organic) %>% 
+  kable_styling() %>%
+  footnote(general = "(D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+### Variable expenses - All Operations
+
+```{r prod_all_exp}
+kable(sum_all) %>% 
+  kable_styling() %>%
+  footnote(general = "(D) denotes data was not released due to disclosure issues.")
+```
+
+\newpage
+
+## Appendix - Restricted access code
+
+The remainder of the document contains the code used to pull the restricted access Census of Agriculture data.
+
+```{r, eval=FALSE}
+library(tidyverse)
+
+# Load data
+load("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/data_processed/coa.RData")
+
+# Get 2017 data only 
+df <- coa %>% 
+  filter(year==2017)
+
+# Explore bean producers
+## Operations with positive value of sales for dry beans 
+df <- df %>% 
+  filter(k4554>0)
+
+```
+
+### Define variables
+
+All variables used across multiple projects are defined in "COA.qmd".
+
+When we get the variables, we will also include those that produce organic products according to USDA’s National Organic Program (NOP) standards or have acres transitioning into USDA NOP production (k3501). For now, we will say that operations with positive Cropland and Pastureland Treated with Organic Fertilizer (K1570) are organic.
+
+### Understanding crop mix
+
+NASS collects information on harvested acres by commodity so double cropping is robust to this. If a producer harvests winter wheat and then plants and harvests soybeans on that same 100-acre field it will report 200 acres harvested; one hundred of corn and one hundred of soybeans. With two harvests on the same land for two different crops, harvested acres would appear twice. As a result, total harvested acres could sum to more than total cropland on the farm.
+
+We take the harvested acres of each crop divided by total cropland to get understand cropping mix.
+
+-   CRLND - Sum of Cropland
+-   K787 - Cropland Harvested, Acres
+-   K791 - Cropland in Summer Fallow, Acres
+-   K1062 Cropland Idle or Used for Cover Crops, Acres
+-   K3456 - Cropland acres planted to a cover crop CROP -
+-   Crop - Sum of Cropland Harvested
+-   K67 - Field Corn for Grain Harvested, Acres
+-   K70 - Field Corn for Silage Harvested, Acres
+-   K578 - Durum Wheat Harvested, Acres
+-   K728 - Other Spring Wheat Harvested, Acres
+-   K572 - Winter Wheat Harvested, Acres
+-   K88 - Soybeans Harvested, Acres
+-   VEGA - Sum Acres of Vegetables
+-   CFRNNNAC - Fruit & Nut None Irrigated Acres
+-   CFRNWHAC - Fruit & Nut Wholly Irrigated Acres
+-   SUMBRTA - Calculated Sum of Total Berry Acres
+-   HAY - Acres Hay Harvested
+
+### Total sales
+
+-   K6764 Total Dry Beans Harvested (Excl Chickpeas and Limas) Sales
+-   K3538 Total Hay & Forage Crops Sales
+-   K4070 Field Corn for Silage Harvested Value of Sales
+-   K4067 Field Corn for Grain Harvested Value of Sales
+-   K4572 Winter Wheat Harvested Value of Sales
+-   K4578 Durum Wheat Harvested Value of Sales
+-   K4728 Other Spring Wheat Harvested Value of Sales
+-   K1792 Total Wheat Sales \$
+-   K6298 Total Soybeans Harvested Sales (don't have this variable)
+-   K3598 Total Vegetables, Potatoes, and Melons (Excl Veg Seeds & Transplants) Sales
+-   K3539 Total Fruit & Nuts Sales
+-   K3540 Total Berries Sales
+-   total value of sales
+-   dry bean sales as a percent of total value of sales
+
+### Yield
+
+k555 - Dry Beans Harvested (Excl Chickpeas and Limas), Hundredweight
+
+### Tillage
+
+k3455 - no till acres k3454 - reduced (conservation) tillage, excluding no-till, acres k3453 - intensive (conventional) tillage practices acres k3456 - cover crop acres
+
+```{r, eval=FALSE }
+
+# How many and what percentage of crop acres do our producers plant as cover crops
+df <- df %>% 
+  mutate(
+    cover_crop_acres = k3456, 
+    cover_crop_acres_pct_cropland = k3456/crlnd)
+
+# Organic - based on >0 Cropland and Pastureland Treated with Organic Fertilizer
+df <- df %>% 
+  mutate(organic = case_when(
+    k1570 >0 ~ 1, 
+    k1570 ==0 ~ 0))
+           
+# Tillage practices 
+df <- df %>% 
+  mutate(
+    no_till_acres = k3455, 
+    reduced_till_acres = k3454, 
+    intensive_till_acres = k3453) %>% 
+  mutate(across(no_till_acres:intensive_till_acres, 
+                ~.x/crlnd, 
+              .names = "{.col}_pct_cropland"))
+
+# Define harvested acres for beans and beans, soybeans, corn, wheat, and fruit/veg as a percent of all crop acres 
+df <- df %>% mutate(
+  harvested_acres_drybeans = k554, 
+  harvested_acres_corn = k67 + k70, 
+  harvested_acres_wheat = k578 + k728 + k572, 
+  harvested_acres_soybeans = k88, 
+  harvested_acres_fruitveg = vega + cfrnnnac +cfrnwhac + sumbrta, 
+  harvested_acres_hay = hay,
+  pasture_acres = past) %>% 
+  mutate(across(harvested_acres_drybeans:harvested_acres_fruitveg, 
+                ~./crlnd, 
+                .names = "{.col}_pct_cropland"))
+
+# Total value of bean sales 
+df <- df %>% 
+  mutate(
+    drybean_sales = k4554, 
+    drybean_sales_percent_tvp = drybean_sales/tvp, 
+    hay_sales = k3538, 
+    corn_silage_sales = k4070, 
+    corn_grain_sales = k4067, 
+    wheat_sales = k1792, 
+    veg_sales = k3598, 
+    fruit_nut_sales = k3539,
+    berry_sales = k3539, 
+    fruitveg_sales = veg_sales + fruit_nut_sales + berry_sales)
+
+# Yield for beans
+df <- df %>% 
+  mutate(
+    cwt_drybeans = k555, 
+    yield_acre_drybeans = k555/k554)
+
+```
+
+### Variable expenses
+
+We gather variable expenses data as a total per category and as a percent of total variable expenses.
+
+Challenge: we have total expenses for the operation, total acres, and total acres of bean production. In order to accurately calculate cost per bean acre, we would have to keep producers that only produce beans, which is too small subset of the population. But, order to do the environmental analysis, we need expenditures on a per acre basis. We are trying to capture expenditures on the acres in which the beans are planted. Beans are all part of a rotation, but we are interested in all of these acres.
+
+We want to tell a story about what these other bean growers are growing. Get value of sales from each commodity.
+
+Total variable expenses: categorized the same as they do in ARMS k1501 fertilizer k1502 chemicals k1503 seeds, plants k1504, k1505 livestock purchases k1506 feed k1507 gasoline, fuels, oils k1508 utilities k1509 maintenance and repair k1510, k1511 labor k1512 customwork k1518 other expenses (Include storage and warehousing, marketing expenses, insurance, etc.)
+
+We calculate it both including other expenses and not.
+
+### Fertilizer questions
+
+K932 - Cropland Fertilized, Acres K933 - Pastureland Fertilized, Acres K1569 - Acres on Which Manure Was Applied K1570 - Cropland and Pastureland Treated with Organic Fertilizer K936 - Land Treated for Insects on Hay or Other Crops, Acres K939 - Land Treated for Weeds in Crops and Pasture, Acres K937 - Land Treated for Nematodes in Crops, Acres K938 - Land Treated for Diseases in Crops and Orchards, Acres K940 - Crops on Which Chemicals for Defoliation Applied, Acres
+
+```{r, eval=FALSE }
+
+# Define variable expenses 
+df <- df %>% 
+  mutate(
+    fert = k1501,
+    chem = k1502, 
+    seedp = k1503, 
+    animalpurchase = k1504 + k1505, 
+    feed = k1506, 
+    fuelo = k1507, 
+    util = k1508,
+    mainr = k1509, 
+    labor = k1510 + k1511,
+    cwork = k1512,
+    otherexp = k1518, 
+    totvarexp = fert + chem + seedp + animalpurchase + feed + fuelo + 
+      util + mainr + labor + cwork, 
+    totvarexp_alt = totvarexp + otherexp)
+
+# Define expenses as a percent of total 
+df <- df %>% 
+  mutate(across(fert:cwork, 
+                ~.x/totvarexp, 
+                .names = "{.col}_pct")) %>% 
+  mutate(across(fert:otherexp, 
+                ~.x/totvarexp_alt, 
+                .names = "{.col}_alt_pct"))
+
+# Define fertilizer variables 
+df <- df %>% 
+  mutate(
+    cropland_acres_fertilized = k932, 
+    pasture_acres_fertilized = k933, 
+    manure_acres = k1569, 
+    organic_fertilizer_acres = k1570, 
+    chemicals_insects_acres = k936, 
+    chemicals_weeds_acres = k939, 
+    chemicals_nematodes_acres = k937,
+    chemicals_disease_acres = k938, 
+    chemicals_defoliation_acres = k940) %>% 
+  mutate(across(cropland_acres_fertilized:chemicals_defoliation_acres, 
+                ~./crlnd, 
+                .names = "{.col}_pct_cropland"))
+
+# Define a beginning farmer as both any and all beginning 
+df <- df %>% 
+  mutate(
+    beginning_alt_dummy = case_when(
+      beginning_alt == "Established" ~ 0, 
+      TRUE ~ 1))
+```
+
+### Define regions
+
+While we are generally interested in New York, we are expanding the study to both the Middle Atlantic and New England as a whole.
+
+```{r, eval=FALSE }
+# Define three regions
+df_NY <- df %>% 
+  filter(state_name == "New York")
+
+df_midatlantic <- df %>% 
+  filter(census_divisions == "Middle Atlantic") 
+
+df_northeast <- df %>% 
+  filter(census_regions == "Northeast")
+
+```
+
+### Summary stats
+
+Summary stats are separated for local, nonlocal, all and by the three different regional definitions.
+
+Summary stats include expenses, profitability measures and farm characteristics. This will allow to to provide survey respondents with our estimate of expenses, they will be able to move it either higher or lower. Profitability and farm characteristics will allow us to understand how the group of bean producers we are meeting with compare to this sample. If SE's are high, see if there are outlier problems. For disclosure, we also provide the n in each category and the top two observations
+
+We provide mean, se, and totals (so we can compute percentages for the group as a whole).
+
+#### Profitability measures:
+
+-   net profitability (infi) (GCFI - EXP)
+-   ROA
+-   OPM
+-   total sales
+
+#### Demographics and farm characteristics
+
+-   bean sales
+-   total value of sales
+-   bean sales as a percent of total value of sales
+-   total harvested crop acres
+-   percent of harvested acres by crop
+-   cover crop acres
+-   cover crop acres as a percent of total harvested acres
+-   percent all/any beginning, beginning_alt != "Established"
+-   owned vs. rented, tenure_fct
+-   other commodities,
+-   total acres operated, k46
+-   gross cash farm income, gcfi
+-   gcfi categories
+-   crop insurance (1/0), crop_insurance
+-   government payments (1/0), gov_payments_cat
+
+```{r, eval=FALSE }
+library(srvyr)
+
+# Turn off scientific notation 
+options(scipen=999)
+
+# Define variables of interest
+var_list <- df %>% 
+  select(
+    cover_crop_acres: beginning_alt_dummy, 
+    crop, crlnd,
+    gcfi_0_75, gcfi_75_350, gcfi_350_1M, gcfi_over_1M,
+    tvp, gcfi, roa, opm, infi, k46, 
+    fullowner, partowner, fulltenant, 
+    crop_insurance, gov_payments_cat, 
+    fieldcrop, fruitveg, othercrops, 
+    livestock, dairy, poultry, otheranimal) %>% 
+  names()
+
+# Define list of dataframes 
+df_list <- list(df_NY, df_northeast, df_midatlantic)
+
+for(i in seq_along(df_list)){
+# Define dataframe 
+df <- df_list[[i]]
+
+# Define data frame and groupbyvar
+df <- df %>% 
+  mutate(
+    groupbyvar = local)
+
+# Define data frame as a survey object
+df <- df %>% as_survey(weight = weight)
+
+# Summary stats 
+sum <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total))) %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total)))) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+   names_to = "variable", 
+    values_to = "value") %>% 
+  ungroup() 
+
+# Drop total_se
+sum <- sum %>% 
+  filter(!str_detect(variable, "total_se$"))
+
+# Add a column with the statistic 
+sum <- sum %>% 
+  mutate(
+    statistic = case_when(
+      str_detect(variable, "se$") ~ "se", 
+      str_detect(variable, "total$") ~ "total", 
+      TRUE ~ "mean"), 
+    variable = str_remove_all(variable, 
+                          "_mean|_se|_total"))
+
+# Get weighted N
+n <- df %>% 
+  group_by(groupbyvar) %>% 
+  survey_tally() %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% survey_tally()) %>%
+  select(-n_se) 
+
+# Get unweighted n
+unweighted_n <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  bind_rows(
+    df %>% 
+      summarise(n = n())) %>% 
+  rename(unweighted_n = n)
+
+# Join data frames
+sum <- left_join(sum, n) %>% left_join(unweighted_n) %>%
+  arrange(groupbyvar, statistic) 
+
+# Get top 2 observations for each variable. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- df$variables %>% 
+  select(groupbyvar, all_of(var_list)) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(groupbyvar, variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(groupbyvar, variable)
+
+dis_all <- df$variables %>% 
+  select(all_of(var_list)) %>%
+  pivot_longer(
+    cols = everything(), 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(variable)
+
+# Make data wider so there is a column for second largest and largest obs. First need to add the column that says first and second largest. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- dis %>% 
+  group_by(groupbyvar, variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2)
+
+dis_all <- dis_all %>% 
+  group_by(variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2) %>% 
+  mutate(
+    groupbyvar = NA)
+
+# Bind data for "groupbyvar" and not 
+dis <- bind_rows(dis, dis_all)
+rm(dis_all)
+
+# Join with original data frame 
+sum <- sum %>% left_join(dis) 
+
+# Arrange columns in correct order and rename groupby
+sum <- sum %>% 
+  select(groupbyvar, variable, statistic, everything()) %>% 
+  mutate(
+    groupbyvar = case_when(
+      groupbyvar==0 ~ "nonlocal", 
+      groupbyvar==1 ~ "local", 
+      is.na(groupbyvar) ~ "all operations"))
+
+write_csv(sum, str_glue("data_processed/summary_{i}.csv"))
+}
+```
+
+### Organic
+
+For organic, we only need the data grouped by organic and do not need data for all producers as we already have that.
+
+```{r, eval=FALSE }
+
+for(i in seq_along(df_list)){
+# Define dataframe 
+df <- df_list[[i]]
+
+# Define data frame and groupbyvar
+df <- df %>% 
+  mutate(
+    groupbyvar = organic)
+
+# Define data frame as a survey object
+df <- df %>% as_survey(weight = weight)
+
+# Summary stats 
+sum <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(across(c(all_of(var_list)),
+                   list(mean = survey_mean, 
+                        total = survey_total))) %>% 
+  ungroup() %>% 
+  pivot_longer(
+    cols = -groupbyvar, 
+   names_to = "variable", 
+    values_to = "value") %>% 
+  ungroup() 
+
+# Drop total_se
+sum <- sum %>% 
+  filter(!str_detect(variable, "total_se$"))
+
+# Add a column with the statistic 
+sum <- sum %>% 
+  mutate(
+    statistic = case_when(
+      str_detect(variable, "se$") ~ "se", 
+      str_detect(variable, "total$") ~ "total", 
+      TRUE ~ "mean"), 
+    variable = str_remove_all(variable, 
+                          "_mean|_se|_total"))
+
+# Get weighted N
+n <- df %>% 
+  group_by(groupbyvar) %>% 
+  survey_tally() %>% 
+  ungroup() %>% 
+  select(-n_se)
+
+# Get unweighted n
+unweighted_n <- df %>% 
+  group_by(groupbyvar) %>%
+  summarise(n = n()) %>% 
+  ungroup() %>% 
+  rename(unweighted_n = n)
+
+# Join data frames
+sum <- left_join(sum, n) %>% left_join(unweighted_n) %>%
+  arrange(groupbyvar, statistic) 
+
+# Get top 2 observations for each variable. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- df$variables %>% 
+  select(groupbyvar, all_of(var_list)) %>%
+  pivot_longer(
+    cols = -groupbyvar, 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(groupbyvar, variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(groupbyvar, variable)
+
+dis_all <- df$variables %>% 
+  select(all_of(var_list)) %>%
+  pivot_longer(
+    cols = everything(), 
+    names_to = "variable", 
+    values_to = "value") %>%
+  group_by(variable) %>% 
+  arrange(desc(value)) %>% 
+  top_n(2) %>% 
+  arrange(variable)
+
+# Make data wider so there is a column for second largest and largest obs. First need to add the column that says first and second largest. Do this separately for the data grouped by "groupbyvar" and for all data. 
+dis <- dis %>% 
+  group_by(groupbyvar, variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2)
+
+dis_all <- dis_all %>% 
+  group_by(variable) %>% 
+  mutate(
+    top2 = rank(desc(value), ties.method = "first")) %>%
+  filter(
+    top2<=2) %>% 
+  pivot_wider(
+    names_from = top2, 
+    values_from = value, 
+    names_glue = "ob_{top2}") %>% 
+  rename(largest_obs = ob_1, 
+         second_largest_obs = ob_2) %>% 
+  mutate(
+    groupbyvar = NA)
+
+# Bind data for "groupbyvar" and not 
+dis <- bind_rows(dis, dis_all)
+rm(dis_all)
+
+# Join with original data frame 
+sum <- sum %>% left_join(dis) 
+
+# Arrange columns in correct order and rename groupby
+sum <- sum %>% 
+  select(groupbyvar, variable, statistic, everything()) %>% 
+  mutate(
+    groupbyvar = case_when(
+      groupbyvar==0 ~ "non_organic", 
+      groupbyvar==1 ~ "organic"))
+
+write_csv(sum, str_glue("data_processed/organic_summary_{i}.csv"))
+}
+```
+
+### Write final results
+
+```{r, eval=FALSE }
+library(openxlsx)
+
+# Read files
+sum_df_NY <- read_csv("data_processed/summary_1.csv")
+sum_df_northeast <- read_csv("data_processed/summary_2.csv")
+sum_df_midatlantic <- read_csv("data_processed/summary_3.csv")
+sum_df_NY_organic <- read_csv("data_processed/organic_summary_1.csv")
+sum_df_northeast_organic <- read_csv("data_processed/organic_summary_2.csv")
+sum_df_midatlantic_organic <- read_csv("data_processed/organic_summary_3.csv")
+
+# Create workbook
+wb <- createWorkbook()
+
+# Add worksheets 
+addWorksheet(wb, "sum_df_NY")
+addWorksheet(wb, "sum_df_midatlantic")
+addWorksheet(wb, "sum_df_northeast")
+addWorksheet(wb, "sum_df_NY_organic")
+addWorksheet(wb, "sum_df_midatlantic_organic")
+addWorksheet(wb, "sum_df_northeast_organic")
+
+writeData(wb, sheet = "sum_df_NY", sum_df_NY)
+writeData(wb, sheet = "sum_df_midatlantic", sum_df_midatlantic)
+writeData(wb, sheet = "sum_df_northeast", sum_df_northeast)
+writeData(wb, sheet = "sum_df_NY_organic", sum_df_NY_organic)
+writeData(wb, sheet = "sum_df_midatlantic_organic", sum_df_midatlantic_organic)
+writeData(wb, sheet = "sum_df_northeast_organic", sum_df_northeast_organic)
+
+saveWorkbook(wb, "data_final/bean_focus_group_results.xlsx",
+             overwrite = TRUE)
+```

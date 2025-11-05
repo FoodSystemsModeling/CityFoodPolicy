@@ -1,0 +1,198 @@
+---
+title: "Institutional purchasing in New York state"
+format: html
+editor: visual
+echo: false
+---
+
+We use data from [NYC Food Policy, Good Food Purchasing data from 2019-2023](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page), we download the full purchasing data set.
+
+We want mean/sd/median on weight (in lbs.) and price (\$/lb.) for dry beans by form (canned, dried, frozen) by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.
+
+## Import data
+Here we import data and define variables. 
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(openxlsx)
+library(knitr)
+library(kableExtra)
+
+# create workbook
+wb <- createWorkbook()
+
+# Import data
+df <- read_xlsx("data_raw/Public-Dashboard-Data-for-Download-FY19-23.xlsx", 
+                sheet = "Citywide")
+
+# Keep bean data only
+df <- df %>% 
+  filter(`Food Product Category`=="Legumes" &
+           str_detect(`Product Name`, "bean")) 
+
+# Define form
+df <- df %>% 
+  mutate(Form = case_when(
+    str_detect(`Product Type`, "10 ") ~ "Canned",
+    str_detect(`Product Type`, "CANS|CND") ~ "Canned",
+    str_detect(`Product Type`, "CANNED") ~ "Canned",
+    str_detect(`Product Name`, "canned") ~ "Canned",
+      str_detect(`Product Type`, "FRZN") ~ "Frozen",
+    TRUE ~ "Dried"))
+
+# Convert lbs. to kgs.
+df <- df %>% 
+  mutate(
+    `Total Weight in kgs` = `Total Weight in lbs` * 0.45359237
+  )
+
+# Define price per kg
+df <- df %>% 
+  mutate(
+    `Price per kg` = `Total Cost`/`Total Weight in kgs`
+  )
+
+# Define price per lb
+df <- df %>% 
+  mutate(
+    `Price per lb` = `Total Cost`/`Total Weight in lbs`
+  )
+
+# Define a dummy for if the product was eligible for a price premium (MWBE and/or local)
+df <- df %>% 
+  mutate(
+    premium = case_when(
+      `MWBE y/n`=="Y" | 
+        `NY State spend y/n`=="Y" ~ 1, 
+      TRUE ~ 0)
+    )
+
+```
+
+## Understand missing total weight data
+
+The missing data does have the number of units, but does not have weight in lbs. We can use the information provided about the product and estimate how much the product weighed and estimate a total weight.
+
+Department of Education has a large purchase that lists number of unit. Units are #10 cans, we assume they each weight 6 lbs 15 oz (111 oz).
+
+For now, we are not going to take this step, but can in the future if needed.
+
+```{r}
+
+# Missing data
+missing <- df %>% 
+  filter(`Total Weight in lbs`==0)
+
+# Zero lbs. but positive price
+testing <- df %>% 
+  mutate(
+    zero_lbs = case_when(
+      `Total Weight in lbs`==0 ~ 1, 
+      TRUE ~ 0)
+    ) %>% 
+  group_by(Agency, `Time Period`, zero_lbs) %>% 
+  count()
+  
+rm(missing, testing)
+```
+
+## Summary stats
+
+Removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).
+
+Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data. 
+
+Data are saved to "drybeans/data_final/nyc_bean_purchasing.xlsx". Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried). 
+
+```{r}
+
+# Drop data without a weight
+df <- df %>% 
+  filter(
+    `Total Weight in lbs`!=0)
+
+# Remove outliers that are more than 2 SD from the mean
+df <- df %>% 
+  group_by(Agency, `Time Period`, Form) %>% 
+  mutate(
+    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
+    sd_lb = sd(`Price per lb`, na.rm = TRUE)
+  ) %>%
+  mutate(
+    outlier = case_when(
+      `Price per lb` < mean_lb - 2*sd_lb |  
+        `Price per lb` > mean_lb + 2*sd_lb ~ 1, 
+      TRUE ~ 0)
+    ) %>% 
+  filter(outlier==0) %>%
+  ungroup() %>% 
+  select(-mean_lb, -sd_lb)
+ 
+# Drop purchases that are local (note there are no MWBE businesses)
+df <- df %>% 
+  filter(`NY State spend y/n`=="N")
+  
+# Summary stats with outliers removed 
+sum <- df %>% 
+  group_by(Agency, `Time Period`, Form) %>% 
+  summarise(
+    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
+    sd_lb = sd(`Price per lb`, na.rm = TRUE), 
+    mean_kg = mean(`Price per kg`, na.rm = TRUE), 
+    sd_kg = sd(`Price per kg`, na.rm = TRUE),
+    n = n()
+  ) %>% 
+  ungroup()
+
+# Add worksheet
+addWorksheet(wb, "NYC_bean_purchasing")
+writeData(wb, "NYC_bean_purchasing", sum)
+
+# Info
+info <- tibble(
+  sheet_name = c(
+    "NYC_bean_purchasing"), 
+  description = c(
+    "Mean and standard deviation of price/lb. and price/kg. for beans by agency, year, and form (e.g, dried, canned, frozen)", 
+  source = "NYC dashboard", 
+  url = "https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page",
+  notes = "Includes only purchases from outside of New York and not from MWBE businesses (i.e., no premiums associated with local/MWBE attributes included in the data).")
+)
+
+# Add Worksheet
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save 
+saveWorkbook(wb, "data_final/NYC_bean_purchasing.xlsx", 
+             overwrite = TRUE)
+```
+
+```{r}
+#| label: nyc_bean_summary
+
+# Keep data per lb. and for 2022 only
+table <- sum %>% 
+  filter(`Time Period`==2022) %>%
+  select(-c(`Time Period`, mean_kg:last_col())) %>% 
+  mutate(
+    sd_lb = case_when(
+      is.na(sd_lb) ~ 0, 
+      TRUE ~ sd_lb
+  )) %>% 
+  rename(
+    Mean = mean_lb, 
+    SD = sd_lb
+  ) 
+
+table %>% 
+  kable(
+    digits = 2, 
+    caption = '<span style="color: black; font-size: 18px; font-weight: bold;">Price per pound for dried and canned beans purchased by New York City in 2022</span>') %>%
+  kable_styling()
+  
+
+```
+
+

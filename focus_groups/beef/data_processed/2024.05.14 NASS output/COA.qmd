@@ -1,0 +1,2502 @@
+---
+title: "Census of Agriculture - General"
+format: html
+editor: visual
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE)
+```
+
+In this file, we do all of the general coding related to the Census of Agriculture data. This includes creating new variables, renaming existing variables, and matching farms across time to create a variable for operations that did and did not survive.
+
+We will also create a metadata file with variable names, variable descriptions, variable definition, source, and url. I will create the metadata along with the code in each corresponding section. For those variables that are from the Census of Ag, I will add in source and url data at the end.
+
+Weights for each data set:
+
+-   2017: fin_dse_weight
+-   2012: k1198
+-   2007: k1198
+
+## Import data
+
+We import all data and bind into one dataframe. Based on guidance from Virginia Harris (NASS), all NAs are assumed to be zero (with some exceptions). They are stored as NAs to save space. In 2007 and 2012, there are a combinations of zeros and NAs whereas in 2017 there are only NAs.
+
+At the end of the Operator Characteristics section, respondents enter a "0" into k1589 and k1600 (2007/2012) if operator was counted in a previous column for living in the same household. These zeros are not converted to NAs. There are no zeros in the 2017 data. It appears all zeros were converted to NAs in 2017, so these data points were incorrectly changed to NA.
+
+```{r}
+library(tidyverse)
+library(janitor)
+
+# Import my functions 
+source("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/myfunctions.R")
+
+# Import data separately and bind together, amendments are joined to the original data before binding
+
+# 2007
+coa_07 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/census_2007.csv") %>% 
+  mutate(year = 2007)
+
+coa_07_amend <- read_csv(
+  "G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Amend2_2007.csv") %>% 
+  mutate(year = 2007, 
+        K1252 = as.character(K1252)) %>% 
+  select(-FIPS, -F_COUNTY)
+
+coa_07 <- left_join(coa_07, coa_07_amend, by = c("year", "CFN"))
+
+# 2012
+coa_12 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/census_2012.csv") %>% 
+  mutate(year = 2012)
+
+coa_12_amend <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Amend2_2012.csv") %>% 
+  mutate(year = 2012, 
+         K1252 = as.character(K1252)) %>% 
+  select(-FIPS, -F_COUNTY)
+
+coa_12 <- left_join(coa_12, coa_12_amend, by = c("year", "CFN"))
+
+# 2017
+coa_17 <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/census_2017.csv") %>% 
+  mutate(year = 2017)
+
+coa_17_amend <- read_csv("G:/USDA_Census_of_Agriculture/custom/Jablonski_CSU23_COAARMSLF/Amend2_2017.csv") %>% 
+  mutate(year = 2017) %>% 
+  select(-FIPS, -F_COUNTY, -COUNTY_NAME)
+
+coa_17 <- left_join(coa_17, coa_17_amend, by = c("year", "CFN"))
+
+# Bind data and make lower case
+coa <- bind_rows(coa_07, coa_12, coa_17) %>% 
+  clean_names()
+
+rm(coa_07, coa_12, coa_17, 
+   coa_07_amend, coa_12_amend, coa_17_amend)                  
+
+# Define weights 
+coa <- coa %>% 
+  mutate(
+    weight = case_when(
+      year != 2017  ~ k1198, 
+      year == 2017 ~ fin_dse_weight))
+
+# Create state and county fips 
+coa <- coa %>% 
+  mutate(
+    state_fips = as.character(fips), 
+    f_county = as.character(f_county), 
+    state_fips = str_pad(state_fips, side = "left", pad = "0", width = 2), 
+    f_county = str_pad(f_county, side = "left", pad = "0", width = 3), 
+    fips = str_c(state_fips, f_county, sep = "")) %>% 
+  select(!f_county)
+
+# Convert all NAs to zero for 2007 and 2012 except for k1589, k1600
+coa <- coa %>% 
+  mutate(across(-c(fips, county_name, state_fips, k1589, k1600, k1252, hhca), 
+                ~ case_when(
+                  is.na(.) ~ 0,
+                  TRUE ~ .)))
+
+save(coa, file = "data_processed/coa_initial.RData")
+
+```
+
+## Define regional variables
+
+```{r}
+
+# Import state name data
+state_fips_data <- usmap::us_map(regions = "state") %>% 
+  select(fips:full) %>% 
+  distinct() %>% 
+  filter(abbr!="DC") %>% rename(
+    state_fips = fips, 
+    state_abbr = abbr, 
+    state_name = full)
+
+# Join coa with state name data
+coa <- left_join(coa, state_fips_data, by = "state_fips")
+rm(state_fips_data)
+
+# Define census regions and Census divisions
+# Create census region and census division variables 
+coa <- coa %>% mutate(
+  census_divisions = case_when(
+    state_fips=="53" | state_fips=="41" | state_fips=="06" |
+      state_fips=="02" | state_fips=="15" ~ "Pacific", 
+   state_fips=="30" | state_fips=="16" | state_fips=="56" | 
+     state_fips=="32" | state_fips=="49" | state_fips=="08" |
+     state_fips=="04" | state_fips=="35" ~ "Mountain", 
+   state_fips== "38" | state_fips== "27" | state_fips== "46" |
+     state_fips=="31" | state_fips=="19" | state_fips=="20" |
+     state_fips=="29" ~ "West North Central", 
+   state_fips=="55" | state_fips=="26" | state_fips=="17" | 
+     state_fips=="18" | state_fips=="39" ~ "East North Central", 
+   state_fips=="40" | state_fips=="05" | state_fips=="48" | 
+     state_fips=="22" ~ "West South Central", 
+   state_fips=="21" | state_fips=="47" | state_fips=="28" | 
+     state_fips=="01" ~ "East South Central", 
+   state_fips=="54" | state_fips=="51" | state_fips=="24" | 
+     state_fips=="10" | state_fips=="37" | state_fips=="45" | 
+     state_fips=="13" | state_fips=="12" ~ "South Atlantic", 
+   state_fips=="36" | state_fips=="42" | state_fips=="34" ~ "Middle Atlantic", 
+   state_fips=="23" | state_fips=="50" | state_fips=="33" | 
+     state_fips=="25" | state_fips=="09" | state_fips=="44" ~ "New England"),
+  census_divisions = fct_relevel(census_divisions, "Pacific", "Mountain", "West North Central", "East North Central", "West South Central", "East South Central", "South Atlantic", "Middle Atlantic", "New England"),
+  census_regions = case_when(
+    census_divisions == "Pacific" | census_divisions=="Mountain" ~ "West", 
+    census_divisions=="West North Central" | 
+      census_divisions=="East North Central" ~ "Midwest", 
+    census_divisions=="West South Central" | 
+      census_divisions=="East South Central" | 
+      census_divisions=="South Atlantic" ~ "South", 
+    census_divisions=="Middle Atlantic" | 
+      census_divisions=="New England" ~ "Northeast"), 
+  census_regions = fct_relevel(census_regions, "West", "Midwest", "South", "Northeast")) 
+
+# Define RUCC groupings
+rucc_2013 <- readxl::read_xls("P:/pr-usda-nass-jablonski-csu23-coaarmslf/derivative_data_Jablonski_CSU_COA20231025/ruralurbancodes2013.xls") %>% 
+  clean_names() %>% 
+  select(fips, rucc_2013)
+
+coa <- coa %>% 
+  left_join(rucc_2013) %>%
+  mutate(
+    metro = ifelse(rucc_2013<=3, 1, 0), 
+    metro_adj = ifelse(rucc_2013==4 | rucc_2013==6 | rucc_2013==8, 1, 0), 
+    nonmetro = ifelse(rucc_2013==5 | rucc_2013==7 | rucc_2013==9, 1, 0))
+
+rm(rucc_2013)
+
+# Start metadata
+meta <- coa %>% 
+  select(year, fips, census_divisions, census_regions, 
+         rucc_2013, metro, metro_adj, nonmetro) %>%
+  mutate(across(everything(), 
+                ~as.character(.))) %>%
+  pivot_longer(
+    cols = !year, 
+    names_to = "variable_name", 
+    values_to = "value") %>%
+  group_by(year, variable_name) %>% 
+  count() %>% 
+  select(-n)
+
+# Add columns   
+meta <- meta %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "fips" ~ "County-level code that identifies the county and state where an operation is located", 
+      variable_name == "census_divisions" ~ "Census divisions" , 
+      variable_name == "census_regions" ~ "Census regions", 
+      variable_name == "rucc_2013" ~ "Rural-urban continuum codes (1 - Metro, 9 - nonmetro", 
+      variable_name == "metro" ~ "Counties in metro areas of 1 million population or more, counties in metro areas of 250,000 to 1 million population, or counties in metro areas of fewer than 250,000 population",
+      variable_name == "metro_adj" ~ "Urban population of 20,000 or more, adjacent to a metro area, urban population of 5,000 to 20,000, adjacent to a metro area, urban population of fewer than 5,000, adjacent to a metro area", 
+      variable_name == "nonmetro" ~ "Urban population of 20,000 or more, not adjacent to a metro area, urban population of 5,000 to 20,000, not adjacent to a metro area, urban population of fewer than 5,000, not adjacent to a metro area"), 
+    variable_definition = case_when(
+      variable_name == "fips" ~ "Codes which uniquely identify U.S. counties. County-level FIPS codes have five digits of which the first two are the FIPS code of the state to which the county belongs", 
+      variable_name == "census_divisions" ~ "Census divisions of the U.S., include Pacific, Mountain, West North Central, West South Central, East North Central, East South Central, Middle Atlantic, South Atlantic, New England", 
+      variable_name == "census_regions" ~ "Census regions of the U.S., include West, Midwest, South, Northeast" , 
+      variable_name == "rucc_2013" ~ "2013 Rural-urban continuum codes, raning from 1: Metro - Counties in metro areas of 1 million population or more to 9: Nonmetro - Urban population of fewer than 5,000, not adjacent to a metro area", 
+      variable_name == "metro" ~ "Rural-urban continuum codes 1, 2, and 3", 
+      variable_name == "metro_adj" ~ "Rural-urban continuum codes 4, 6, and 8", 
+      variable_name == "nonmetro" ~ "Rural-urban continuum codes 5, 7, and 9"), 
+  source = case_when(
+    variable_name == "fips" ~ "U.S. Census Bureau",
+    variable_name %in% c("rucc_2013", "metro", 
+                         "metro_adj", "nonmetro") ~ 
+      "U.S. Department of Agriculture, Economic Research Service, 2013 Rural-Urban Continuum Codes",
+    variable_name %in% c("census_divisions", "census_regions") ~ 
+      "U.S. Department of Commerce Economics and Statistics Administration, U.S. Census Bureau",
+    TRUE ~ NA), 
+  url = case_when(
+    variable_name == "fips" ~
+      "https://www.census.gov/library/reference/code-lists/ansi.html",
+    variable_name %in% c("rucc_2013", "metro", 
+                         "metro_adj", "nonmetro") ~ 
+    "https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/",
+    variable_name %in% c("census_divisions", "census_regions") ~ 
+      "https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf",
+  TRUE ~ NA))
+
+save(meta, file = "data_processed/meta.RData")  
+```
+
+## Differentiated sales
+
+### Organic
+
+Data on organic is asked the same in 2012 and 2017 and differently in 2007.
+
+All organic questions in 2012/2017 are asked as yes/no other than total value of organic production. In 2007, they asked acreage. Questions are slightly different and don't totally line up.
+
+```{r}
+
+coa <- coa %>% 
+  mutate(
+    organic_farm = case_when(
+      (year != 2007 & k3501 ==1) | 
+      (year == 2007 & k1248==1)  ~ 1,
+      TRUE ~ 0), 
+    organic_nop = case_when(
+      year != 2007 ~ k3502,
+      year ==2007 & k1250==1 ~ 1, 
+      TRUE ~ 0), 
+    organic_nop_exempt = case_when(
+      year != 2007 ~ k3503,
+      year == 2007 & k1250 ==3 ~ 1, 
+      TRUE ~ 0), 
+    organic_transitioning = 
+      case_when(
+        (year != 2007 & k3504) |
+        (year ==2007 & k1490>0) ~ 1,
+        TRUE ~ 0), 
+    organic_not_certified = case_when(
+      year != 2007 ~ k3506, 
+      year == 2007 ~ NA), 
+    organic_sales = case_when(
+      year != 2007 ~ k3505, 
+      year == 2007 ~ k1460), 
+    organic_sales_tvp = case_when(
+      tvp==0 ~ 0, 
+      TRUE ~ organic_sales/tvp), 
+    pos_organic_sales = ifelse(organic_sales>0, organic_sales, NA),
+    pos_organic_sales_tvp = case_when(
+      !is.na(pos_organic_sales) ~ organic_sales/tvp, 
+      TRUE ~ NA), 
+    organic_fct = case_when(
+      organic_farm==1 ~ "Organic sales", 
+      TRUE ~ "No organic sales"))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, organic_farm:pos_organic_sales_tvp) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "organic_farm" ~ "Operation that produced organic products", 
+      variable_name == "organic_nop" ~ "Operation that has USDA NOP certified organic production", 
+      variable_name == "organic_nop_exempt" ~ "Operations that has USDA NOP organic production exempt from certification", 
+      variable_name ==  "organic_transitioning" ~ "Operation has acres transitioning into USDA NOP organic production", 
+      variable_name == "organic_not_certified" ~"Operation has production according to USDA NOP standards but not certified or exempt", 
+      variable_name == "organic_sales" ~ "Gross value of sales of certified or exempt organic products", 
+    variable_name == "organic_sales_tvp" ~ "Organic sales as a percent of total sales", 
+    variable_name == "pos_organic_sales" ~ "Organic sales for only those producers with positive organic sales", 
+    variable_name == "pos_organic_sales_tvp" ~ "Organic sales as a percent of total sales for those producers with organic sales", 
+    variable_name == "organic_ftc" ~ "Organic factor variable with two levels: Organic sales and No organic sales"))
+
+# Add variable definition 
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "organic_farm" & year ==2007 ~ "Only includes organic products produced according to the National Organic Standards",
+      variable_name == "organic" & year !=2007 ~ "Includes organic products produced according to USDA's National Organic Program (NOP) standards or have acres transitioning into USDA NOP production",
+      variable_name == "organic_nop" ~ "National Organic Program (NOP)", 
+      variable_name == "organic_nop_exempt" ~ "National Organic Program (NOP)", 
+      variable_name ==  "organic_transitioning" ~ "National Organic Program (NOP)", 
+      variable_name == "organic_sales" & year != 2007 ~ 
+        "Includes the gross value of USDA NOP certified or exempt organically produced commodities sold from this operation", 
+      variable_name == "organic_sales" & year ==2007 ~ 
+        "Includes total value of sales for crops produced and sold as organic (k1460). This is not included but will be the next time: total value of sales for livestock and poultry products produced and sold as organic by this operation, including eggs, milk, etc. (k1480)", 
+    variable_name == "organic_sales_tvp" ~ "equal to zero when total sales are zero", 
+    variable_name == "pos_organic_sales" ~ "NA for operations without organic sales, and a positive number for those with organic sales", 
+    variable_name == "pos_organic_sales_tvp" ~ "Organic sales "))
+
+# Join with meta data 
+meta <- bind_rows(meta, m)
+
+```
+
+### Local food sales
+
+We define local food market channels based on reported positive sales in a category.
+
+To define local only, we want operations that sell through local channels only, commodity channels only and both local and commodity.
+
+There are 17 observations that have positive local food sales and a tvp=0.
+
+```{r}
+# Define operations with local food sales and sales by market channel
+coa <- coa %>% 
+  mutate(
+    d2c_sales = case_when(
+      year == 2017 ~ k4160, 
+      year != 2017 ~ k920),
+    d2c_farm = case_when(
+      d2c_sales> 0 ~ 1, 
+      TRUE ~ 0), 
+    intermediated_sales = case_when(
+      year ==2017 ~ k2752, 
+      TRUE ~ NA),
+    intermediated_farm = case_when(
+      intermediated_sales>0 ~ 1, 
+      TRUE ~ 0), 
+    local_sales = case_when(
+      year == 2017 ~ d2c_sales + intermediated_sales, 
+      year != 2017 ~ d2c_sales),
+    local_farm = case_when(
+      local_sales>0 ~ 1, 
+      TRUE ~ 0))
+
+# Local as categorical variables
+# Only local_fct is defined for 2007 since no intermediated questions asked
+coa <- coa %>% mutate(
+  local_fct = case_when(
+    local_farm ==1 ~ "Local", 
+    local_farm ==0 ~ "No local food sales"), 
+  d2c_only = case_when(
+    year!=2007 & local_farm==1 & 
+      d2c_farm==1 & intermediated_farm==0 ~ 1,
+    TRUE ~0), 
+  intermediated_only = case_when(
+    year!=2007 & local_farm==1 & d2c_farm==0 & 
+      intermediated_farm==1 ~ 1, 
+    TRUE ~ 0), 
+  d2c_intermediated = case_when(
+    year!=2007 & local_farm==1 & 
+      d2c_farm==1 & intermediated_farm==1 ~ 1, 
+    TRUE ~ 0), 
+  market_channel_fct = case_when(
+    d2c_only==1 ~ "Direct-to-consumer only", 
+    intermediated_only==1 ~ "Intermediated only", 
+    d2c_intermediated==1 ~ "Direct and intermediated",
+    local_farm==0 ~ "No local food sales"), 
+  market_channel_fct = fct_relevel(market_channel_fct, 
+                                   "Direct-to-consumer only", 
+                                   "Intermediated only",
+                                   "Direct and intermediated", "No local food sales"))
+
+# Positive sales only
+coa <- coa %>% mutate(  
+  pos_d2c = case_when(
+    d2c_sales>0 ~ d2c_sales, 
+    TRUE ~ NA), 
+  pos_intermediated = case_when(
+    intermediated_sales>0 ~ intermediated_sales, 
+    TRUE ~ NA), 
+  pos_local = case_when(
+    local_sales>0 ~ local_sales, 
+    TRUE ~ NA))
+
+# Define local food sales as a percent of TVP, truncate at 100%
+coa <- coa %>% mutate(
+  d2c_tvp = case_when(
+    tvp!=0 ~ pos_d2c/tvp, 
+    TRUE ~ NA), 
+  d2c_tvp = case_when(
+    d2c_tvp>1  ~1, 
+    TRUE ~ d2c_tvp),
+  intermediated_tvp = case_when(
+    tvp!=0 ~ pos_intermediated/tvp, 
+    TRUE ~ NA), 
+  intermediated_tvp = case_when(
+    intermediated_tvp>1 ~ 1, 
+    TRUE ~ intermediated_tvp), 
+  local_tvp = case_when(
+    tvp!=0 ~ pos_local/tvp, 
+    TRUE ~ NA), 
+  local_tvp = case_when(
+    local_tvp>1 ~ 1,
+    TRUE ~ local_tvp))
+
+# Define operations with local sales only, commodity sales, both 
+coa <- coa %>% 
+  mutate(
+    local_only = case_when(
+      local_sales >= tvp ~ 1,
+      TRUE ~ 0), 
+    commodity_only = case_when(
+      local_sales == 0 ~ 1,
+      TRUE ~ 0), 
+    local_and_commodity = case_when(
+      local_sales>0 & local_sales<tvp & 
+        tvp>0 ~ 1, 
+      TRUE ~ 0), 
+    local_only_fct = case_when(
+      local_only == 1 ~ "Local sales only", 
+      commodity_only == 1 ~ "Commodity sales only", 
+      local_and_commodity==1 ~ "Local and commodity sales"))
+
+# Create metadata
+varlist <- coa %>%
+  select(year, d2c_sales, d2c_farm, 
+         intermediated_sales, intermediated_farm, 
+         local_sales, local_farm, 
+         local_fct:market_channel_fct, pos_d2c:pos_local,
+         d2c_tvp:local_tvp, local_only, 
+         commodity_only, local_and_commodity, 
+         local_only_fct) %>%
+  names()
+
+cols_remove <- "year"
+
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "d2c_farm" ~ "Operations with direct-to-consumer sales", 
+      variable_name == "d2c_sales" ~ "Direct-to-consumer sales", 
+      variable_name == "intermediated_farm" ~ "Operations with intermediated sales", 
+      variable_name == "intermediated_sales" ~ "Intermediated sales", 
+      variable_name == "local_farm" ~ "Operations with local food sales", 
+      variable_name == "local_sales" ~ "Local food sales", 
+      variable_name == "local_fct" ~ "Local food sales factor variable with two levels: Local, Commodity only", 
+      variable_name == "d2c_only" ~ "Local food operations with direct-to-consumer sales only", 
+      variable_name == "intermediated_only" ~ "Local food operations with intermediated sales only", 
+      variable_name == "d2c_intermediated" ~ "Local food operations with both direct-to-consumer and intermediated sales", 
+      variable_name == "market_channel_fct" ~ "Market channel factor variable with four levels: Direct-to-consumer only, Intermediated only, Direct and intermediated, No local food sales", 
+      variable_name == "pos_d2c" ~ "Operations with positive direct-to-consumer sales", 
+      variable_name == "pos_intermediated" ~ "Operations with positive intermediated sales", 
+      variable_name == "pos_local" ~ "Operations with positive local food sales", 
+      variable_name == "d2c_tvp" ~ "Direct-to-consumer sales as a percent of total sales", 
+      variable_name == "intermediated_tvp" ~ "Intermediated sales as a percent of total sales", 
+      variable_name == "local_tvp" ~ "Local sales as a percent of total sales", 
+      variable_name == "local_only" ~ "Operations with all sales coming from local food marketing channels, they have no sales through commodity market channels", 
+      variable_name == "commodity_only" ~ "Operations with commodity sales only", 
+      variable_name == "local_and_commodity" ~ "Operations with local and commodity sales", 
+      variable_name == "local_only_fct" ~ "Local only factor variable with 3 levels: Local sales only, Commodity sales only, Local and commodity sales"))
+  
+# Add variable definition
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "d2c_farm" ~ "Dummy variable where 1 indicates an operation has direct-to-consumer sales and 0 it does not (they could also have intermediated sales, not an exclusive category)", 
+      variable_name == "d2c_sales" ~ "2017: k4160, 2007/2012: k920", 
+      variable_name == "intermediated_farm" ~ "Dummy variable where 1 indicates an operation has intermediated sales and 0 it does not (they could also have direct-to-consumer sales, not an exclusive category)", 
+      variable_name == "intermediated_sales" ~ "k2752", 
+      variable_name == "local_farm" ~ "Dummy variable where 1 indicates an operation has local sales and 0 it does not (they could also have nonlocal sales, not an exclusive category)", 
+      variable_name == "local_sales" ~ "d2c_sales + intermediated_sales", 
+      variable_name == "d2c_only" ~ "Variable is exclusive within operations with local food sales, operations do not have sales through intermediated channels", 
+      variable_name == "intermediated_only" ~ "Variable is exclusive within operations with local food sales, operations do not have sales through direct-to-consumer channels", 
+      variable_name == "d2c_intermediated" ~ "Variable is exclusive within operations with local food sales, operations have sales through both direct and intermediated market channels", 
+      variable_name == "pos_d2c" ~ "Useful when calculating statistics to understand information about only those that participate", 
+      variable_name == "pos_intermediated" ~ "Useful when calculating statistics to understand information about only those that participate", 
+      variable_name == "pos_local" ~ "Useful when calculating statistics to understand information about only those that participate", 
+      variable_name == "intermediated_tvp" ~ "Truncated at 1 if intermediated sales are greater than 1 (less than 1% of obs.), 0 if tvp==0", 
+      variable_name == "local_tvp" ~ "Truncated at 1 if local sales are greater than 1 (less than 1% of obs.), 0 if tvp==0", 
+      variable_name == "local_only" ~ "This is an exclusive category and can be useful when wanting to attribute metrics at the whole farm level to local producers"))
+
+# Add to metadata
+meta <- bind_rows(meta, m) %>% 
+  ungroup()
+rm(m)
+```
+
+### Value-added and Agritourism
+
+```{r}
+
+# Define variables
+coa <- coa %>% mutate(
+  agritourism_farm = case_when(
+    k1401>0 ~ 1, 
+    TRUE ~ 0),
+  agritourism_sales = k1401,
+  value_added_farm = case_when(
+    k1726==1 ~ 1, 
+    TRUE ~ 0),
+  value_added_sales = case_when(
+    year!=2017 ~ 0,
+    year==2017 ~ k2727), 
+  value_added_fct = case_when(
+    value_added_farm == 1 ~ "Value-added sales", 
+    value_added_farm == 0 ~ "No value-added sales"), 
+  differentiated_farm = case_when(
+    agritourism_farm==1 | 
+      organic_farm==1 | value_added_farm==1 | 
+      local_farm==1 ~ 1,
+    TRUE ~ 0), 
+  differentiated_sales = case_when(
+    year == 2017 ~ agritourism_sales + value_added_sales + 
+    organic_sales + local_sales, 
+    year != 2017 ~ agritourism_sales + organic_sales + local_sales)) 
+
+# Positive sales only
+coa <- coa %>% mutate(  
+  pos_agritourism = case_when(
+    k1401>0 ~ k1401, 
+    TRUE ~ NA), 
+  pos_va = case_when(
+    value_added_sales>0 ~ value_added_sales, 
+    TRUE ~ NA))
+
+# Define sales as a percent of TVP, not that agritourism is income and separate from TVP. 
+coa <- coa %>% mutate(
+  agritourism_tvp = case_when(
+    tvp!=0 ~ pos_agritourism/tvp, 
+    TRUE ~ NA), 
+  va_tvp = case_when(
+    tvp!=0 ~ pos_va/tvp, 
+    TRUE ~ NA))
+
+# Create metadata
+varlist <- coa %>%
+  select(year, starts_with("agritourism"),
+         starts_with("value_added"),
+          agritourism_tvp, va_tvp,  
+         starts_with("differentiated")) %>%
+  names()
+
+cols_remove <- "year"
+
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "agritourism_farm" ~ "Operations with agritourism income", 
+      variable_name == "agritourism_sales" ~ "Income from agritourism activities", 
+      variable_name == "value_added_farm" ~ "Operations with value-added sales", 
+      variable_name == "value_added_sales" ~ "Sales from value-added or processed products", 
+      variable_name == "value_added_fct" ~ "A value-added factor variable with two levels: Value-added sales and no value-added sales", 
+      variable_name == "differentiated_farm" ~ "An operation with local, organic, or value-added sales or agritourism income", 
+      variable_name == "differentiated_sales" ~ "Total sales from local, organic, or value-added and income from agritourism",
+      variable_name == "pos_agritourism" ~ "An operation with positive income from agritourism", 
+      variable_name == "pos_va" ~ "An operation with positive value-added sales", 
+      variable_name == "agritourism_tvp" ~ "Agritourism income as a percent of total sales", 
+      variable_name == "va_tvp" ~ "Value-added sales as a percent of total sales"))
+  
+# Add variable definition
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "agritourism_farm" ~ "Agritourism includes agri-tourism and recreational services such as farm tours, hay rides, hunting, fishing, etc.", 
+      variable_name == "agritourism_sales" ~ "Agritourism includes agri-tourism and recreational services such as farm tours, hay rides, hunting, fishing, etc.", 
+      variable_name == "value_added_farm" ~ "Processed or value-added products include jam, wine, cheese, meat, floral arrangements, cider, etc. (includes sales through both local and commodity market channels)", 
+      variable_name == "value_added_sales" ~ "Processed or value-added products include jam, wine, cheese, meat, floral arrangements, cider, etc. (includes sales through both local and commodity market channels)", 
+      str_detect(variable_name, "differentiated") ~ "In 2007 and 2012 only includes sales from direct-to-consumer and does not include value-added sales",
+      variable_name == "pos_agritourism" ~ "Useful when calculating statistics to understand information about only those that participate", 
+      variable_name == "pos_va" ~ "Useful when calculating statistics to understand information about only those that participate", 
+      variable_name == "agritourism_tvp" ~ "Agritourism is income that is calculated separtely from total sales, so this percentage can be over 100"))
+
+# Add to metadata
+meta <- bind_rows(meta, m) %>% 
+  ungroup()
+rm(m)
+```
+
+## Financial variables
+
+```{r}
+coa <- coa %>% 
+  mutate(
+    gcfi = case_when(
+      year == 2017 ~ gcfi, 
+      TRUE ~ k1347 + k1314 + k684 + ofri - k1349), 
+    gov_payments = k684,
+    gov_payments_cat = ifelse(gov_payments>0, 1, 0),
+    assets = k996 + k997 + k943 - k998, 
+    interest_percent_assets = (k1515 + k1516)/assets,
+    interest_percent_acres = (k1515 + k1516)/k46,
+    roa = (gcfi - exp + k1513 + k1515)/(k996 + k997 + k943 - k998),
+    roa_crit_zone = ifelse(roa<0.01, 1, 0),
+    opm = (gcfi - exp + k1513 + k1515)/gcfi,
+    opm = ifelse(is.infinite(opm)==TRUE, NA, opm),
+    opm_crit_zone = ifelse(opm<0.1, 1, 0), 
+    gov_payment_intensity = case_when(
+      gcfi==0 ~ 0, 
+      TRUE ~ k684/gcfi),
+    cropins_percent_acres = k1067/k46, 
+    rented_in_operated = rlif/k46, 
+    owned_operated = k43/k46, 
+    owner = ifelse(owned_operated >=0.5, 1, 0), 
+    tenure_fct = case_when(
+      k43 >= k46 ~ "Full owner", 
+      k43 >0 & k43 < k46 ~ "Part owner", 
+      k43 == 0 ~ "Full tenant"), 
+    fullowner = ifelse(tenure_fct=="Full owner", 1, 0), 
+    partowner = ifelse(tenure_fct=="Part owner", 1, 0), 
+    fulltenant = ifelse(tenure_fct=="Full tenant", 1, 0),
+    op_expense_ratio = ifelse(gcfi==0, NA, (exp - k1513 - k1515)/gcfi),
+    op_expense_ratio_crit_zone = ifelse(op_expense_ratio>0.8, 1, 0),
+    pos_profit = ifelse(gcfi - exp > 0, 1, 0), 
+    opm_zone = case_when(
+      opm < 0.10 ~ "High risk",
+      opm >= 0.10 & opm <= 0.25 ~ "Medium risk",
+      opm >0.25 ~ "Low risk"),
+    opm_zone = factor(opm_zone, levels = c("High risk", "Medium risk", "Low risk")), 
+    infi = gcfi - exp)
+
+# Add meta data
+varlist <- coa %>% 
+  select(year, tvp, exp, gcfi, gov_payments:infi) %>% 
+  names()
+
+cols_remove <- "year"
+
+m <- meta_select_vars(coa) %>%  
+  mutate(
+    variable_description = case_when(
+      variable_name == "gcfi" ~ "Gross cash farm income (GCFI): total sales + contract income + government payments + income from ag related sources - landlord's share of  total sales",
+      variable_name == "exp" ~ "Total expense: contractor total production expenses + operator and landlord total production expeneses",
+      variable_name == "tvp" ~ "Total sales (both under production contract and not under production contract)",
+      variable_name == "assets" ~ "Total assets: all land and buildings owned, rented or leased from others, machinery, equipment, and implements, minus land and buildings leased from others", 
+      variable_name == "cropins_percent_acres" ~ "Acres covered under crop insurance as a percent of all acres operated",
+      variable_name == "fullowner" ~ "Operation owns all of the land they operate",
+      variable_name == "fulltenant" ~ "Operation rents all of the land they operate",
+      variable_name == "gov_payments_cat" ~ "Operations that recieve government payments",
+      variable_name == "gov_payment_intensity" ~ "Government payments as a share of total value of production, shows the importance of government payments to the farm business",
+      variable_name == "gov_payments" ~ "Total government payments received, including CRP, WRP, FWP, CREP, and other Federal agricultural program payments)",
+      variable_name == "gov_percent_gcfi" ~ "Total government payments as a percent of gross cash farm income ($1,000)",
+      variable_name == "infi" ~ "Net farm income (GCFI minus total expenses)",
+      variable_name == "interest_percent_acres" ~ "Total interest expense as a share of total acres",
+      variable_name == "interest_percent_assets" ~ "Total interest expense as a share of total assets",
+      variable_name == "op_expense_ratio" ~ "Operating expense ratio, measures the amount of cash the farm sector spends to generate a dollar of production",
+      variable_name == "op_expense_ratio_crit_zone" ~ "A value of one means the operating expense ratio is greater than 0.8, zero otherwise",
+      variable_name == "opm" ~ "Operating profit margin: measures funds available to finance the farm's ongoing operation",
+      variable_name == "opm_crit_zone" ~ "A value of one means the operating profit margin is less than 0.1, zero otherwise",
+      variable_name == "opm_zone" ~ "Operating profit margin zones: High risk (OPM < 0.10), Medium risk (OPM >= 0.10 & OPM <= 0.25), Low risk (OPM >0.2)",
+      variable_name == "owned_operated" ~ "Ratio of owned acres to operated acres",
+      variable_name == "owner" ~  "A value of one means operations owns at least 50% of the land they operate, a value of zero means they do not",
+      variable_name == "partowner" ~ "A value of one means operation owns part of the land they operate, zero means they either own or rent all of their land",
+      variable_name == "pos_profit" ~ "A value of 1 means the operation has positive profit, zero means they do not",
+      variable_name == "rented_in_operated" ~ "Share of operated land that is rented in",
+      variable_name == "roa" ~ "Return on assets (ROA): measures the returns to farm sector assets from current farm operations",
+      variable_name == "roa_crit_zone" ~ "A value of one means the operation has a return on assets less than 0.01, zero otherwise",
+      variable_name == "tenure_fct" ~ "Three levels: Full owner, Part owner and Full tenant"),  
+    variable_definition = case_when(
+      variable_name == "gcfi" ~ "k1347 + k1314 + k684 + OFRI - k1349",
+      variable_name == "exp" ~ "k1539 + k1540",
+      variable_name == "tvp" ~ "k1347 (sales not under production contract) + k1367 (total sales under production contract)",
+      variable_name == "assets" ~ "k996 + k997 + k943 - k998", 
+      variable_name == "cropins_percent_acres" ~ "k1067/k46",
+      variable_name == "fullowner" ~ " k43 >= k46",
+      variable_name == "fulltenant" ~ "k43 == 0",
+      variable_name == "gov_payments_cat" ~ "when gov_payments>0 then 1, otherwise 0",
+      variable_name == "gov_payment_intensity" ~ "When gcfi==0, then 0, otherwise
+      k684/gcfi",
+      variable_name == "gov_payments" & year ==2007 ~
+        "k1420 + k1421 + k1422", 
+      variable_name == "gov_payments" & year ==2012 ~
+        "k685 + k1424 (Direct Payments and Counter Cyclical Payments) + k1425 (Loan Deficiency Payments, Marketing Loan Gains and Net Value of Commodity Certific) + k1422",
+      variable_name == "gov_payments" & year ==2017 ~
+        "K685 + K1422",
+      variable_name == "infi" ~ "gcfi - exp",
+      variable_name == "interest_percent_acres" ~ "(k1515 + k1516)/k46",
+      variable_name == "interest_percent_assets" ~ "(k1515 + k1516)/assets",
+      variable_name == "op_expense_ratio" ~ "If gcfi equals zero then  NA, otherwise equals (exp - k1513 - k1515)/gcfi",
+      variable_name == "op_expense_ratio_crit_zone" ~ 
+        "If the operating expense ratio >0.8 then 1, otherwise 0",
+      variable_name == "opm" ~ "gcfi - exp + k1513 + k1515)/gcfi. Note: we cannot deduct the estimated market value of the unpaid labor and management services provided by the farm household as they do using ARMS.",
+      variable_name == "opm_crit_zone" ~ "If OPM<0.1 then 1, otherwise 0",
+      variable_name == "opm_zone" ~ "If OPM< 0.10 then High risk, if OPM >= 0.10 & opm <= 0.25 then Medium risk, if OPM >0.25 then Low risk",
+      variable_name == "owned_operated" ~ "k43/k46",
+      variable_name == "owner" ~ "if owned_operated >=0.5, then 1, otherwise 0", 
+      variable_name == "partowner" ~ "k43 >0 & k43 < k46",
+      variable_name == "pos_profit" ~ "If (gcfi - exp) > 0, then 1, otherwise 0",
+      variable_name == "rented_in_operated" ~ "rlif/k46",
+      variable_name == "roa" ~ "gcfi - exp + k1513 + k1515)/(k996 + k997 + k943 - k998)",
+      variable_name == "roa_crit_zone" ~ "If roa<0.01, then 1, otherwise 0,",
+      variable_name == "tenure_fct" ~ " When k43 >= k46 then Full owner, when k43 >0 & k43 < k46 then Part owner and when k43 == 0 then Full tenant"))
+
+# Add sources for a couple variables 
+m <- m %>% 
+  mutate(
+    source = case_when(
+      variable_name %in% c("opm_zone", "opm_crit_zone") ~ "Hoppe and MacDonald. 2016. America's Diverse Family Farms. U.S. Department of Agriculture, Economic Research Service, Economic Information Bulletin No. 164."))
+
+meta <- bind_rows(meta, m)
+rm(m)
+
+```
+
+## Farm characteristics
+
+Commodities are based on the NASS created variable FARMTYPE. We collapse some of the categories to have larger categorizations.
+
+```{r}
+
+# Acres 
+coa <- coa %>% 
+  mutate(
+    owned_acres = k43, 
+    rented_in_acres = k46 - k43 + k53,
+    rented_out_acres = k53, 
+    operated_acres = k46, 
+    owned_farm = case_when(
+      owned_acres >0 ~1, 
+      TRUE ~0), 
+    rented_in_farm = case_when(
+      rented_in_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    rented_out_farm = case_when(
+      rented_out_acres>0 ~ 1, 
+      TRUE ~ 0))
+
+# Scale
+## by GCFI
+coa <- coa %>% 
+  mutate(
+    sales_class = case_when(
+      gcfi <75000 ~ "$0 to $74,999",
+      gcfi >=75000 & gcfi <350000 ~ "$75,000 to $349,999", 
+      gcfi >=350000 & gcfi <1000000 ~ "$350,000 to $999,999", 
+      gcfi >=1000000 ~ "$1,000,000 or more"), 
+    sales_class = factor(sales_class, levels = (c("$0 to $74,999", "$75,000 to $349,999", "$350,000 to $999,999", "$1,000,000 or more"))), 
+    gcfi_0_75 = ifelse(sales_class=="$0 to $74,999", 
+                        1, 0), 
+    gcfi_75_350 = ifelse(sales_class=="$75,000 to $349,999", 
+                          1, 0), 
+    gcfi_350_1M = ifelse(sales_class=="$350,000 to $999,999", 
+                          1, 0), 
+    gcfi_over_1M = ifelse(sales_class=="$1,000,000 or more", 
+                           1, 0))
+
+# create farm size by acres operated categories
+coa <- coa %>% 
+  mutate(
+    acres_class = case_when(
+      k46>0 & k46<10 ~ "1 to 9", 
+      k46>=10 & k46<50 ~ "10 to 49", 
+      k46>=50 & k46<180 ~ "50 to 179", 
+      k46>=180 & k46<500 ~ "180 to 499", 
+      k46>=500 & k46<1000 ~ "500 to 999", 
+      k46>=1000 & k46<2000 ~ "1,000 to 1,999", 
+      k46>=2000 ~ "2,000 or more"), 
+    acres_class = factor(acres_class, levels = c("1 to 9", "10 to 50","50 to 179","180 to 499","500 to 999","1,000 to 1,999","2,000 or more")))
+
+# Primary commodity
+coa <- coa %>% mutate(
+  fieldcrop = ifelse(farmtype==1 | farmtype==2 | farmtype==3, 1, 0), 
+  fruitveg = ifelse(farmtype==4 | farmtype==5, 1, 0), 
+  othercrops = ifelse(farmtype==6 | farmtype==7 | farmtype==8, 1, 0), 
+  livestock = ifelse(farmtype==9 | farmtype==11 | farmtype==12, 1, 0), 
+  dairy = ifelse(farmtype==10, 1, 0), 
+  poultry = ifelse(farmtype==14, 1, 0),
+  otheranimal = ifelse(farmtype==13 | farmtype==15 | farmtype==16, 1, 0), 
+  all_crop = ifelse(fieldcrop==1 | fruitveg==1 | othercrops==1, 1, 0), 
+  all_animal = ifelse(livestock==1 | dairy==1 | poultry==1 |otheranimal==1, 1, 0), 
+  primary_commodity = case_when(
+    fieldcrop ==1 ~ "Field crop", 
+    fruitveg==1 ~ "Fruit/Veg", 
+    othercrops ==1 ~ "Other crops", 
+    livestock ==1 ~ "Livestock", 
+    dairy ==1 ~ "Dairy", 
+    poultry ==1 ~ "Poultry",
+    otheranimal==1 ~ "Other animal"), 
+  primary_commodity = fct_relevel(primary_commodity, "Field crop","Fruit/Veg","Other crops","Livestock","Dairy", "Poultry","Other animal"))
+
+
+# Define crop insurance variable by primary commodity and a categorical gov. payments variable
+coa <- coa  %>% mutate(
+  crop_insurance = ifelse(k1067>0, 1, 0), 
+  crop_ins_fieldcrop = ifelse(fieldcrop ==1, crop_insurance, NA), 
+  crop_ins_fruitveg = ifelse(fruitveg==1, crop_insurance, NA), 
+  crop_ins_othercrops = ifelse(othercrops ==1, crop_insurance, NA),
+  crop_ins_livestock  = ifelse(livestock ==1, crop_insurance, NA), 
+  crop_ins_dairy = ifelse(dairy ==1, crop_insurance, NA), 
+  crop_ins_poultry = ifelse(poultry ==1, crop_insurance, NA), 
+  crop_ins_otheranimal = ifelse(otheranimal==1, crop_insurance, NA),
+  crop_ins_primary_commodity = case_when(
+    crop_ins_fieldcrop==1 ~ "Field crop", 
+    crop_ins_fruitveg==1 ~ "Fruit/veg", 
+    crop_ins_othercrops==1 ~ "Other crops",
+    crop_ins_livestock==1 ~ "Livestock", 
+    crop_ins_dairy ==1 ~ "Dairy", 
+    crop_ins_poultry ==1 ~ "Poultry", 
+    crop_ins_otheranimal == 1 ~ "Other animal", 
+    TRUE ~ "No Federal crop insurance"))
+
+# Add metadata
+varlist <- coa %>%
+  select(year, 
+         owned_acres:rented_out_farm,
+         sales_class:acres_class,
+         fieldcrop: primary_commodity,
+         crop_insurance:crop_ins_primary_commodity) %>%
+  names()
+
+cols_remove <- "year"
+
+m <- meta_select_vars(coa) 
+
+m <-  m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "owned_acres" ~ "Total acres owned", 
+      variable_name == "rented_in_acres" ~ "Total acres rented or leased FROM others", 
+      variable_name == "rented_out_acres" ~ "Total acres reted or leased TO others", 
+      variable_name == "operated_acres" ~ "Total acres operated",
+      variable_name == "owned_farm" ~ "Operations that own a portion or all of the acres they operate", 
+      variable_name == "rented_in_farm" ~ "Operations that rent in all or a portion of the acres they operate", 
+      variable_name == "rented_out_farm" ~ "Operations that rent out all or a portion of the acres they own",
+      variable_name == "sales_class" ~ "Scale factor variable with 4 categories based on GCFI: $0 to $74,999, $75,000 to $349,999, $350,000 to $999,999, $1,000,000 or more)", 
+      variable_name == "gcfi_0_75" ~ "Operation with gross cash farm income from $0 to $74,999",  
+      variable_name == "gcfi_75_350" ~ "Operation with gross cash farm income $75,000 to $349,999", 
+      variable_name == "gcfi_350_1M" ~ "Operation with gross cash farm income $350,000 to $999,999",  
+      variable_name == "gcfi_over_1M" ~ "Operation with gross cash farm income over $1 million",
+      variable_name == "acres_class" ~ "Scale factor variable with 8 categories based on acres operated: 1 to 9, 10 to 50, 50 to 179, 180 to 499, 500 to 999, 1,000 to 1,999, 2,000 or more",
+      variable_name == "farmtype" ~ "Farm type code: 1-Grains, Oilseeds, Dry Beans, Dry Peas, 2-Tobacco, 3-Cotton, 4-Vegetables, Melons, Potatoes, and Sweet Potatoes, 5-Fruit, Tree Nuts, and Berries, 6-Nursery, Greenhouse, Floriculture, and Sod, 7-Cut Christmas Trees and Short Rotation Woody Crops, 8-Other Crops and Hay, 9-Hogs and Pigs, 10-Milk and other dairy products from cows, 11 - Cattle and Calves", 
+    variable_name == "fieldcrop" ~ "Primary commodity: Grains, Oilseeds, Dry Beans, Dry Peas, Tobacco, Cotton", 
+    variable_name == "fruitveg" ~ "Primary commodity: Vegetables, Melons, Potatoes, and Sweet Potatoes, Fruit, Tree Nuts, and Berries", 
+    variable_name == "othercrops" ~ "Primary commodity: Nursery, Greenhouse, Floriculture, and Sod, Cut Christmas Trees and Short Rotation Woody Crops, Other Crops and Hay", 
+    variable_name == "livestock" ~ "Primary commodity: Hogs and Pigs, Cattle and Calves, Sheep, Goats, and their Products", 
+    variable_name == "dairy" ~ "Primary commodity: Milk and other dairy products from cows", 
+    variable_name == "poultry" ~ "Primary commodity: Poultry and Eggs",
+    variable_name == "otheranimal" ~ "Primary commodity: Horse, Ponies, Mules, Burros and Donkeys, Aquaculture, Other Animals and Other Animal Products",
+    variable_name == "all_crop" ~ "Primary commodity: crops", 
+    variable_name == "all_animal" ~ "Primary commodity: livestock and dairy", 
+    variable_name == "primary_commodity" ~ "Primary commodity with 7 factors: Field crop, Fruit/Veg, Other crops, Livestock, Dairy, Poultry, Other animal",
+    variable_name == "crop_insurance" ~ "Operation has crop acres insured under Federal crop insurance",
+    variable_name == "crop_ins_fieldcrop" ~ "Field crop operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_fruitveg" ~ "Fruit/vegetable operation with acres insured under Federal crop insurance", 
+    variable_name == "crop_ins_othercrops" ~ "Other crop operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_livestock" ~ "Livestock operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_dairy" ~ "Dairy operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_poultry" ~ "Poultry operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_otheranimal" ~ "Other animal operation with acres insured under Federal crop insurance",
+    variable_name == "crop_ins_primary_commodity" ~ "Crop insurance by primary commodity factor variable where each factor indicates an operation has a specific primary commodity and Federal crop insurance: Field crop, Fruit/veg, Other crops, Livestock, Dairy, Poultry, Other animal"))
+
+# Definition        
+m <- m %>% mutate(      
+    variable_definition = case_when(
+      variable_name == "acres_owned" ~ "k43", 
+      variable_name == "acres_rented_in" ~ "k46 - k43 + k53", 
+      variable_name == "acres_rented_out" ~ "k53", 
+      variable_name == "acres_operated" ~ "k46", 
+      variable_name == "sales_class" ~ "gcfi <75000 is $0 to $74,999, gcfi >=75000 & gcfi <350000 is $75,000 to $349,999,  gcfi >=350000 & gcfi <1000000 is $350,000 to $999,999, gcfi >=1000000 is $1,000,000 or more", 
+      variable_name == "gcfi_0_75" ~ "If sales_class== $0 to $74,999 then 1, otherwise 0",  
+      variable_name == "gcfi_75_350" ~ "If sales_class==$75,000 to $349,999 then 1, otherwise 0", 
+      variable_name == "gcfi_350_1M" ~ "If sales_class==$350,000 to $999,999 then 1, otherwise 0",  
+      variable_name == "gcfi_over_1M" ~ "If sales_class==$1,000,000 or more then 1, otherwise 0", 
+      variable_name == "acres_class" ~  "If k46>0 & k46<10 then 1 to 9, k46>=10 & k46<50 then 10 to 49, k46>=50 & k46<180 then 50 to 179, k46>=1 & k46<500 then 180 to 499, k46>=500 & k46<1000 then 500 to 999, k46>=1000 & k46<2000 then 1,000 to 1,999, k46>=2000 then 2,000 or more", 
+    variable_name == "farmtype" ~ "Defined by NASS, a primary commodity accounts for 50 percent or more of an operation’s total value of production. For diversified operations, where no one commodity makes up 50 percent or more of the total values of production, NASS uses an algorithm to assign the operation a primary commodity.  In most cases, diversified crop operations are classified as other crop and diversified livestock operations are classified as other animal", 
+    variable_name == "fieldcrop"  ~ " If farmtype==1, 2, or 3, then 1, otherwise 0",
+    variable_name == "fruitveg" ~ "If farmtype==4 or 5, then 1, otherwise 0", 
+    variable_name == "othercrops" ~ "If farmtype==6, 7, or 8, then 1, otherwise 0", 
+    variable_name == "livestock" ~ "If farmtype==9, 11, or 12, then 1, otherwise 0", 
+    variable_name == "dairy" ~ "If farmtype==10, then 1, otherwise 0", 
+    variable_name == "poultry" ~ "If farmtype==14, then 1, otherwise 0",
+    variable_name == "otheranimal" ~ "If farmtype==13, 15, or 16, then 1, otherwise 0", 
+    variable_name == "all_crop" ~ " If fieldcrop==1, fruitveg==1, or othercrops==1, then 1, otherwise 0", 
+    variable_name == "all_animal" ~ "If livestock==1, dairy==1, poultry==1, or otheranimal==1, then 1, otherwise 0", 
+    variable_name == "primary_commodity" ~ "A primary commodity accounts for 50 percent or more of an operation’s total value of production. For diversified operations, where no one commodity makes up 50 percent or more of the total values of production, NASS uses an algorithm to assign the operation a primary commodity. In most cases, diversified crop operations are classified as other crop and diversified livestock operations are classified as other animal",       
+    variable_name == "crop_insurance" ~ "If k1067>0, then 1, otherwise 0",
+    variable_name == "crop_ins_fieldcrop" ~ "If fieldcrop ==1, then crop_insurance, otherwise NA", 
+    variable_name == "crop_ins_fruitveg" ~ "If fruitveg==1, then crop_insurance, otherwise NA", 
+    variable_name == "crop_ins_othercrops" ~ "If othercrops ==1, then crop_insurance, otherwise NA",
+    variable_name == "crop_ins_livestock" ~ "If livestock ==1, then crop_insurance, otherwise NA", 
+    variable_name == "crop_ins_dairy" ~ "If dairy ==1, then crop_insurance, otherwise NA", 
+    variable_name == "crop_ins_poultry" ~ "If poultry ==1, then crop_insurance, otherwise NA", 
+    variable_name == "crop_ins_otheranimal" ~ "If otheranimal==1, then crop_insurance, otherwise NA",
+    variable_name == "crop_ins_primary_commodity" ~ "Factor variable: crop_ins_fieldcrop==1 then Field crop, crop_ins_fruitveg==1 then Fruit/veg crop_ins_othercrops==1 then Other crops, crop_ins_livestock==1 then Livestock, crop_ins_dairy ==1 then Dairy, crop_ins_poultry ==1 then Poultry, crop_ins_otheranimal == 1 then Other animal, otherwise then no crop insurance"))
+
+# Add to meta 
+meta <- bind_rows(meta, m)
+
+```
+
+### Commodity specific variables
+
+Here we define commodity specific variables, that indicate sales of a commodity. This is different from primary commodity, where at least 50% of sales would come from that commodity, with the exception of diversified operations which are generally classified at other crop or other animal. Here, variables end with "\_farm" or "\_sale".
+
+```{r}
+
+# Define variables dairy and cattle variables
+coa <- coa %>% 
+  mutate(
+    dairy_farm = case_when(
+      k805>0 ~ 1, 
+      TRUE ~ 0),
+    dairy_only = case_when(
+      k805>0 & k804==0 ~ 1, 
+      TRUE ~ 0),
+    dairy_herd = k805,
+    dairy_sales = k1380,
+    dairy_sales_tvp = case_when(
+      tvp>0 ~ dairy_sales/tvp, 
+      tvp==0 ~ 0),
+    cattle_farm = case_when(
+      k804>0 ~ 1, 
+      TRUE ~ 0), 
+    cattle_herd = k804,
+    cattle_sales = k1379,
+    cattle_sales_tvp = case_when(
+      tvp>0 ~ cattle_sales/tvp, 
+      tvp==0 ~ 0), 
+    cowcalf = case_when(
+       k804>0 & k805==0 ~ 1, 
+       TRUE ~ 0), 
+    cowcalf_stocker = case_when(
+      k804>0 & k805==0 & k1206>0 ~ 1, 
+      TRUE ~ 0),
+    stocker_backgrounder = case_when(
+      k804==0 & k805==0 & 
+        k1206>0 & k1207==0 & k812==0 ~ 1, 
+      TRUE ~ 0), 
+    cowcalf_stocker_backgrounder_feedlot = case_when(
+      k804>0 & k805==0 & 
+        k1206>0 & k1207>0 ~ 1, 
+      TRUE ~ 0), 
+    stocker_backgrounder_feedlot = case_when(
+      k804==0 & k805==0 & 
+        k1206>0 & k1207>0 ~ 1, 
+      TRUE ~ 0), 
+    feedlot_only = case_when(
+      k804=0 & k805==0 & k1207>0 ~ 1, 
+      TRUE ~ 0))
+
+# Metadata 
+varlist <- coa %>% 
+  select(year, dairy_farm:feedlot_only) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add description
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "dairy_farm" ~ "An operation with dairy cows", 
+      variable_name == "dairy_only" ~ "An operation with dairy cows only, no other cattle",
+      variable_name == "dairy_herd" ~ "Number of milk cows kept for production of milk", 
+      variable_name == "dairy_sales" ~ "Sales of milk from cows", 
+      variable_name == "dairy_sales_tvp" ~ "Sales of milk from cows as a percent of total sales", 
+      variable_name == "cattle_farm" ~  "An operation with beef cows", 
+      variable_name == "cattle_herd" ~ "Number of beef cows on an operation",
+      variable_name == "cattle_sales" ~ "Gross value of sales from cattle and calves", 
+      variable_name == "cattle_sales_tvp"  ~ "Gross value of sales from cattle and calves as a percent of total sales", 
+      variable_name == "cowcalf" ~ "A cow-calf operation", 
+      variable_name == "cowcalf_stocker" ~ "A cow-calf, stocker operation", 
+      variable_name == "stocker_backgrounder" ~ "A stocker or stocker/backgrounder operation",
+      variable_name == "cowcalf_stocker_backgrounder_feedlot" ~ "A cow-calf, stocker, backgrounder, feedlot operation", 
+      variable_name == "stocker_backgrounder_feedlot" ~ "A stocker/backgrounder and feedlot operation", 
+      variable_name == "feedlot_only" ~ "A feedlot only operation"))
+
+# Add definition
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "dairy_farm" ~ "k805>0", 
+      variable_name == "dairy_only" ~ "k805>0 & k804==0",
+      variable_name == "dairy_herd" ~ "k805", 
+      variable_name == "dairy_sales" ~ "k1380", 
+      variable_name == "cattle_farm" ~ "k804>0", 
+      variable_name == "cattle_herd" ~ "k804",
+      variable_name == "cattle_sales" ~ "Includes both sales under production contract and not under production contract", 
+      variable_name == "cowcalf"  ~ "k804>0 & k805==0", 
+      variable_name == "cowcalf_stocker" ~ "k804>0 & k805==0 & k1206>0", 
+      variable_name == "stocker_backgrounder" ~ "k804==0 & k805==0 & k1206>0 & k1207==0 & k812==0",  
+      variable_name == "cowcalf_stocker_backgrounder_feedlot" ~ "k804>0 & k805==0 & k1206>0 & k1207>0", 
+      variable_name == "stocker_backgrounder_feedlot" ~ "k804==0 & k805==0 & k1206>0 & k1207>0", 
+      variable_name == "feedlot_only" ~ "k804==0 & k805==0 & k1207>0"))
+
+# Add to meta 
+meta <- bind_rows(meta, m)
+```
+
+## Demographics
+
+### Beginning farmers
+
+In 2007, the only question asked about beginning farmers was what year did the operator begin to operate this farm. We use this to define all beginning and any beginning. If we are comparing a change in a variable over time, we use the weights from 2007. If we are estimating summary stats for each year separately, then we use the weights from each sample respectively.
+
+Later, we will also define beginning farmer for 2012 and 2017 using the question "what year did the operator begin to operate any farm" and look at the differences between the two responses to get an idea for how much we might be overestimating beginning farmers using the 2007 definition. Note that in order to correctly count the years, I take the year of the census plus one, minus the year they began operation THIS/ANY farm.
+
+```{r}
+
+# Number of operators (based on answering operator sex of operator question)
+coa <- coa %>% 
+  mutate(
+    number_operators = case_when(
+      k1586!=0 & k1597!=0 & k1614!=0 ~ 4, 
+      k1586!=0 & k1597!=0 & k1614==0 ~ 3, 
+      k1586!=0 & k1597==0 & k1614==0 ~ 2, 
+      TRUE ~1))
+
+# create beginning based on ANY operation for 2012 and 2017
+coa <- coa %>% 
+  mutate(
+    op1_beg = ifelse(
+      year == 2017 & (2018 - k2834 <=10) | 
+      year == 2012 & (2013 - k1834 <= 10), 1, 0), 
+    op2_beg = ifelse(
+      year == 2017 & (2018 - k1851 <=10) |
+      year == 2012 & (2013 - k1851 <=10), 1, 0), 
+    op3_beg = ifelse(
+      year ==2017 & (2018 - k1871 <=10) | 
+      year ==2012 & (2013 - k1871 <=10),  1, 0), 
+    op4_beg = ifelse(
+      year==2017 & (2018 - k1628 <=10), 1, 0), 
+    total_beg = op1_beg + op2_beg + op3_beg + op4_beg, 
+    all_beg = ifelse(
+      (number_operators==4 & total_beg==4) | 
+      (number_operators==3 & total_beg==3) | 
+      (number_operators==2 & total_beg==2) | 
+      (number_operators==1 & total_beg==1), 1, 0),
+    any_beg = ifelse(total_beg !=0 & (total_beg < number_operators), 1, 0), 
+    not_beg = ifelse(all_beg == 0 & any_beg ==0, 1, 0), 
+    all_beg = ifelse(year==2007, NA, all_beg),
+    any_beg = ifelse(year==2007, NA, any_beg), 
+    not_beg = ifelse(year==2007, NA, not_beg), 
+    beginning_fct = case_when(
+      all_beg ==1 ~ "All beginning", 
+      any_beg ==1 ~ "Multigenerational beginning", 
+      not_beg ==1 ~ "Established"), 
+    beginning = case_when(
+      total_beg>0 ~ 1, 
+      TRUE ~ 0))
+
+# Metadata 
+varlist <- coa %>% 
+  select(year, number_operators, total_beg, 
+         all_beg, any_beg, not_beg, beginning_fct, beginning) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add description and definition
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "number_operators" ~ "Number of operators", 
+      variable_name == "total_beg" ~ "Total beginning operators", 
+      variable_name == "all_beg" ~ "All beginning", 
+      variable_name == "any_beg" ~ "Multigenerational beginning", 
+      variable_name == "not_beg" ~ "Established", 
+      variable_name == "beginning_fct" ~ "Beginning factor variable: All beginning, Multigenerational beginning, Established", 
+      variable_name == "beginning" ~ "An operation with a beginning operator"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "number_operators" ~ "Total number of operators on an operation", 
+      variable_name == "total_beg" ~ "Total number of operators on an operation with no more than 10 years experience operating any farm", 
+      variable_name == "all_beg" ~ "All operators on an operation have no more than 10 years experience operating any farm", 
+      variable_name == "any_beg" ~ "One or more but not all operators on an operation have no more than 10 years experience operating any farm", 
+      variable_name == "not_beg" ~ "No operators on an operation have no more than 10 years experience operating any farm", 
+      variable_name == "beginning" ~ "At least one operator on the operation has no more than 10 years experience operating any farm"))
+
+# Join to metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+### Race/ethncity
+
+Following Hendricks et. al. (2024) if a producer indicates they are of a specific race or ethnicity, the operation is counted as that race/ethnicity. Apart from operations where all operators are White only, non-Hispanic, categories are non-exclusive. For example, if one operator selected "Black or African American" and another operator selected "White", the farm would be categorized both as "Black or African American" and "White". As another example, if an operator selected "Hispanic or Latin Origin" and "Asian", they would be counted as a "Hispanic" operation and as an "Asian" operation. Farms can be counted multiple times, categories are not exclusive. An operator that selects multiple races will be counted for all races selected.
+
+```{r}
+
+# Define race/ethnicity of each producer on an operation, total number of operators, the operation as a whole
+
+# Hispanic 
+coa <- coa %>% 
+  mutate(
+    op1_hispanic = case_when(
+      (year ==2017 & k1927==1) | 
+        (year != 2017 & k927==1) ~ 1, 
+      TRUE ~ 0), 
+    op2_hispanic = case_when(
+      k1587==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_hispanic = case_when(
+      k1598==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_hispanic = case_when(
+      year==2017 & k1622==1 ~ 1, 
+      TRUE ~ 0), 
+    total_hispanic = op1_hispanic + op2_hispanic + 
+      op3_hispanic + op4_hispanic, 
+    hispanic = case_when(
+      total_hispanic >0 ~ 1, 
+      TRUE ~ 0))
+
+# White only non-Hispanic and White
+coa <- coa %>% 
+  mutate(
+    op1_whiteonlynonhis = case_when(
+      (year == 2017 & 
+        (k1927==3 & k2701 == 1 & 
+           k2702==0 & k2703==0 & 
+           k2704==0 & k2705==0)) |
+        (year !=2017 & 
+           (k927==3 & k1701 == 1 & 
+           k1702==0 & k1703==0 & 
+           k1704==0 & k1705==0)) ~ 1,
+      TRUE ~ 0), 
+    op2_whiteonlynonhis = case_when(
+      k1587==3 & k1801==1 & 
+        k1802==0 & k1803==0 & 
+        k1804==0 & k1805==0 ~ 1, 
+      TRUE ~ 0),
+    op3_whiteonlynonhis = case_when(
+      k1598==3 & k1901==1 & 
+        k1902==0 & k1903==0 & 
+        k1904==0 & k1905==0 ~ 1, 
+      TRUE ~ 0), 
+    op4_whiteonlynonhis = case_when(
+      year ==2017 & k1622==3 & 
+        k1616==1 & k1617==0 & 
+        k1618==0 & k1620==0 & 
+        k1621==0 ~ 1, 
+      TRUE ~ 0),
+    total_whiteonlynonhis = op1_whiteonlynonhis + op2_whiteonlynonhis + 
+      op3_whiteonlynonhis + op4_whiteonlynonhis, 
+    op1_white = case_when(
+      (year ==2017 & k2701==1) | 
+        (year !=2017 & k1701 == 1) ~ 1, 
+      TRUE ~ 0), 
+    op2_white = case_when(
+      k1801==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_white = case_when(
+      k1901==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_white = case_when(
+      year == 2017 & k1616==1 ~ 1, 
+      TRUE ~ 0),
+    total_white = op1_white + op2_white + op3_white + op4_white, 
+    white = case_when(
+      op1_white==1 | op2_white ==1 | op3_white==1 | op4_white==1 ~ 1, 
+      TRUE ~ 0), 
+    whiteonlynonhis = case_when(
+      (number_operators==1 & op1_whiteonlynonhis == 1) |
+        (number_operators==2 & op1_whiteonlynonhis == 1 & 
+           op2_whiteonlynonhis == 1) | 
+        (number_operators ==3 & op1_whiteonlynonhis == 1 & 
+           op2_whiteonlynonhis == 1 & op3_whiteonlynonhis == 1) | 
+        (year == 2017 & number_operators==4 & 
+           op1_whiteonlynonhis == 1 & op2_whiteonlynonhis == 1 & 
+           op3_whiteonlynonhis == 1 & op4_whiteonlynonhis == 1) ~ 1, 
+      TRUE ~ 0))
+
+# Black or African American (black)
+coa <- coa %>% 
+  mutate(
+    op1_black = case_when(
+      (year == 2017 & k2702==1) |
+        (year != 2017 & k1702==1) ~ 1, 
+    TRUE ~ 0), 
+    op2_black = case_when(
+      k1802==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_black = case_when(
+      k1902==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_black = case_when(
+      year ==2017 & k1617==1 ~ 1, 
+      TRUE ~ 0), 
+    total_black = op1_black + op2_black + op3_black + op4_black, 
+    black = case_when(
+      total_black>0 ~ 1, 
+      TRUE ~ 0))
+
+# American indian or alaska native (indian)
+coa <- coa %>% 
+  mutate(
+    op1_indian = case_when(
+      (year ==2017 & k2703==1) | 
+        (year != 2017 & k1703==1) ~ 1, 
+      TRUE ~ 0), 
+    op2_indian = case_when(
+      k1803==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_indian = case_when(
+      k1903==1 ~ 1, 
+      TRUE ~0), 
+    op4_indian = case_when(
+      year ==2017 & k1618==1 ~ 1, 
+      TRUE ~ 0), 
+    total_indian = op1_indian + op2_indian + op3_indian + op4_indian, 
+    indian = case_when(
+      total_indian>0 ~ 1, 
+      TRUE ~ 0))
+
+# Native Hawaiian or Other Pacific islander (opi)
+coa <- coa %>% 
+  mutate(
+    op1_opi = case_when(
+      (year == 2017 & k2704==1) | 
+        (year != 2017 & k1704==1) ~ 1, 
+      TRUE ~ 0), 
+    op2_opi = case_when(
+      k1804==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_opi = case_when(
+      k1904 ==1 ~ 1,
+      TRUE ~ 0),
+    op4_opi = case_when(
+      year ==2017 & k1621==1 ~ 1, 
+      TRUE ~ 0), 
+    total_opi = op1_opi + op2_opi + 
+      op3_opi + op4_opi, 
+    opi = case_when(
+      total_opi>0 ~ 1, 
+      TRUE ~ 0))
+
+# Asian 
+coa <- coa %>% 
+  mutate(
+    op1_asian = case_when(
+      (year != 2017 & k1705 ==1) | 
+        (year ==2017 & k2705==1) ~ 1, 
+      TRUE ~ 0), 
+    op2_asian = case_when(
+      k1805==1 ~ 1, 
+      TRUE ~0), 
+    op3_asian = case_when(
+      k1905==1 ~ 1, 
+      TRUE ~0), 
+    op4_asian = case_when(
+      year ==2017 & k1620==1 ~ 1, 
+      TRUE ~ 0), 
+    total_asian = op1_asian + op2_asian + 
+      op3_asian + op4_asian, 
+    asian = case_when(
+      total_asian >0 ~ 1, 
+      TRUE ~ 0))
+
+# Native Hawaiian and American indian combined (indian_opi)
+coa <- coa %>% 
+  mutate(
+    op1_indian_opi = case_when(
+      op1_indian == 1 | op1_opi==1 ~ 1, 
+      TRUE ~ 0),
+    op2_indian_opi = case_when(
+      op2_indian == 1 | op2_opi==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_indian_opi = case_when(
+      op3_indian == 1 | op3_opi==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_indian_opi = case_when(
+      year == 2017 & (op4_indian == 1 | op4_opi==1) ~ 1, 
+      TRUE ~ 0), 
+    total_indian_opi = total_indian + total_opi, 
+    indian_opi = case_when(
+      total_indian_opi >0 ~ 1, 
+      TRUE ~ 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, total_hispanic, hispanic, 
+         total_white, white, 
+         total_whiteonlynonhis, whiteonlynonhis, 
+         total_black, black, 
+         total_indian, indian, 
+         total_opi, opi, 
+         total_indian_opi, indian_opi, 
+         total_asian, asian) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add description and definition
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "total_white" ~ "Total number of White operators on an operation", 
+      variable_name == "white" ~ "An operation with a White operator", 
+      variable_name == "total_whiteonlynonhis" ~ "Total number of White only, non-Hispanic operators on an operation", 
+      variable_name == "whiteonlynonhis" ~ "An operation with all White only, non-Hispanic operators", 
+      variable_name == "total_black" ~ "Total number of Black or African American operators on an operation", 
+      variable_name == "black" ~ "An operation with a Black or African American operator", 
+      variable_name == "total_asian" ~ "Total number of Asian operators on an operation", 
+      variable_name == "asian" ~ "An operation with an Asian operator", 
+      variable_name == "total_opi" ~ "Total number of Hawaiian or Other Pacific Islander operators on an operation", 
+      variable_name == "opi" ~ "An operation with a Hawaiian or Other Pacific Islander operator", 
+      variable_name == "total_indian" ~ "American Indian or Alaska Native operators", 
+      variable_name == "indian" ~ "An operation with an American Indian or Alaska Native operator", 
+      variable_name == "total_indian_opi" ~ "Total number of American Indian, Alaska Native, Hawaiian, or Other Pacific Islander operators",
+      variable_name == "indian_opi" ~ "An operation with an American Indian, Alaska Native, Hawaiian, or Other Pacific Islander operator",
+      variable_name == "total_hispanic" ~ "Total number of operators of Hispanic, Latino, or Spanish origin (of any race) on an operation", 
+      variable_name == "hispanic" ~ "An operation with an operator of Hispanic, Latino, or Spanish origin (of any race)"))
+
+# Variable definition 
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      str_detect(variable_name, "whiteonlynonhis|hispanic") ~ NA, 
+      TRUE ~ "An operator that selects multiple races will be counted for all races selected"))
+  
+# Join with metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+### Gender
+
+Gender is defined based on total number of each gender on an operation, all female or all male operations, and operations with a gender.
+
+```{r}
+
+# Female 
+coa <-coa %>% 
+  mutate(
+    op1_female = case_when(
+      year == 2017 & k1926==2 | 
+        year != 2017 & k926==2 ~ 1, 
+      TRUE ~ 0), 
+    op2_female = case_when(
+      k1586==2 ~ 1, 
+      TRUE ~ 0), 
+    op3_female = case_when(
+      k1597==2 ~ 1, 
+      TRUE ~ 0), 
+    op4_female = case_when(
+      year == 2017 & k1614==2 ~ 1, 
+      TRUE ~ 0), 
+    total_female = op1_female + op2_female + op3_female + op4_female, 
+    all_female = case_when(
+      (number_operators == 1 & total_female == 1) | 
+        (number_operators ==2 & total_female ==2) | 
+        (number_operators == 3 & total_female ==3) | 
+        (number_operators ==4 & total_female == 4) ~ 1, 
+      TRUE ~ 0), 
+    any_female = case_when(
+      total_female !=0 & (total_female < number_operators) ~ 1, 
+      TRUE ~ 0), 
+    not_female = case_when(
+      total_female ==0 ~ 1, 
+      TRUE ~ 0), 
+    female_fct = case_when(
+      all_female ==1 ~ "All females", 
+      any_female ==1 ~ "Multiple genders", 
+      not_female ==1 ~ "No females"), 
+    female = case_when(
+      total_female > 0 ~ 1, 
+      TRUE ~ 0))
+
+# Male 
+coa <-coa %>% 
+  mutate(
+    op1_male = case_when(
+      year == 2017 & k1926==1 | 
+        year != 2017 & k926==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_male = case_when(
+      k1586==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_male = case_when(
+      k1597==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_male = case_when(
+      year == 2017 & k1614==1 ~ 1, 
+      TRUE ~ 0), 
+    total_male = op1_male + op2_male + op3_male + op4_male, 
+    all_male = case_when(
+      (number_operators == 1 & total_male == 1) | 
+        (number_operators ==2 & total_male ==2) | 
+        (number_operators == 3 & total_male ==3) | 
+        (number_operators ==4 & total_male == 4) ~ 1, 
+      TRUE ~ 0), 
+    any_male = case_when(
+      total_male !=0 & (total_male < number_operators) ~ 1, 
+      TRUE ~ 0), 
+    not_male = case_when(
+      total_male ==0 ~ 1, 
+      TRUE ~ 0), 
+    male_fct = case_when(
+      all_female ==1 ~ "All males", 
+      any_female ==1 ~ "Multiple genders", 
+      not_female ==1 ~ "No males"), 
+    male = case_when(
+      total_male > 0 ~ 1, 
+      TRUE ~ 0))
+
+# Metadata 
+varlist <- coa %>% 
+  select(year, 
+         total_female, all_female, any_female, not_female, 
+         female_fct, female,
+         total_male, all_male, any_male, not_male, 
+         male_fct, male) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) %>% 
+  ungroup()
+
+# Add description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "total_female" ~ "Total number of female operators on an operation", 
+      variable_name == "all_female" ~ "All operators on an operation are female", 
+      variable_name == "any_female" ~ "An operation with operators of multiple genders",
+      variable_name == "not_female" ~ "An operation with no female operators",
+      variable_name == "female_fct" ~ "Female factor variable with three levels: All females, Multiple genders, No females", 
+      variable_name == "female" ~ "An operation with a female operator",
+      variable_name == "total_male" ~ "Total number of male operators on an operation", 
+      variable_name == "all_male" ~ "All operators on an operation are male",
+      variable_name == "any_male" ~ "An operation with operators of multiple genders", 
+      variable_name == "not_male" ~ "An operation with no male operators", 
+      variable_name == "male_fct" ~ "Male factor variable with three levels: All males, Multiple genders, No males",
+      variable_name == "male" ~ "An operation with a male operator"))
+
+# Add definition 
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "all_female" ~ "Dummy variable that is one if all operators on an operation are female and zero otherwise", 
+      variable_name == "any_female" ~ "Dummy variable to indicate there is one or more but not all female operators", 
+      variable_name == "not_female" ~ "A dummy variable that is one if no operators on the operation are female",
+      variable_name == "female" ~ "A dummmy variable that is one if there is at least female operator on an operation",
+      variable_name == "all_male" ~ "Dummy variable that is one if all operators operators on an operation are male", 
+      variable_name == "any_male" ~ "Dummy variable to indicate there is one or more but not all male operators", 
+      variable_name == "not_male" ~ "A dummy variable that is one if no operators on the operation are male",
+      variable_name == "male" ~ "A dummmy variable that is one if there is at least male operator on an operation"))
+
+# Bind data 
+meta <- bind_rows(meta, m)
+
+```
+
+### Operator age
+
+Define young farmers as less than 35 years old. This is following the 2022 Census definition (not what NASS defined in 2017, which was 35 years or less).
+
+These are defined as a farm with any young farmers, all young farmers, not young farmers, and at least one young farmer.
+
+Define operations over 65 and over as all, any, non, at least one.
+
+Because we are no longer supposed to use principal operator, we do not provide any categorical age categories for principal operator.
+
+```{r}
+
+# Operator age 
+coa <- coa %>% mutate(
+  op1_age = case_when(
+    year==2017 ~ k1925, 
+    year!=2017 ~ k925),
+  op2_age = k1585, 
+  op3_age = k1596, 
+  op4_age = case_when(
+    year==2017 ~ k1615, 
+    year!=2017 ~ 0), 
+  total_age = op1_age + op2_age + op3_age + op4_age)
+
+# Young   
+coa <- coa %>% 
+  mutate(
+    op1_young = case_when(
+      op1_age<35 ~ 1, 
+      TRUE ~ 0), 
+    op2_young = case_when(
+      op2_age>0 & op2_age<35 ~ 1, 
+      TRUE ~ 0), 
+    op3_young = case_when(
+     op3_age>0 & op3_age<35 ~ 1, 
+     TRUE ~ 0), 
+   op4_young = case_when(
+     op4_age>0 & op4_age<35 ~ 1, 
+     TRUE ~ 0),
+   total_young = op1_young + op2_young + op3_young + op4_young, 
+   all_young = case_when(
+    (number_operators==4 & total_young==4) | 
+    (number_operators ==3 & total_young==3) |
+    (number_operators==2  & total_young==2) | 
+    (number_operators==1 & total_young==1) ~ 1, 
+    TRUE ~ 0), 
+  any_young = case_when(
+    total_young !=0 & (total_young < number_operators) ~ 1, 
+    TRUE ~ 0), 
+  not_young = case_when(
+    all_young == 0 & any_young ==0 ~ 1, 
+    TRUE ~ 0), 
+  young_fct = case_when(
+    all_young ==1 ~ "All young", 
+    any_young ==1 ~ "Multigenerational", 
+    not_young ==1 ~ "No young"), 
+  young = case_when(
+    total_young>0 ~ 1, 
+    TRUE ~0))
+
+# Senior  
+coa <- coa %>% 
+  mutate(
+    op1_senior = case_when(
+      op1_age>=65 ~ 1, 
+      TRUE ~ 0), 
+    op2_senior = case_when(
+      op2_age>0 & op2_age>=65 ~ 1, 
+      TRUE ~ 0), 
+    op3_senior = case_when(
+     op3_age>0 & op3_age>=65 ~ 1, 
+     TRUE ~ 0), 
+   op4_senior = case_when(
+     op4_age>0 & op4_age>=65 ~ 1, 
+     TRUE ~ 0),
+   total_senior = op1_senior + op2_senior + op3_senior + op4_senior, 
+   all_senior = case_when(
+    (number_operators==4 & total_senior==4) | 
+    (number_operators ==3 & total_senior==3) |
+    (number_operators==2  & total_senior==2) | 
+    (number_operators==1 & total_senior==1) ~ 1, 
+    TRUE ~ 0), 
+  any_senior = case_when(
+    total_senior !=0 & (total_senior < number_operators) ~ 1, 
+    TRUE ~ 0), 
+  not_senior = case_when(
+    all_senior == 0 & any_senior ==0 ~ 1, 
+    TRUE ~ 0), 
+  senior_fct = case_when(
+    all_senior ==1 ~ "All seniors", 
+    any_senior ==1 ~ "Multigenerational", 
+    not_senior ==1 ~ "No seniors"), 
+  senior = case_when(
+    total_senior>0 ~ 1, 
+    TRUE ~0))
+
+# Metadata 
+varlist <- coa %>% 
+  select(year, 
+         total_age,
+         total_young, all_young, any_young, not_young,
+         young_fct, young, 
+         total_senior, all_senior, any_senior, not_senior,
+         senior_fct, senior) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "total_age" ~ "Total age of all operators on an operation", 
+      variable_name == "total_young" ~ "Total number of young operators on an operation", 
+      variable_name == "all_young" ~ "All operators on an operation are young", 
+      variable_name == "any_young" ~ "Multigenerational operation", 
+      variable_name == "not_young" ~ "No operators on an operation are young", 
+      variable_name == "young_fct" ~ "Young factor variable with three levels: all young, multigenerational, no young", 
+      variable_name == "young" ~ "An operation with a young operator", 
+      variable_name == "total_senior" ~ "Total number of senior operators on an operation", 
+      variable_name == "all_senior" ~ "All operators on an operation are seniors", 
+      variable_name == "any_senior" ~ "Multigenerational operation", 
+      variable_name == "not_senior" ~ "No operators on an operation are seniors",
+      variable_name == "senior_fct" ~ "Senior factor variable with three levels: all senior, multigenerational, no senior", 
+      variable_name == "senior" ~ "An operation with a senior operator"))
+
+# Add variable definition
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+       variable_name == "total_age" ~ "Can be used to compute average age in combination with number_operators", 
+      str_detect(variable_name, "young") ~ "Young is defined as less than 35 years of age (following the 2022 NASS definition)", 
+      str_detect(variable_name, "senior") ~ "Senior is defined as 65 years or older"))
+      
+# Bind to meta data 
+meta <- bind_rows(meta, m)
+
+```
+
+### Veterans
+
+This question was asked starting in 2017.
+
+```{r}
+
+coa <- coa %>% mutate(
+  op1_vet = case_when(
+    year==2017 & (k1633==2 | k1633==3 | k1633==4) ~ 1, 
+    year!=2017 | (year==2017 & (k1633==0 | k1633==1)) ~0), 
+  op2_vet = case_when(
+    year==2017 & (k1634==2 | k1634==3 | k1634==4) ~ 1, 
+    year!=2017 | (year==2017 & (k1634==0 | k1634==1)) ~0),
+  op3_vet = case_when(
+    year==2017 & (k1635==2 | k1635==3 | k1635==4) ~ 1, 
+    year!=2017 | (year==2017 & (k1635==0 | k1635==1)) ~0),
+  op4_vet = case_when(
+    year==2017 & (k1636==2 | k1636==3 | k1636==4) ~ 1, 
+    year!=2017 | (year==2017 & (k1636==0 | k1636==1)) ~0),
+  total_vet = op1_vet + op2_vet + op3_vet + op4_vet, 
+  all_vet = case_when(
+    (number_operators==4 & total_vet==4) | 
+    (number_operators ==3 & total_vet==3) |
+    (number_operators==2  & total_vet==2) | 
+    (number_operators==1 & total_vet==1) ~ 1, 
+    TRUE ~ 0), 
+  any_vet = case_when(
+    total_vet !=0 & (total_vet < number_operators) ~ 1, 
+    TRUE ~ 0), 
+  not_vet = case_when(
+    all_vet == 0 & any_vet ==0 ~ 1, 
+    TRUE ~ 0), 
+  vet_fct = case_when(
+    all_vet ==1 ~ "All Veterans", 
+    any_vet ==1 ~ "One or more, but not all Veterans", 
+    not_vet ==1 ~ "No Veterans"), 
+  vet = case_when(
+    total_vet>0 ~ 1, 
+    TRUE ~ 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, all_vet, any_vet, 
+         not_vet, total_vet,
+         vet_fct, vet) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "all_vet" ~ "All operators have military service", 
+      variable_name == "any_vet" ~ "One or more, but not all operators have military service", 
+      variable_name == "not_vet" ~ "No operators have military service", 
+      variable_name == "total_vet" ~ "Total number of operators with military service on an operation",
+      variable_name == "vet_fct" ~ "Military service factor variable with three levels: All Veterans, One or more, but not all Veterans and No Veterans", 
+      variable_name == "vet" ~ "An operation with a producer with military service"))
+
+# Add variable definition 
+m <- m %>% 
+  mutate(
+    variable_definition = "Military service is defined as operators only on active duty for training in the Reserves or National Guard, now on active duty, on active duty in the past but not now")
+
+# Remove data from 2007, 2012
+m <- m %>% 
+  filter(year ==2017)
+
+# Join with metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+### Retired
+
+```{r}
+# Create dummy to indicate that all operators are retired
+coa <- coa %>% mutate(
+  op1_retired = ifelse(
+    year!=2017 & k924==1 | 
+    year==2017 & k1924==1, 1, 0), 
+  op2_retired = ifelse(
+    k1582==1, 1, 0), 
+  op3_retired = ifelse(
+    k1593==1, 1, 0), 
+  op4_retired = ifelse(
+    year==2017 & k1624==1, 1, 0), 
+  total_retired = op1_retired + op2_retired + op3_retired + op4_retired,
+  proportion_retired = total_retired/number_operators,
+  all_retired = ifelse(number_operators == total_retired, 1, 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, total_retired, 
+         proportion_retired, all_retired) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "total_retired" ~ "Total number of retired operators on an operation", 
+      variable_name == "all_retired" ~ "All operators on an operation are retired", 
+      variable_name == "proportion_retired" ~ "Proportion of operators on an operation that are retired"), 
+    variable_definition = "Retired is defined as retired from farming or ranching")
+
+# Bind with metadata
+meta <- bind_rows(meta, m)
+```
+
+### Primary occupation and off-farm work
+
+Here we use two questions to better understand off-farm work. Questions include the occupation where person spent the majority of their time (on/off farm) and the number of days worked off farm (a categorical variable ranging from 0 to 200 days or more).
+
+For 2007 and 2012 we create an off-farm work variable for the primary producer.
+
+```{r}
+
+# Which occupation did this person spend the majority of their time: Farm/ranch work or work other than farming/ranching
+coa <- coa %>% mutate(
+  op1_off_farm = case_when(
+    (year==2017 & k1928==2) | (year!=2017 & k928==2) ~ 1,
+    (year==2017 & k1928==1) | (year!=2017 & k928==1) ~ 0), 
+  op2_off_farm = case_when(
+    k1580==2  ~ 1, 
+    k1580==1 | k1580==0 ~ 0),
+  op3_off_farm = case_when(
+    k1591==2 ~ 1, 
+    k1591==1| k1591==0 ~0),
+  op4_off_farm = case_when(
+     year==2017 & k1623==2  ~ 1,
+     year!=2017 | (year==2017 & (k1623==1 | k1623==0)) ~ 0),
+  total_off_farm = op1_off_farm + op2_off_farm + op3_off_farm + op4_off_farm,
+  all_off_farm = ifelse(
+    (number_operators==4 & total_off_farm==4) | 
+    (number_operators ==3 & total_off_farm==3) |
+    (number_operators==2  & total_off_farm==2) | 
+    (number_operators==1 & total_off_farm==1), 1, 0), 
+  any_off_farm = ifelse(total_off_farm !=0 & (total_off_farm < number_operators), 1, 0), 
+  not_off_farm = ifelse(all_off_farm == 0 & any_off_farm ==0, 1, 0), 
+  off_farm = case_when(
+    all_off_farm ==1 ~ "All operators work majority off-farm", 
+    any_off_farm ==1 ~ "One or more but not all operators work majority off-farm", 
+    not_off_farm ==1 ~ "No operators work majority off-farm"), 
+  primary_off_farm = case_when(
+    year == 2017 ~ NA,
+    year!=2017 & op1_off_farm==1 ~ 1,
+    TRUE ~ 0), 
+  proportion_off_farm = (op1_off_farm + op2_off_farm + op3_off_farm + op4_off_farm)/number_operators)
+
+# How many days did this person work off the farm? none, 0-49 days, 50-99 days, 100-199 days, 200 days or more.
+coa <- coa %>% mutate(
+  op1_days_off_farm = case_when(
+    year==2017 ~ k1929, 
+    year!=2017 ~ k929), 
+  op2_days_off_farm = k1831,
+  op3_days_off_farm = k1931,
+  op4_days_off_farm = case_when(
+     year==2017 ~ k1625, 
+     year!=2017 ~ 0),
+  total_days_off_farm = op1_days_off_farm + op2_days_off_farm + op3_days_off_farm + op4_days_off_farm,
+  primary_days_off_farm = case_when(
+    year == 2017 ~ NA, 
+    year != 2017 ~ op1_days_off_farm), 
+  proportion_days_off_farm = (op1_days_off_farm + op2_days_off_farm + op3_days_off_farm + op4_days_off_farm)/number_operators)
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, total_off_farm:proportion_off_farm, 
+         total_days_off_farm,
+         primary_days_off_farm, 
+         proportion_days_off_farm) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "total_off_farm" ~ "Total number of operators on an operation working primarily off-farm", 
+      variable_name == "all_off_farm" ~ "All operators on an operation work primarily off-farm", 
+      variable_name == "any_off_farm" ~ "One or more but not all operators work primarily off-farm", 
+      variable_name == "not_off_farm" ~ "No operators on an operation work primarily off-farm", 
+      variable_name == "off_farm" ~ "Off-farm work factor variable with three levels: All operators work majority off-farm, One or more but not all operators work majority off-farm, No operators work majority off-far", 
+      variable_name == "primary_off_farm" ~ "Primary operator works majority off-farm", 
+      variable_name == "proportion_off_farm" ~ "Proportion of operators on an operation that work majority off-farm", 
+      variable_name == "total_days_off_farm" ~ "Total number of days worked off-farm by all operators on an operation (1:none, 2:1-49 days, 3:50-99 days, 4:100-199 days, 5:200 days or more) ", 
+      variable_name == "primary_days_off_farm" ~ "Number of days worked off-farm by primary operator (1:none, 2:1-49 days, 3:50-99 days, 4:100-199 days, 5:200 days or more)", 
+      variable_name == "proportion_days_off_farm" ~ "Average days worked off-farm for all operators on an operation"), 
+    variable_definition = case_when(
+      variable_name == "primary_off_farm" ~ "Majority off-farm is defined as an operator spending 50% or more of his/her worktime on work other than farming or ranching, data is not available in 2017", 
+      variable_name == "proportion_off_farm" ~ "Total number of operators working majority off-farm/total number of operators", 
+      variable_name == "total_days_off_farm" ~ "Days off-farm include days in which the operator worked at least four hours per day in an off-farm job, including work on someone else's farm for pay. Each operator indicates a number from 1-5 and here we sum up those numbers", 
+      variable_name == "primary_days_off_farm" ~ "Days off-farm include days in which the operator worked at least four hours per day in an off-farm job, including work on someone else's farm for pay, data not available for 2017", 
+      variable_name == "proportion_days_off_farm" ~ "Days off-farm include days in which the operator worked at least four hours per day in an off-farm job, including work on someone else's farm for pay. Each operator indicates a number from 1-5 and here we sum up those numbers and divide them by the number of operators on the operation", 
+      TRUE ~ "Majority off-farm is defined as an operator spending 50% or more of his/her worktime on work other than farming or ranching"))
+
+# Add to metadata
+meta <- bind_rows(meta, m)
+
+```
+
+## Farm organization
+
+```{r}
+
+# Create dummy variables for farm ownership
+coa <- coa %>% mutate(
+  org_family = ifelse(k1671==1, 1, 0), 
+  org_partnership = ifelse(k1671==2, 1, 0), 
+  org_incorporated = ifelse(k1671==3, 1, 0), 
+  org_other = ifelse(k1671==4, 1, 0)) 
+
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, org_family, 
+         org_partnership, org_incorporated, 
+         org_other) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "org_family" ~ "Family or individual operation (exludes partnerships and corporations)", 
+      variable_name == "org_partnership" ~ "Partnership operation (includes family partnerships)", 
+      variable_name == "org_incorporated" ~ "Operation incorporated under state law", 
+      variable_name == "org_other" ~ "Operation is organized as an estate or trust, prision farm, grazing association, American Indian Reservation, etc."),
+    variable_definition = "Describes operations legal status for tax purposes")
+
+# Add to metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+## Land use practices
+
+Data includes acres with a cover crop, no-till acres, reduced till acres, and intensive till acres.
+
+-   A cover crop is a crop planted primarily to manage soil erosion, soil fertility, soil quality, water, weeds, pests, and diseases on non-CRP acres.
+-   No-till farming practices is cropland used for production from year to year without disturbing the soil through tillage other than planting.
+-   Reduced tillage leaves between 15% and 30% residue cover on the soil of small grain residue to conserve moisture and prevent erosion. This may involve the use of a chisel plow, field cultivators, or other implements.
+-   Intensive tillage leaves less than 15% of crop residue of small grain residue. This type of tillage is often referred to as conventional tillage. Intensive tillage often involves multiple operations with implements such as a mold board, disk, and/or chisel plow.
+
+```{r}
+
+# Define land use practices by number of acres
+coa <- coa %>% 
+  mutate(
+    cover_crop_acres = k3456, 
+    no_till_acres = k3455, 
+    reduced_till_acres = k3454, 
+    intensive_till_acres = k3453)
+
+# Define land use practices as dummy variables 
+coa <- coa %>%
+  mutate(
+    cover_crop = case_when(
+      cover_crop_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    no_till = case_when(
+      no_till_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    reduced_till = case_when(
+      reduced_till_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    intensive_till = case_when(
+      intensive_till_acres>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, cover_crop_acres:intensive_till) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "cover_crop_acres" ~ "Acres planted with a cover crop", 
+      variable_name == "cover_crop" ~ "An operation with acres planted as a cover crop",
+      variable_name == "no_till_acres" ~ "Acres where no-till farming practices were utilized", 
+      variable_name == "no_till" ~ "An operation where no-till farming practices were utilized", 
+      variable_name == "reduced_till_acres" ~ "Acres where reduced-till farming practices were utilized", 
+      variable_name == "reduced_till" ~ "An operation where reduced-till farming practices were utilized", 
+      variable_name == "intensive_till_acres" ~ "Acres where intensive-till farming practices were utilized", 
+      variable_name == "intensive_till" ~ "An operation where intensive-till farming practices were utilized"))
+
+# Add variable definition 
+m <- m %>% 
+  mutate(
+    variable_definition= case_when(
+      variable_name %in% c("cover_crop_acres", "cover_crop") ~ 
+        "A cover crop is a crop planted primarily to manage soil erosion, soil fertility, soil quality, water, weeds, pests, and diseases on non-CRP acres",
+      variable_name %in% c("no_till_acres", "no_till") ~ 
+        "No-till farming practices is cropland used for production from year to year without disturbing the soil through tillage other than planting", 
+      variable_name %in% c("reduced_till_acres", "reduced_till") ~ 
+        "Reduced tillage leaves between 15% and 30% residue cover on the soil of small grain residue to conserve moisture and prevent erosion. This may involve the use of a chisel plow, field cultivators, or other implements", 
+      variable_name %in% c("intensive_till_acres", "intensive_till") ~ 
+        "Intensive tillage leaves less than 15% of crop residue of small grain residue. This type of tillage is often referred to as conventional tillage. Intensive tillage often involves multiple operations with implements such as a mold board, disk, and/or chisel plow"))
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+## Practices 
+All questions are asked as a yes/no 
+
+```{r}
+# define variables 
+coa <- coa %>% 
+  mutate(
+    rotational_grazing = case_when(
+      k1725==1 ~ 1, 
+      TRUE ~ 0), 
+    alley_cropping = case_when(
+      k1731==1 ~ 1, 
+      TRUE ~ 0), 
+    biomass = case_when(
+      k1750 == 1 ~ 1, 
+      TRUE ~ 0), 
+    onfarm_packing = case_when(
+      k1752==1 ~ 1, 
+      TRUE ~ 0), 
+    veal = case_when(
+      k1728 == 1 ~ 1, 
+      TRUE ~ 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, rotational_grazing:veal) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "rotational_grazing" ~ "Operation practiced rotaional grazing or management-intensive grazing", 
+      variable_name == "alley_cropping" ~ "Operation practiced alley cropping, silvopasture, or forest farming or have riparian forest buffers or windbreaks", 
+      variable_name == "biomass" ~ "Operation harvested biomass for use in the production of renewable energy",
+      variable_name == "onfarm_packing" ~ "Operation has an on-farm packing facility", 
+      variable_name == "veal" ~ "Operation raised or sold veal calves"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "biomass" ~ "Includes crop residue, grasses, woody biomass, etc., excluding grains, oilseeds, and firewood",
+      variable_name == "onfarm_packing" ~ "Used for distributing vegetables, potatoes, fruit, nuts, berries or other crops"))
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+```
+## Land use 
+
+```{r}
+
+# define as acres
+coa <- coa %>% 
+  mutate(
+    permanent_pasture_acres = k796, 
+    woodland_pasture_acres = k794, 
+    other_pasture_acres = k788, 
+    pasture_acres = k796 + k794 + k788)
+
+# define as dummy
+coa <- coa %>% 
+  mutate(
+    permanent_pasture = case_when(
+      permanent_pasture_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    woodland_pasture = case_when(
+      woodland_pasture_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    other_pasture = case_when(
+      other_pasture_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    pasture = case_when(
+      pasture_acres>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, 
+         permanent_pasture_acres:pasture) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "permanent_pasture_acres" ~ "Acres of permanent pasture and rangeland", 
+      variable_name == "woodland_pasture_acres" ~ "Acres of woodland pastured", 
+      variable_name == "other_pasture_acres" ~ "Acres of other pasture and grazing land that could have been used for crops without additional improvement", 
+      variable_name == "pasture_acres" ~ "Total pasture acres",
+      variable_name == "permanent_pasture" ~ "An operationw with permanent pasture and rangeland", 
+      variable_name == "woodland_pasture" ~ "An operation with woodland pastured", 
+      variable_name == "other_pasture" ~ "An operation with other pasture and grazing land that could have been used for crops without additional improvement", 
+      variable_name == "pasture" ~ "An operation with pastureland"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "other_pasture_acres" ~ "Including rotational pasture", 
+      variable_name == "pasture_acres" ~ "Includes permanent pasture and rangeland, woodland pastured, and other pasture and grazing land",
+      variable_name == "other_pasture" ~ "Including rotational pasture", 
+      variable_name == "pasture" ~ "Includes permanent pasture and rangeland, woodland pastured, and other pasture and grazing land"))
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+## Fertilizers, chemicals, soil conditioners
+
+```{r}
+
+# Define variables by acres
+coa <- coa %>% 
+  mutate(
+    fertilizer_cropland_acres = k932, 
+    fertilizer_pastureland_acres  = k933, 
+    manure_acres = k1569, 
+    organic_acres = k1570, 
+    insects_acres = k936, 
+    weeds_acres = k939, 
+    nematodes_acres = k937, 
+    diseases_acres = k938,
+    defoliation_acres = k940)
+
+# Define variables as a dummy
+coa <- coa %>% 
+  mutate(
+    fertilizer_cropland = case_when(
+      fertilizer_cropland_acres>0 ~ 1, 
+      TRUE ~ 0),
+    fertilizer_pastureland = case_when(
+      fertilizer_pastureland_acres>0 ~ 1, 
+      TRUE ~ 0),  
+    manure = case_when(
+      manure_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    organic = case_when(
+      organic_acres>0 ~ 1, 
+      TRUE ~ 0),
+    insects = case_when(
+      insects_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    weeds = case_when(
+      weeds_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    nematodes = case_when(
+      nematodes_acres>0 ~ 1, 
+      TRUE ~ 0),  
+    diseases = case_when(
+      diseases_acres>0 ~ 1, 
+      TRUE ~ 0), 
+    defoliation = case_when(
+      defoliation_acres>0 ~ 1, 
+      TRUE ~ 0))
+
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, fertilizer_cropland_acres:defoliation) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "fertilizer_cropland_acres" ~ "Cropland acres to which commercial fertilizer and soil conditioners were applied", 
+      variable_name == "fertilizer_pastureland_acres" ~ "Pastureland and rangeland acres to which commercial fertilizer and soil conditioners were applied",
+      variable_name == "manure_acres" ~ "Acres of cropland and pastureland on which animal manure was applied", 
+      variable_name == "organic_acres" ~ "Acres of cropland and/or pastureland treated with certified organic fertilizer", 
+      variable_name == "insects_acres" ~ "Acres on which chemicals were applied to control insects", 
+      variable_name == "weeds_acres" ~ "Acres on which chemicals were applied to control weeds, grass or brush", 
+      variable_name == "nematodes_acres" ~ "Acres on which chemicals were applied to control nematodes", 
+      variable_name == "diseases_acres" ~ "Acres on which chemicals were applied to control diseases in crops anc orchards", 
+      variable_name == "defoliation_acres" ~ "Acres of crops treated to contraol growth, thin fruit, ripen or defoliate",
+      variable_name == "fertilizer_cropland" ~ "An operation with cropland acres to which commercial fertilizer and soil conditioners were applied", 
+      variable_name == "fertilizer_pastureland" ~ "An operation with pastureland and rangeland acres to which commercial fertilizer and soil conditioners were applied",
+      variable_name == "manure" ~ "An operation with acres of cropland and pastureland on which animal manure was applied", 
+      variable_name == "organic" ~ "An operation with acres of cropland and/or pastureland treated with certified organic fertilizer", 
+      variable_name == "insects" ~ "An operation with acres on which chemicals were applied to control insects", 
+      variable_name == "weeds" ~ "An operation with acres on which chemicals were applied to control weeds, grass or brush", 
+      variable_name == "nematodes" ~ "An operation with acres on which chemicals were applied to control nematodes", 
+      variable_name == "diseases" ~ "An opeartion with acres on which chemicals were applied to control diseases in crops anc orchards", 
+      variable_name == "defoliation" ~ "An operation with acres of crops treated to contraol growth, thin fruit, ripen or defoliate"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "fertilizer_cropland_acres" ~ 
+        "Excluding cropland used only for pasture", 
+      variable_name == "fertilizer_pastureland_acres" ~ 
+        "Including cropland used only for pasture or grazing",
+      variable_name == "organic_acres" ~ 
+        "Organic according to USDA's NAtional Organic Program (NOP) standards", 
+      variable_name == "weeds_acres" ~ "Includes both pre-ermergence and post emergence", 
+      variable_name == "diseases_acres" ~ "Includes blight, smut, rust, etc.", 
+      variable_name == "fertilizer_cropland" ~ 
+        "Excluding cropland used only for pasture",  
+      variable_name == "fertilizer_pastureland" ~ 
+        "Including cropland used only for pasture or grazing",
+      variable_name == "organic" ~ "Organic according to USDA's NAtional Organic Program (NOP) standards",
+      variable_name == "weeds" ~ 
+        "Includes both pre-ermergence and post emergence", 
+      variable_name == "diseases" ~ "Includes blight, smut, rust, etc."))
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+
+```
+## Renewable energy 
+
+```{r}
+
+# Define variables 
+coa <- coa %>% 
+  mutate(
+    solar = k3606, 
+    wind = k3604, 
+    methane_digester = k3605, 
+    geothermal = k3614, 
+    small_hydro = k3615, 
+    biodiesel = k3609, 
+    ethanol = k3610, 
+    other_renewable = k3606, 
+    wind_rights = k3607)
+  
+# Define metadata 
+varlist <- coa %>% 
+  select(year, solar:wind_rights) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "solar" ~ "Solar panels on operation", 
+      variable_name == "wind" ~ "Wind turbines on operation", 
+      variable_name  == "methane_digester" ~ "Methane digesters on operation", 
+      variable_name == "geothermal" ~ "Geothermal/geoexchange system on operation", 
+      variable_name == "small_hydro" ~ "Samll hydro system on operation", 
+      variable_name == "biodiesel" ~ "Biodiesel production system on operation", 
+      variable_name == "ethanol" ~ "Ethanol production system on operation", 
+      variable_name == "other_renewable" ~ "Other renewable energy system on operation", 
+      variable_name == "wind_rights" ~ "Wind rights on the land owned by this operation were leased to others"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = case_when(
+      variable_name == "wind_rights" ~ NA, 
+      TRUE ~ "Renewable energy producing systems on the operation, regardless of ownership"))
+
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+```
+
+## Machinery and equipment 
+In this section we report the number on an operation 
+
+```{r}
+
+# Define variables
+coa <- coa %>% 
+  mutate(
+    trucks = k944, 
+    tractors_less_40hp = k946, 
+    tractors_40_99hp = k948, 
+    tractors_100_plushp = k962, 
+    combines = k950, 
+    cotton_picker = k956, 
+    forage_harvester = k953, 
+    hay_balers = k960)
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, trucks:hay_balers) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description and definition 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "trucks" ~ "Number of trucks, including pickups on operations", 
+      variable_name == "tractors_less_40hp" ~ "Number of tractors less than 40 horesepower (PTO), excluding garden tractors", 
+      variable_name == "tractors_40_99hp" ~ "Number of tractors 40-99 horsepower (PTO)" , 
+      variable_name == "tractors_100_plushp" ~ "Number of tractors 100 horsepower (PTO) or more",   
+      variable_name == "combines" ~ "Number of grain and bean combines, self-propelled",  
+      variable_name == "cotton_picker" ~ "Number of cotton pickers and strippers, self-propelled", 
+      variable_name == "forage_harvester" ~ "Number of forage harvesters, self-propelled", 
+      variable_name == "hay_balers" ~ "Number of hay balers"))
+
+m <- m %>% 
+  mutate(
+    variable_definition = "Includes machinery, equipment and implements used for the farm or ranch business and usually kept on the operations")
+
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+```
+
+## Production expenses
+
+-   Variable expenses (categorized the same as they do in ARMS):
+    -   k1501 fertilizer
+    -   k1502 chemicals
+    -   k1503 seeds,
+    -   plants k1504,
+    -   k1505 livestock purchases
+    -   k1506 feed
+    -   k1507 gasoline, fuels, oils
+    -   k1508 utilities
+    -   k1509 maintenance and repair
+    -   k1510, k1511 labor
+    -   k1512 customwork
+    -   k1518 other expenses (include storage and warehousing, marketing expenses, insurance, etc.)
+
+Notes: other expenses include both fixed and variable expenses. In one definition totvarexp and totfixedexp, other expenses are included as a fixed expense. In totvarexp_alt and totfixedexp_alt, other expenses are included as a variable expense.
+
+-   Fixed expenses:
+    -   k1513 and k1514 rent and lease payments for land, buildings, and equipment
+    -   k1515 and k1516 interest paid
+    -   k1517 property taxes
+    -   k1935 veterinary
+
+```{r}
+
+# Define variable expenses 
+coa <- coa %>% 
+  mutate(
+    fert = k1501,
+    chemical = k1502, 
+    seedp = k1503, 
+    animalpurchase = k1504 + k1505, 
+    feed = k1506, 
+    fuelo = k1507, 
+    util = k1508,
+    mainr = k1509,
+    hired_labor = k1510, 
+    contract_labor = k1511,
+    labor = k1510 + k1511,
+    cwork = k1512,
+    otherexp = k1518, 
+    totvarexp = fert + chem + seedp + animalpurchase + feed + fuelo + 
+          util + mainr + labor + cwork, 
+    totvarexp_alt = totvarexp + otherexp)
+
+# Define variable expenses as a percent of total variable expense both including and not including other expenses
+coa <- coa %>% 
+  mutate(across(fert:cwork, 
+                ~.x/totvarexp, 
+                .names = "{.col}_var_pct")) %>% 
+  mutate(across(fert:otherexp, 
+                ~.x/totvarexp_alt, 
+                .names = "{.col}_alt_var_pct"))
+
+# Total expense - including other and not including other (totfixedexp_alt)
+coa <- coa %>% 
+  mutate(
+    rent_lease = k1513 + k1514, 
+    interest = k1515 + k1516, 
+    property_tax = k1517, 
+    veterinary = k1935, 
+    totfixedexp = rent_lease + interest + 
+      property_tax + veterinary + otherexp, 
+    totfixedexp_alt = rent_lease + interest + 
+      property_tax + veterinary)
+
+# Define fixed expenses as a percent of total fixed expense both including and not including other expenses
+coa <- coa %>% 
+  mutate(across(c(rent_lease, interest, property_tax, 
+                veterinary, otherexp), 
+                ~.x/totfixedexp, 
+                .names = "{.col}_fixed_pct")) %>% 
+  mutate(across(rent_lease:veterinary, 
+                ~.x/totfixedexp_alt, 
+                .names = "{.col}_alt_fixed_pct"))
+
+# Define total expense 
+coa <- coa %>% 
+  mutate(
+    totexp = totvarexp + totfixedexp)
+
+
+# Define each expense as a percent of total expenses 
+coa <- coa %>% 
+  mutate(across(c(fert:cwork, 
+                  rent_lease, interest, property_tax, 
+                  veterinary, otherexp), 
+                ~.x/totexp, 
+                .names = "{.col}_pct")) 
+
+# Define metadata 
+varlist <- coa %>% 
+  select(year, fert:otherexp_pct) %>% 
+  names()
+
+cols_remove <- "year"
+m <- meta_select_vars(coa) 
+
+# Add variable description 
+m <- m %>% 
+  mutate(
+    variable_description = case_when(
+      variable_name == "fert" ~ "Fertilizer, lime, and soil conditioners purchased", 
+      variable_name == "chemical" ~ "Chemicals purchased", 
+      variable_name == "seedp" ~ "Seeds, plants, vines, trees, etc. purchased", 
+      variable_name == "animalpurchase"~ "Breeding livestock, all other livestock and poultry purchased or leased", 
+      variable_name == "feed" ~ "Feed purchased for livestock and poultry", 
+      variable_name == "fuelo" ~ "Gasoline, fuels, and oils purchased for the farm business", 
+      variable_name == "util" ~ "Utilities purchased for the farm business", 
+      variable_name == "mainr" ~ "Repairs, supplies, and maintenance costs for the farm business", 
+      variable_name == "labor" ~ "Hired farm and ranch labor, contract labor", 
+      variable_name == "cwork" ~ "Customwork and custom hauling", 
+      variable_name == "rent_lease" ~ "Cash rent for land and buildings, rent and lease expense for machinery, equipment and farm share of vehicles", 
+      variable_name == "interest" ~ "Interes paid on debts", 
+      variable_name == "property_tax" ~ "Property tax", 
+      variable_name == "veterinary" ~ "Medical supplies, veterinary, and custom services for livestock", 
+      variable_name == "otherexp" ~ "Other production expenses", 
+      variable_name == "totvarexp" ~ "Total variable expenses", 
+      variable_name == "totvarexp_alt" ~ "Total variable expenses, including other production expense", 
+      variable_name == "totfixedexp" ~ "Total fixed expense", 
+      variable_name == "totfixedexp_alt" ~ "Total fixed expenses, not including other production expense", 
+      variable_name == "totexp" ~ "Total production expense",
+      variable_name %in% c("fert_var_pct", "fert_alt_var_pct") ~ "Fertilizer, lime, and soil conditioners purchased as a percent of total variable expense", 
+      variable_name %in% c("chemical_var_pct", "chemical_alt_var_pct") ~ "Chemicals purchased as a percent of total variable expense", 
+      variable_name %in% c("seedp_var_pct", "seedp_alt_var_pct") ~ "Seeds, plants, vines, trees, etc. purchased as a percent of total variable expense", 
+      variable_name %in% c("animalpurchase_var_pct", "animalpurchase_alt_var_pct") ~ "Breeding livestock, all other livestock and poultry purchased or leased as a percent of total variable expense", 
+      variable_name %in% c("feed_var_pct", "feed_alt_var_pct") ~ "Feed purchased for livestock and poultry as a percent of total variable expense", 
+      variable_name %in% c("fuelo_var_pct", "fuelo_alt_var_pct") ~ "Gasoline, fuels, and oils purchased for the farm business as a percent of total variable expense", 
+      variable_name %in% c("util_var_pct", "util_alt_var_pct") ~ "Utilities purchased for the farm business as a percent of total variable expense", 
+      variable_name %in% c("mainr_var_pct", "mainr_alt_var_pct") ~ "Repairs, supplies, and maintenance costs for the farm business as a percent of total variable expense", 
+      variable_name %in% c("hired_labor_var_pct", "hired_labor_alt_var_pct") ~ "Hired farm and ranch labor as a percent of total variable expense", 
+      variable_name %in% c("contract_labor_var_pct", "contract_labor_alt_var_pct") ~ "Contract labor as a percent of total variable expense",
+      variable_name %in% c("labor_var_pct", "labor_alt_var_pct") ~ "Hired farm and ranch labor, contract labor as a percent of total variable expense", 
+      variable_name %in% c("cwork_var_pct", "cwork_alt_var_pct") ~ "Customwork and custom hauling as a percent of total variable expense", 
+      variable_name %in% c("rent_lease_fixed_pct", "rent_lease_alt_fixed_pct") ~ "Cash rent for land and buildings, rent and lease expense for machinery, equipment and farm share of vehicles as a percent of total fixed cost", 
+      variable_name %in% c("interest_fixed_pct", "interest_alt_fixed_pct") ~ "Interes paid on debts as a percent of total fixed cost", 
+      variable_name %in% c("property_tax_fixed_pct", "property_tax_alt_fixed_pct") ~ "Property tax as a percent of total fixed cost", 
+      variable_name %in% c("veterinary_fixed_pct", "veterinary_alt_fixed_pct") ~ "Medical supplies, veterinary, and custom services for livestock as a percent of fixed cost", 
+      variable_name == "otherexp_fixed_pct" ~ "Other production expenses as a percent of total fixed cost",
+      variable_name == "otherexp_alt_var_pct" ~ "Other production expenses as a percent of total variable cost", 
+            variable_name == "fert_pct" ~ "Fertilizer, lime, and soil conditioners purchased as a percent of total production expense", 
+      variable_name == "chemical_pct" ~ "Chemicals purchased as a percent of total production expense", 
+      variable_name == "seedp_pct" ~ "Seeds, plants, vines, trees, etc. purchased as a percent of total production expense", 
+      variable_name == "animalpurchase_pct"~ "Breeding livestock, all other livestock and poultry purchased or leased as a percent of total production expense", 
+      variable_name == "feed_pct" ~ "Feed purchased for livestock and poultry as a percent of total production expense", 
+      variable_name == "fuelo_pct" ~ "Gasoline, fuels, and oils purchased for the farm business as a percent of total production expense", 
+      variable_name == "util_pct" ~ "Utilities purchased for the farm business as a percent of total production expense", 
+      variable_name == "mainr_pct" ~ "Repairs, supplies, and maintenance costs for the farm business as a percent of total production expense", 
+      variable_name == "labor_pct" ~ "Hired farm and ranch labor, contract labor as a percent of total production expense", 
+      variable_name == "hired_labor_pct" ~ "Hired farm and ranch labor as a percent of total production expense",
+      variable_name == "contract_labor_pct" ~ "Contract labor as a percent of total production expense",
+      variable_name == "cwork_pct" ~ "Customwork and custom hauling as a percent of total production expense", 
+      variable_name == "rent_lease_pct" ~ "Cash rent for land and buildings, rent and lease expense for machinery, equipment and farm share of vehicles as a percent of total production expense", 
+      variable_name == "interest_pct" ~ "Interes paid on debts as a percent of total production expense", 
+      variable_name == "property_tax_pct" ~ "Property tax as a percent of total production expense", 
+      variable_name == "veterinary_pct" ~ "Medical supplies, veterinary, and custom services for livestock as a percent of total production expense", 
+      variable_name == "otherexp_pct" ~ "Other production expenses as a percent of total production expense"))
+
+# Add variable definition 
+m <- m %>% 
+  mutate(
+    variable_definition= case_when(
+      str_detect(variable_name, "fert") ~ "Include rock, phosphate, gypsum, manure purchased, potting soil, growing media, and other organic materials, including cost of custom application", 
+      str_detect(variable_name, "chemical") ~ "Includes insecticides, herbicides, fungicides, other pesticides, etc, include the cost of custom application", 
+      str_detect(variable_name, "seedp") ~ "Includes technology or other fees, seed treatments, and seed cleaning cost, excludes items purchased for resale without additional growth", 
+      str_detect(variable_name, "animalpurchase")~ "Includes dairy cattle, stocker and feeder cattle, calves, sheep, lambs, feeder pigs, chicks, pullets, poults, horses, fish, goats, bee colonies, etc., includes livestock leasing expense", 
+      str_detect(variable_name, "feed") ~ "Includes grain, hay,
+silage, mixed feeds, concentrates, supplements, premixes, etc.", 
+      str_detect(variable_name, "fuelo") ~ "Include diesel, natural gas, LP gas, motor oil, grease, etc.", 
+      str_detect(variable_name, "util") ~ "Includes electricity, farm share of telephone, water purchased, etc.", 
+      variable_name %in% c("labor", "labor_var_pct", "labor_alt_var_pct",
+                           "labor_pct", "hired_labor", "hired_labor_var_pct", 
+                           "hired_labor_alt_var_pct", "hired_labor_pct") ~ " Include employer’s cost for social security, worker’s compensation, health and life insurance premiums, pension plans, expenses for labor, such as harvesting of fruit, vegetables, berries, etc. performed on a contract basis by a contractor, crew leader, etc.", 
+      variable_name %in% c("contract_labor", "contract_labor_var_pct", 
+                           "contract_labor_alt_var_pct", 
+                           "contract_labor_pct") ~ "Includes expenses such as harvesting of fruit, vegetables, berries, etc. performed on a contract basis by a contractor, crew leader, etc.",
+      str_detect(variable_name, "cwork") ~ "Includes custom planting, harvesting, etc. and custom hauling of grain, livestock, milk, manure, etc.", 
+      str_detect(variable_name, "rent_lease") ~ "Includes grazing fees, exludes custom hire", 
+      str_detect(variable_name, "interest") ~ "Interest expense on debts secured by real estate and not secured by real estate", 
+      str_detect(variable_name, "property_tax") ~ "Includes farm real estate, machinery, livestock, etc. for the farm business, exludes taxes paid by this operation’s landlords", 
+      str_detect(variable_name, "veterinary") ~ "Includes artificial insemination (AI), branding, breeding fees, caponizing, castrating, custom feed processing, hormone injections, performance testing, pregnancy testing, seining, sheep shearing, etc, excludes manure disposal", 
+      str_detect(variable_name, "otherexp") ~ "Includes storage and warehousing,
+marketing expenses, insurance, etc, excludes health insurance premiums and payroll taxes", 
+      variable_name == "totvarexp" ~ "Includes fertilizer, chemical, seeds and plants, animal purchases, feed, fuel and oil, utilities, maintenance and repair, contract labor, hired labor, and customwork", 
+      variable_name == "totvarexp_alt" ~ "Includes fertilizer, chemical, seeds and plants, animal purchases, feed, fuel and oil, utilities, maintenance and repair, contract labor, hired labor, and customwork and other expenses", 
+      variable_name == "totfixedexp" ~ "Includes rent and lease, interest, property tax, veterinary, and other expenses", 
+      variable_name == "totfixedexp_alt" ~ "Includes rent and lease, interest, property tax, and veterinary"))
+
+# Bind with metadata 
+meta <- bind_rows(meta, m)
+
+```
+
+## Define CFN
+
+We add metadata for the CFN, that we can use to track operations over time.
+
+```{r}
+
+m <- tibble(
+  year = c("2007", "2012", "2017"),
+  variable_name = "cfn", 
+  variable_description = "Operation ID (NASS defined)", 
+  variable_definition = "Use to track operations over time")
+
+meta <- bind_rows(meta, m)
+
+```
+
+## Save final data frames
+
+```{r}
+library(srvyr)
+
+# Make year numeric in metadata to match data frame and add source and citation
+meta <- meta %>% 
+  mutate(
+    source = case_when(
+      year =="2007" & is.na(source) ~ "U.S. Department of Agriculture, National Agricultural Statistics Service, 2007 Census of Agriculture", 
+      year == "2012" & is.na(source)~ "U.S. Department of Agriculture, National Agricultural Statistics Service, 2012 Census of Agriculture", 
+      year == "2017" & is.na(source)~ "U.S. Department of Agriculture, National Agricultural Statistics Service, 2017 Census of Agriculture",
+    TRUE ~ source), 
+    url = case_when(
+      year == "2007" & is.na(url) ~ "https://agcensus.library.cornell.edu/census_year/2007-census/", 
+      year == "2012" & is.na(url) ~ "https://agcensus.library.cornell.edu/census_year/2012-census/", 
+      year == "2017" & is.na(url) ~ "https://www.nass.usda.gov/Publications/AgCensus/2017/index.php", 
+    TRUE ~ url))
+
+# Make meta data for coa and save files
+meta_coa <- meta
+rm(m, meta)
+
+# Save data frames
+save(coa, file = "data_processed/not_survey/coa.RData")
+save(meta_coa, file = "data_processed/meta_coa.RData")
+write_csv(meta_coa, "data_processed/meta_coa.csv")
+
+# By year for not survey data
+coa_07 <- coa %>% 
+  filter(year ==2017)
+save(coa_07, file = "data_processed/not_survey/coa_07.RData")
+coa_12 <- coa %>% 
+  filter(year == 2012)
+save(coa_12, file = "data_processed/not_survey/coa_12.RData")
+coa_17 <- coa %>% 
+  filter(year == 2017)
+save(coa_17, file = "data_processed/not_survey/coa_17.RData")
+
+# Add survey version of data 
+coa <- coa %>% as_survey(weights = weight)
+save(coa, file = "data_processed/coa.RData")
+
+coa_07 <- coa %>% 
+  filter(year == 2007) %>% 
+  as_survey(weights = weight)
+save(coa_07, file = "data_processed/coa_07.RData")
+rm(coa_07)
+
+coa_12 <- coa %>% 
+  filter(year ==2012) %>%
+  as_survey(weights = weight)
+save(coa_12, file = "data_processed/coa_12.RData")
+
+coa_17 <- coa %>% 
+  filter(year == 2017) %>%
+  as_survey(weights = weight)
+save(coa_17_srv, file = "data_processed/coa_17.RData")
+
+```
