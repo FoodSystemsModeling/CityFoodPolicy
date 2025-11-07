@@ -12,7 +12,7 @@ As regions across the world leverage public food procurement to meet a combinati
 -   Develop policy instruments that inform how cities weigh and implement values-based food policies
 
 ## Work-in-progress
-All of the files shared here are a in work-in-progress. We are in the middle of our 5-year project and will periodically update the GitHub with additional data and code as we continue to progress on our work.
+All of the files shared here are a in work-in-progress. We are in the middle of our 5-year project and will periodically update the GitHub with additional data and code as we continue to progress on our work. We have created an [online book](https://allison-bauman.quarto.pub/cityfoodpolicy/) to document the project and will continue to update it throughout the project. 
 
 ## License
 This website is (and will always be) free to use, and is licensed under the Creative Commons Attribution 4.0 International License.

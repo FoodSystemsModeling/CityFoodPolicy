@@ -2,12 +2,11 @@
 title: "Institutional purchasing in New York state"
 format: html
 editor: visual
-echo: false
 ---
 
 We use data from [NYC Food Policy, Good Food Purchasing data from 2019-2023](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page), we download the full purchasing data set.
 
-We want mean/sd/median on weight (in lbs.) and price (\$/lb.) for dry beans by form (canned, dried, frozen) by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.
+We provide average and standard deviation for price per lb. and kg. for dry beans by form (canned, dried, frozen), and by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.
 
 ## Import data
 Here we import data and define variables. 
@@ -103,7 +102,7 @@ Removed outliers that were more than 2 standard deviations from the mean based o
 
 Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data. 
 
-Data are saved to "drybeans/data_final/nyc_bean_purchasing.xlsx". Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried). 
+[Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried).](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/NYC_bean_purchasing.xlsx) 
 
 ```{r}
 

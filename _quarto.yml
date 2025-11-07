@@ -4,9 +4,9 @@ project:
 	
 book:
   title: "CityFoodPolicy"
-  author: "Becca Jablonski, Randall Boone, Jasmine Dillon, Frank Ge, Miguel Gomez, Erin Love, Rebecca Wasserman-Olin, Allison Bauman"
+  author: "Becca Jablonski, Randall Boone, Jasmine Dillon, Frank Ge, Miguel Gomez, Jon Guez, McKenna Short, Rebecca Whipple Silverstein, Allison Bauman"
   cover-image: images/cover.png
-  date: "2026"
+  date: "November 2025"
   favicon: images/favicon.png
   repo-url: https://github.com/FoodSystemsModeling/CityFoodPolicy
   page-navigation: true
@@ -21,9 +21,11 @@ book:
     - part: "Dry beans"
       chapters: 
       - drybeans/supply_chain.qmd
+      - drybeans/agricultural_production.qmd
       - drybeans/farmgate.qmd
-      - drybeans/model_data_documentation.qmd
+      - drybeans/supply_chain_margins.qmd
       - drybeans/institutional_purchasing_NYC.qmd
+      - drybeans/model_data_documentation.qmd
     - part: "Beef"
       chapters: 
         - beef/beef.qmd
