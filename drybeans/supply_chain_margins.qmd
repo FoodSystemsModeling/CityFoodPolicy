@@ -4,15 +4,15 @@ format: html
 editor: visual
 ---
 
-We use data from interviews to understand margins along the dry bean supply chain, both inside and outside of New York, lead by Michael Herwitz.
+We use data from interviews to understand margins along the dry bean supply chain, both inside and outside of New York, lead by Michael Hurwitz. Maybe link to other chapters where we discuss interviews. 
 
-After conducting all of the interviews [Michael went through them to pull out all information related to margins](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_processed/2025_BeanMarginInfo_fromInterviews), reached out to contacts to get clarification where needed, and went to additional sources to better understand margins outside of New York.
+After conducting all of the interviews [Michael went through them to pull out all information related to margins](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_processed/2025_BeanMarginInfo_fromInterviews), reached out to dry bean advisory committee to get clarification where needed.
 
 Additional data collected includes:
 
 -   Cleaner/aggreagtor in New York
 
-    -   NY Bean strives for \$.08/lb. 
+    -  \$.06/lb. to \$.08/lb. for all types of beans (differentiated and not) 
 
 -   Cleaner/aggregator margin outside of New York
 
@@ -62,26 +62,20 @@ In some cases, the margins for dry beans moving through the differentiated marke
 
 ## Cleaner/aggregator
 
-Data from New York cleaner/aggregators comes from the interview with Seneca grain, NY Bean, and GVB.
-
--   Seneca Grain - margins for organic dry beans grown in New York
--   NY Bean and GVB - margins for conventional dry beans grown in New York
-
-**Michael** - is this correct? anything else relevant to prices in our diagram?
+Data from New York cleaner/aggregators comes from the interviews. 
 
 For the cleaner/aggregator processing New York beans, organic beans have an 11% margin and conventional ranges from 4-9%. Margins do not differ by market channel.
 
-For beans grown outside of New York, the cleaner aggregator margin ranges from \$.06/lb. to \$.15/lb. For organic, these margins are \$.10/lb. to \$.12/lb.
+For beans grown outside of New York, the cleaner aggregator mark up cost ranges from \$.06/lb. to \$.15/lb. For organic, these margins are \$.10/lb. to \$.12/lb.
 
 To convert these margins:
 
 -   margin = (selling price - cost)/selling price.
 -   selling price - cost = 0.06 to 0.15
--   we use \$57/50lbs (\$1.14/lb.) for the selling price to compute the margin (from the NY Bean interview).
--   low margin = 0.06/1.14 = 5%
--   high margin = 0.15/1.14 = 13%
-
-**Michael question** - is this correct?
+-   selling price = commodity price paid to farmer (0.40) + 0.06 = 0.46
+-   selling price = commodity price paid to farmer (0.40) + 0.15 = 0.55
+-   low margin = 0.06/0.46 = 13%
+-   high margin = 
 
 ```{r}
 
@@ -126,12 +120,11 @@ cleaner_agg <- cleaner_agg %>%
 
 ## Primary processor
 
-Conventional & organic canning margin ranges from 6-10%. Conventional & organic dry beans bagging margin ranges from 15-20% 
+Conventional & organic canning margin ranges from 6-10%. Conventional & organic dry beans bagging margin ranges from 15-20%
 
 ### Canning
-There are no differences for by conventional/organic or by scale. 
 
-Add where this is from...
+There are no differences for by conventional/organic or by scale.
 
 ```{r}
 
@@ -145,7 +138,9 @@ primary_processor_canning <- margins %>%
 ```
 
 ### Bagging
-ADD where this is from 
+
+ADD where this is from
+
 ```{r}
 
 primary_processor_bagging <- margins %>%
@@ -157,7 +152,8 @@ primary_processor_bagging <- margins %>%
 ```
 
 ## Secondary processor
-These include products that are frozen or otherwise processed, but do not include canned beans. Canned beans are considered a primary processor. 
+
+These include products that are frozen or otherwise processed, but do not include canned beans. Canned beans are considered a primary processor.
 
 ```{r}
 
@@ -212,7 +208,8 @@ wholesale_canned <- margins %>%
 ```
 
 ## All margins and save
-We combine all [margins and save the file](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/margins.xlsx).   
+
+We combine all [margins and save the file](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/margins.xlsx).
 
 ```{r}
 
