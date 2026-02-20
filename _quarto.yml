@@ -1,12 +1,12 @@
 project:
   type: book
-  output-dir: _book
+  output-dir: docs
 	
 book:
   title: "CityFoodPolicy"
   author: "Becca Jablonski, Randall Boone, Jasmine Dillon, Frank Ge, Miguel Gomez, Jon Guez, McKenna Short, Rebecca Whipple Silverstein, Allison Bauman"
   cover-image: images/cover.png
-  date: "November 2025"
+  date: "December 2025"
   favicon: images/favicon.png
   repo-url: https://github.com/FoodSystemsModeling/CityFoodPolicy
   page-navigation: true
@@ -16,16 +16,15 @@ book:
     - index.qmd
     - cityfoodpolicies.qmd
     - research_question.qmd
-    - nys_supply_chains.qmd
-    - modeling_approach.qmd
+    - research_approach.qmd
     - part: "Dry beans"
       chapters: 
-      - drybeans/supply_chain.qmd
-      - drybeans/agricultural_production.qmd
-      - drybeans/farmgate.qmd
-      - drybeans/supply_chain_margins.qmd
-      - drybeans/institutional_purchasing_NYC.qmd
-      - drybeans/model_data_documentation.qmd
+      - drybeans/model_boundaries.qmd
+      - drybeans/data_inputs.qmd
+      - drybeans/model_parameterization.qmd
+      - drybeans/agent_behavior_decisions.qmd
+      - drybeans/model_validation.qmd
+      - drybeans/model_outputs.qmd
     - part: "Beef"
       chapters: 
         - beef/beef.qmd
@@ -34,6 +33,7 @@ book:
         - greens/greens.qmd
     - part: "Appendices"
       chapters:
+        - appendix/glossary.qmd
         - appendix/appendix.qmd
 
 bibliography: references.bib
@@ -45,7 +45,7 @@ knitr:
     message: false
     warning: false
     
-    # Add echo: true or false for different versions with and without the code
+# Add echo: true or false for different versions with and without the code
 
 
 

@@ -1,0 +1,40 @@
+---
+format: html
+---
+
+# Model parameterization
+
+## Supply Chain Data
+Click on a node of the supply chain to link to the data used in the model for each location along the supply chain. 
+
+```{r, echo = FALSE}
+library(DiagrammeR)
+
+mermaid('
+graph LR;
+  A(Land)--> D(Producer)
+  B(Labor)-->D
+  C(Farm <br/> Inputs)-->D
+  D-->F("Aggregator<br>(Cleaner)")
+  F-->G(Primary <br/> Processor)
+  F-->H("Wholesaler<br>(Distributor)")
+  G-->H
+  G-->I(Secondary <br/> Processor)
+  I-->H
+  H-->K(NYC Agency)
+  G-->K
+  H-->L(Commodity and<br>Differentiated<br>Markets)
+  G-->L
+  
+  classDef whiteBox fill:#ffffff,stroke:#000000,stroke-width:2px
+  class A,B,C,D,E,F,G,H,I,J,K,L whiteBox
+  
+  click D "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers" "Producer data"
+  click G "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Primary_Processors" "Primary processor data"
+  click H "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Wholesalers" "Wholesaler data"
+  click I "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Secondary_Processors" "Secondary processor data"
+  click F "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Aggregators" "Cleaner/aggregator data"
+  click K "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Agencies" "NYC agency data"
+  ')
+
+```

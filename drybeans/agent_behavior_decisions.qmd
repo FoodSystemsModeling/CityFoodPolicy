@@ -1,0 +1,38 @@
+---
+format: html
+editor: visual
+---
+
+# Agent behavior and decision making
+
+## How base agents respond to requests with offers
+
+```{r, echo = FALSE}
+
+library(DiagrammeR)
+
+mermaid('
+  graph TD
+  A[What vendor should<br>I sell to?] --> B[Does the contract<br>meet my raw profit]
+  A -->C[Does the contract<br>meet my purchase price]
+  A -->D[Does the contract<br>meet my landed cost requirements]
+  B -->E[Does the contract meet my raw profit, purchase price, and <br>landed cost requirements]
+  C -->E
+  D -->E
+  E -->F[Do not sell to this agent]
+  E -->G[Is the quantity requested<br>greater than my minimum order?]
+  G --> H[Set offer price.<br>Allow for sale of items]
+  G -->I[Do not sell to this agent]
+  
+  click B "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers" "Raw profit"
+  click C "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers" "Purchase price"
+  click D "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers" "Landed cost"
+  
+  classDef whiteBox fill:#ffffff,stroke:#000000,stroke-width:2px
+  class A,B,C,D,E,F,G,H,I whiteBox
+  
+')
+
+```
+
+## Scoring incoming requests for product in the model

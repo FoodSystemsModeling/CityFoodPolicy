@@ -1,0 +1,24 @@
+# Research approach {.unnumbered}
+Big picture
+
+## Stakeholder engagement
+There is growing literature that talks about the importance of engaging stakeholders in all aspects of model design, building, and validation (e.g., [Wentworth et al., 2024](https://www.sciencedirect.com/science/article/pii/S1462901123002940). Accordingly, this project incorporated commodity specific advisory committees. These advisory groups helped us to select and recruit relevant stakeholders to participate in focus groups and interviews. The focus groups and interviews were used to validate data, understand decision making, and establish model boundaries and decisions. 
+
+### Causal loop diagrams
+Describe why we did causal loop diagrams. The actual diagrams are referenced in the commodity specific sections. 
+
+## Modeling approach
+Drawing on publicly available data as well as input from food and agriculture stakeholders around New York State, this three-year research collaborative adapts an agent-based research model, building upon past agent-based modeling work in Denver, Colorado.
+
+The CFPP model allows for the simulation of complex systems and the emergent behavior that may result from the autonomous actions of system agents with each other and their environment.
+
+This model can simulate a variety of potential changes to a city’s food policy environment and to observe any resulting effects or feedback throughout various stages of the supply chain. To learn more, please visit our GitHub site.
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/Model-graphic.png")
+```
+
+### Model validations
+Supply chain and New York City agency stakeholders supported model validation. More details available in the commodity sections. 
+
+

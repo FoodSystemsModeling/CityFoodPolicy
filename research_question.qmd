@@ -1,13 +1,98 @@
 # Research question {.unnumbered}
 
-## How did we choose our commodities
+What are the regional economic and environmental impacts and tradeoffs associated with New York City's public food procurement policies?
 
-### New York City data
+## How did we choose our focal food policy actions?
 
-This is where we put all of the data collected by Rebecca New York state ag data (Census of Ag, etc.)
+Coming soon...
 
-Selected food policy actions Aiden put this together and Dana/Michael have a nice visual to add
+## How did we choose our commodities?
 
-New York City legal framework (Aiden) 
+Our goal was to select items that were purchased in substantial quantity by New York City that were also grown or raised by New York State farmers and that which were not already being purchased locally in substantial quantities.
 
-NYC baseline purchasing by food policy action This is what Rebecca is currently working on
+### New York City purchasing (demand)
+
+#### Good Food Purchasing
+
+The Good Food Purchasing (GFP) Program provides a transparent, flexible, and metrics-based, framework that encourages large institutions to direct their food buying power toward five core values: local economies, environmental sustainability, valued workforce, animal welfare, and nutrition. The program is managed by the Center for Good Food Purchasing, an organization which works with partner institutions to incorporate the values into their spending, collect data, and track progress.
+
+Over the past five years, NYC has worked with the Center for Good Food Purchasing to develop an approach to integrating the principles of GFP across our own agency food spending.
+
+```{r, echo=FALSE}
+library(knitr)
+
+include_graphics("images/research_question/GFP.png")
+
+```
+
+#### Policy
+
+In 2017, MOFP started working with City agencies to onboard them into the Good Food Purchasing program. We started with Health and Hospitals and then the DOE, which is by far the largest food buyer, making up almost half of our \$300M annual food spend. Later we added ACS, DHS, DOC, and NYC Aging. We started collecting data from the agencies and their vendors about where their food dollars were going, and we collaborated to develop action plans to advance the GFP values.
+
+```{r, echo=FALSE}
+
+include_graphics("images/research_question/mofp_history.png")
+```
+
+**Executive Order 8**<br> "MOFP shall establish a Good Food Purchasing Program, the goal of which shall include the study and publication of data, on an annual basis, that provides transparency about how mayoral agencies’ procurements impact core values relating to local economies, environmental sustainability, valued workforce, animal welfare, and nutrition affecting the health of all New Yorkers."
+
+#### NYC values and metrics
+
+```{r, echo = FALSE}
+
+include_graphics("images/research_question/nyc_values_metrics.png")
+```
+
+#### Agency food procurement
+[NYC Food Policy Dashboard](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page) shows NYC food purchasing from the 2019 school year through the 2023 school year.  
+
+```{r, echo = FALSE}
+#| out-width: "100%"
+#| out-height: "100vh"
+
+include_graphics("images/research_question/foodpolicydashboard_1.png")
+
+include_graphics("images/research_question/foodpolicydashboard_2.png")
+
+```
+
+**Fiscal Year 2023 citywide data highlights**
+
+-   Total Food Spend: ~$460M
+-   Agencies with largest food spend: NYC Public Schools, DHS, NYC Aging
+-   Total Food Spend Analyzed: ~330M
+-   Agencies with most complete data available: NYC Public Schools, HRA, H+H, DOC
+-   Total GHG emissions: ~260K tons CO2e
+-   NY State Food Spend: 42%
+-   NY MWBE Food Spend: 2%
+-   NY Food Standards Compliance: 95%
+
+### New York State production (supply)
+
+#### Dry beans
+Dry bean production is centralized in western New York, according to the 2017 USDA Ag Census (USDA National Agricultural Statistics Service, n.d.). A small amount of acreage is scattered across the state, with the exact acreage counts suppressed by the USDA. These counties are shown as white on the map below. Grey counties have no reported acreage or an indication that data was suppressed. 
+
+Between the 2012 and 2017 USDA Ag Census, dry bean acreage and harvest quantity increased in the state. Total production increased from 199,581 CWT to 281,038 CWT, or a 40% increase. Acreage increased by 31% (or 2,977 acres) in the same time period. The use of irrigation decreased and the number of farmers reported to produce dry beans increased from
+90 to 91. Eight key counties account for most of the state’s production and are all located in the same centralized region.
+
+```{r, echo=FALSE}
+#| out-width: "100%"
+#| out-height: "100vh"
+#| 
+include_graphics("images/research_question/beans_map.png")
+
+```
+
+#### Beef
+Agriculture is important to New York State. The value of agricultural production was over $5.40 billion in 2017. About 23 percent of the state’s land area, or 7 million acres, are used by the 33,000 farms to produce a very diverse array of food products ([nybeef.org](https://www.nybeef.org/raising-beef/beef-production-in-new-york)). 
+
+```{r, echo=FALSE}
+
+include_graphics("images/research_question/beef_map.jpg")
+```
+
+#### Greens
+
+Coming soon...
+
+

@@ -1,13 +1,69 @@
-# City food policies to meet sustainable development goals {.unnumbered}
+# Values-based public food procurement {.unnumbered}
 
 ## International public food procurement
-
-## U.S. public food procurment
+Coming soon... 
 
 ## New York City public food procurment
+{{< include cityfoodpolicies/legal_basis_report.qmd >}}
 
-### New York City agency specific procurment information
+## New York City food policy actions
+In 2022, New York City formally established the Good Food Purchasing initiative, which guides City agencies in aligning food spending with six core values: nutrition, local economies, environmental sustainability, animal welfare, valued workforce, and transparency. These values shape how agencies design procurements, how vendors and supply chain stakeholders develop and price products, and how bids are evaluated and selected. The Food Policy Actions featured in this dashboard were identified in partnership with the Mayor’s Office of Food Policy. The first part of each Food Policy Action name reflects its Good Food Purchasing value alignment, while the second describes how New York City is advancing (or considering advancing) progress toward that value.
 
-this is where the NYC data overview, this is what NYC has on their dashboard, overall trends in purchasing
+#### Business As Usual
 
+Business as Usual represents our best estimate of current NYC purchasing practices for the selected commodities. It reflects what NYC agencies purchase, where those products come from, and how they move through the supply chain—from producers to City buyers. Under Business as Usual, vendors submit bids in response to NYC procurement requests, and agencies generally select the lowest-priced bid that meets their requirements. This scenario is built using multiple data sources, existing models, and input and validation from NYC and affected supply chain stakeholders. It serves as a baseline for comparing how alternative food policy actions may change outcomes.
 
+#### Environmental Sustainability: Organic Purchasing
+
+Bid allowance or requirement for organic certification by the producer, as defined by the [U.S. Department of Agriculture’s National Organic Program](https://www.ams.usda.gov/about-ams/programs-offices/national-organic-program).
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Organic.png")
+```
+
+#### Local Economies: M/WBE Purchasing
+Bid allowance or requirement for purchasing from certified minority or women owned businesses as defined by New York City or New York State. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_MWBE.png")
+```
+
+#### Local Economies: Local Purchasing
+A bid allowance or requirement that products be grown, aggregated, processed, and/or distributed in New York State. Which stages of the supply chain must occur in New York State depends on the selected definition.
+Under this food policy action, local can be defined in five ways: <br> 
+**Producer**:
+Only the producer that grew or raised the commodity must be located in the state of New York <br>
+**Partial-supply chain**:
+At least one of the producer, aggregator, primary or secondary processor must be located in the state of New York <br>
+**Entire supply chain**:
+Every supply chain stakeholder must be located in the state of New York <br>
+**51% NY ingredients + processor in NY**:
+This definition applies to processed products only. Under this definition, the processed product must include a processor from New York State and at least 51% of the raw ingredients must come from NYS producers. <br>
+**51% NY ingredients + processor located anywhere**
+This definition applies to processed products only. Under this definition, the processed product can be aggregated, processed, and distributed from anywhere, but at least 51% of the raw ingredients must come from NYS producers. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Local.png")
+```
+
+#### Local Economies: Community Hiring from Small Producers
+Bid allowance or requirement for products grown or raised by small- or medium-sized farms. Farm size is measured by annual gross cash farm income (GCFI)—a measure of the farm's revenue (before deducting expenses) that includes sales of crops and livestock, payments made under agricultural federal programs, and other farm-related cash income including fees from production contracts. The U.S. Department of Agriculture’s Economic Research Service Farm Typology defines small- and mid-sized farms as those with less that $1,000,000 in GCFI. Small- and medium-sized farms were selected as a proxy for “community hiring” as, on average, these operations have lower total household income.
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Hiring.png")
+```
+
+#### Local Economies: Investment in Middle Supply Chain Infrastructure
+An investment in a New York State aggregator, primary or secondary processor that expands the availability of New York-grown or -raised products and/or increases access to further processed items.
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Infrastructure.png")
+```
+
+#### Nutrition: Menu Changes
+
+A change in the number of meals per week that are plant-based. This decision changes the relative share of animal-based proteins and plant-based proteins purchased by NYC agencies. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Menu.png")
+```

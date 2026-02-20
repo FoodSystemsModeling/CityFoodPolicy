@@ -1,0 +1,41 @@
+---
+format: html
+editor: visual
+echo: false
+---
+
+# Model boundaries
+
+## Dry beans supply chain
+
+In the model, each "agent" represents a type of food system participant—such as farms, food businesses, or City agencies—with distinct roles, constraints, decision rules, and characteristics. We refer to these as supply chain stakeholders, each of which has different types of characteristics. For example, a farm can have one or more of the following characteristics: small, certified organic, M/WBE operators.
+
+```{r}
+#| label: drybeans_supply_chain
+#| out-width: "100%"
+
+knitr::include_graphics("../images/dried-bean-supply-chain_12-11-25-02.jpg")
+
+```
+
+## Supply Chain Stakeholder Types
+
+**Producer** <br> Farms that grow beans using land, labor, and other farm inputs. This includes all on-farm production activities—from planting through harvest—but does not include activities such as cleaning or packaging.
+
+**Aggregator (Cleaner)** <br> These businesses clean and sort dry beans. They may be owned by a single farm, a group of farms, or operate independently. They typically purchase beans in bulk (e.g., by the truckload) and resell them in smaller quantities or in containers for export markets. They operate either by purchasing beans and selling them after cleaning, or by providing cleaning and storage services for a fee.
+
+**Primary Processor** <br> These businesses use cleaned beans as an input, such as canning operations, bean flour producers, and facilities that package beans into retail-sized bags.
+
+**Secondary Processor** <br> This is a secondary stage of processing beans into products. These businesses use beans from primary processors as inputs into their products. These include using cooked beans or bean flour to create a new product.
+
+**Wholesaler (Distributor)** <br> Businesses that sell a product made by someone else. They can sell items from various stages in the supply chain.
+
+**NYC Agency** <br> A New York City agency that purchases processed bean products from various suppliers.
+
+**Commodity and Differentiated Markets** <br> Commodity markets (domestic or export) have effectively unlimited supply and demand and typically purchase at the lowest available price. They do not pay premiums for value characteristics (such as organic certification). Differentiated markets have more limited demand but often pay higher prices than commodity markets, reflecting preferences for specific product or business characteristics. <br>
+
+**Out-of-State-Supply Bean Pathway** <br> **Contract Information Pathway**
+
+## Causal loop diagram
+
+Coming soon...

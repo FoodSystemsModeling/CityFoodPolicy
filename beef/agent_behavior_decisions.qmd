@@ -1,0 +1,9 @@
+---
+title: "Agent behavior and decision making"
+format: html
+editor: visual
+---
+
+## How base agents decide which agents to buy from
+## How base agents respond to requests with offers
+## Scoring incoming requests for product in the model

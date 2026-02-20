@@ -1,0 +1,25 @@
+---
+title: "Data inputs and model parameterization"
+format: html
+editor: visual
+---
+
+## Agricultural production
+
+### Farm inputs and production costs
+
+## Processing
+
+## Distribution
+
+## Markets
+
+## Estimated margins
+
+## Consumption
+
+## Institutional purchasing in New York State
+
+## LCA
+
+Jasmine and Elsie add.

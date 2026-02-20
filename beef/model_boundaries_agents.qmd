@@ -1,0 +1,22 @@
+---
+title: "How the supply chain works"
+format: html
+editor: visual
+echo: false
+---
+
+## Model boundaries and agents
+
+```{r}
+#| label: drybeans_supply_chain
+#| out-width: "100%"
+
+knitr::include_graphics("../images/dried-bean-supply-chain_12-11-25-02.jpg")
+
+```
+
+## Supply chain definitions
+
+## Causal loop diagram
+
+Include diagrams here.

@@ -1,5 +1,4 @@
 ---
-title: "Institutional purchasing in New York state"
 format: html
 editor: visual
 ---
@@ -8,8 +7,9 @@ We use data from [NYC Food Policy, Good Food Purchasing data from 2019-2023](htt
 
 We provide average and standard deviation for price per lb. and kg. for dry beans by form (canned, dried, frozen), and by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.
 
-## Import data
-Here we import data and define variables. 
+### Import data
+
+Here we import data and define variables.
 
 ```{r}
 library(tidyverse)
@@ -69,7 +69,7 @@ df <- df %>%
 
 ```
 
-## Understand missing total weight data
+### Understand missing total weight data
 
 The missing data does have the number of units, but does not have weight in lbs. We can use the information provided about the product and estimate how much the product weighed and estimate a total weight.
 
@@ -96,13 +96,13 @@ testing <- df %>%
 rm(missing, testing)
 ```
 
-## Summary stats
+### Summary {#sec-drybeans-NYC-purchasing}
 
 Removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).
 
-Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data. 
+Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data.
 
-[Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried).](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/NYC_bean_purchasing.xlsx) 
+[Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried).](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/NYC_bean_purchasing.xlsx)
 
 ```{r}
 
@@ -193,5 +193,3 @@ table %>%
   
 
 ```
-
-

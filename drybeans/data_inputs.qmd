@@ -1,0 +1,28 @@
+---
+format: html
+editor: visual
+---
+
+# Data inputs
+
+## Agricultural production
+
+{{< include ../drybeans/farmgate.qmd >}}
+
+## Processing
+
+## Distribution
+
+## Markets
+
+## Estimated margins
+
+## Consumption
+
+## Institutional purchasing in New York State
+
+{{< include ../drybeans/institutional_purchasing_NYC.qmd >}}
+
+## LCA
+
+Jasmine and Elsie add.

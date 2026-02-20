@@ -1,16 +1,15 @@
 ---
-title: "Farmgate cost of production and prices received"
 format: html
 editor: visual
 ---
 
 We estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. Prices received by producer on the commodity market are based on price data from NASS and prices received on the differentiated market are based on interview data.
 
-## Cost of production
+### Cost of production {#sec-drybeans-costofproduction}
 
 Using the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.
 
-### Dry beans
+#### Dry beans
 
 To understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of \$525 per acre.
 
@@ -31,7 +30,7 @@ From the Census of Agriculture, we have an average dry bean yield in NY of 20.5 
 
 The New York cost of production per acre is based on June's assumption.
 
-#### NYS producers
+##### NYS producers
 
 ```{r}
 library(tidyverse)
@@ -91,7 +90,7 @@ drybeans <- drybeans %>%
   filter(!is.na(variable_name))
 ```
 
-#### Outside NYS producers
+##### Outside NYS producers
 
 -   North Dakota: 434.05
 -   Wyoming: 598.70
@@ -153,7 +152,7 @@ drybeans <- drybeans %>%
 rm(outside_ny)
 ```
 
-### Soybeans
+#### Soybeans
 
 We use Census of Agriculture data and keep only those producers with soybean sales. Because we only have soybean producers, then the total cost per acre is for soybeans only and we don't need to use a crop budget.
 
@@ -252,7 +251,7 @@ soybeans <- soybeans %>%
 
 ```
 
-### Save
+#### Save
 
 Combine all data into one file and save. [Final cost of production data](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/production_cost.xlsx)
 
@@ -285,9 +284,9 @@ saveWorkbook(wb, "data_final/production_cost.xlsx",
 rm(list=ls())
 ```
 
-## Prices
+### Prices
 
-### NASS prices
+#### NASS prices
 
 For prices for conventionally grown dry beans (dry edible beans, excluding chickpeas) and soybeans, we use price data from [USDA NASS Quick Stats](https://quickstats.nass.usda.gov/). All data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans. For the model, they want everything in terms of kilograms, so we convert to dollars per kg.
 
@@ -303,7 +302,7 @@ price <- price %>%
 
 ```
 
-### Convert to \$/lb and \$/kg
+#### Convert to \$/lb and \$/kg
 
 All data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans.
 
@@ -339,7 +338,7 @@ price <- price %>%
 
 ```
 
-### PPI
+#### PPI
 
 We present data in 2023 prices used the St. Louis Fed, Producer Price Index by Commodity for [soybeans](https://fred.stlouisfed.org/series/WPU01830131) and [dry beans](https://fred.stlouisfed.org/series/WPU0113011).
 
@@ -435,7 +434,7 @@ price_full <- price
 
 ```
 
-### Commodity price
+#### Commodity price
 
 We use the data collected above using 2023 dollars and convert the data to be in a similar format to the cost of production data. In this case, we will have different prices for organic, conventional, and New York beans sold through differentiated channels (not data on soy for this category).
 
@@ -512,7 +511,7 @@ price <- bind_rows(drybean_price, soybean_price)
 rm(soy_organic, drybean_price, soybean_price)
 ```
 
-### Differentiated price
+#### Differentiated price
 
 We use data from the interviews to understand differentiated prices
 
