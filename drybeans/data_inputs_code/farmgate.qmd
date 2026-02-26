@@ -1,0 +1,578 @@
+---
+format: html
+editor: visual
+---
+
+We estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. Prices received by producer on the commodity market are based on price data from NASS and prices received on the differentiated market are based on interview data.
+
+### Cost of production {#sec-drybeans-costofproduction}
+
+Using the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.
+
+#### Dry beans
+
+To understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of \$525 per acre.
+
+We also need a cost of production for bean producers outside of New York, as those are the producers currently supplying the New York City beans. Based on discussions with Michael, most of the beans come from North Dakota, so we base our cost of production on an enterprise budget from North Dakota. We also include the other crop budgets we could find for comparison/to provide range:
+
+-   [North Dakota, 2024](https://www.ndsu.edu/agriculture/sites/default/files/2024-02/2024%20North%20East%20ND%20Projected%20Crop%20Budget%20-%20PDF.pdf)
+    -   Cost per acre: \$434.05
+-   [Wyoming](https://wyoextension.org/publications/html/B1315-2/)
+    -   Cost per acre: \$598.70, cost per CWT \$23.95
+-   [Colorado](https://abm.extension.colostate.edu/enterprise-budgets-crop/)
+    -   Cost per acre: \$454.57, cost per CWT \$113.64
+-   [Texas](https://aggie-horticulture.tamu.edu/smallacreage/crops-guides/vegtables/dry-beans/)
+    -   Cost per acre: \$400
+
+**Conclusions** We will use the cost of production data from New York combined with Census of Agriculture data to estimate cost of production for different types of operations. For those outside of NY, we will provide a range based on the enterprise budgets we were able to find.
+
+From the Census of Agriculture, we have an average dry bean yield in NY of 20.5 CWT per acre to convert to production cost per lb.
+
+The New York cost of production per acre is based on June's assumption.
+
+##### NYS producers
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(openxlsx)
+
+ny_production_cost_acre <- 525
+ny_production_cost_acre_se <- 0.25*ny_production_cost_acre
+
+# Import fake data
+drybeans <- read_xlsx(
+  "data_raw/coa_cost_per_acre.xlsx", 
+  sheet = "drybeans")
+
+# Add production cost per acre for beans from crop budget
+drybeans <- drybeans %>% 
+  mutate(
+    year = 2024,
+    baseline = ny_production_cost_acre, 
+    baseline_se = ny_production_cost_acre_se,
+    production_cost_acre_mean = baseline + 
+      (baseline*percent_diff_mean), 
+    production_cost_acre_se =  baseline_se + 
+      (baseline_se*percent_diff_se) 
+    )
+
+# Rename to be consistent with other spreadsheet
+drybeans <- drybeans %>% 
+  mutate(
+    variable_name = case_when(
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI $1M or more" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_drybean_more_mill_nonmwbe_conv", 
+      mwbe_fct=="MWBE" & 
+        sales_class_agg == "GCFI $1M or more" & 
+        organic_fct == "No organic sales" ~
+      "cost_of_production_drybean_more_mill_mwbe_conv",
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_drybean_less_mill_nonmwbe_conv", 
+      mwbe_fct=="MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_drybean_less_mill_mwbe_conv", 
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "Organic sales" ~
+        "cost_of_production_drybean_less_mill_nonmwbe_org")
+  ) 
+
+# Keep only data we need
+drybeans <- drybeans %>% 
+  select(variable_name,
+         production_cost_acre_mean, production_cost_acre_se) %>% 
+  filter(!is.na(variable_name))
+```
+
+##### Outside NYS producers
+
+-   North Dakota: 434.05
+-   Wyoming: 598.70
+-   Colorado: 454.57
+-   Texas: 400
+
+```{r}
+
+# Calculate mean and se from the data that we have
+outside_ny <- tibble(
+  location = c("North Dakota", "Wyoming", "Colorado", "Texas"), 
+  cost_acre = c(434.05, 598.70, 454.57, 400)
+)
+
+# Calulate mean and standard error and include as vectors
+mean <- outside_ny %>% 
+  summarise(mean = mean(cost_acre)) %>% 
+  pull()
+
+se <- outside_ny %>% 
+  summarise(sd = sd(cost_acre), 
+            n = n(), 
+            se = sd/sqrt(n)) %>% 
+  pull(se)
+
+drybeans <- drybeans %>% 
+  add_row(
+    variable_name = "cost_of_production_drybean_outsideNY", 
+    production_cost_acre_mean = mean, 
+    production_cost_acre_se = se)
+
+
+# ADD in N/As for options not included 
+names <- tibble(
+  variable_name = 
+    c("cost_of_production_drybean_more_mill_nonmwbe_conv",
+      "cost_of_production_drybean_more_mill_mwbe_conv",
+      "cost_of_production_drybean_less_mill_nonmwbe_conv", 
+      "cost_of_production_drybean_less_mill_mwbe_conv", 
+      "cost_of_production_drybean_more_mill_nonmwbe_org",
+      "cost_of_production_drybean_more_mill_mwbe_org", 
+      "cost_of_production_drybean_less_mill_nonmwbe_org", 
+      "cost_of_production_drybean_less_mill_mwbe_org", 
+      "cost_of_production_drybean_outsideNY")
+)
+
+# Join 
+drybeans <- left_join(names, drybeans)
+
+rm(names)
+
+# Add in $ per hectare (1 hectare) = 2.471 acres)
+drybeans <- drybeans %>% 
+  mutate(
+    production_cost_hectare_mean = production_cost_acre_mean*2.471, 
+    production_cost_hectare_se = production_cost_acre_se*2.471
+  )
+
+rm(outside_ny)
+```
+
+#### Soybeans
+
+We use Census of Agriculture data and keep only those producers with soybean sales. Because we only have soybean producers, then the total cost per acre is for soybeans only and we don't need to use a crop budget.
+
+In NY there are not enough farms in some categories. So we modify that NY data that we have up or down based on the national numbers.
+
+Conventional soybean producers in NY have 50% higher production costs than compared to the US. We take the numbers we have by scale, MWBE, organic and increase them by 50%.
+
+Crop budgets for comparison:
+
+-   [Ohio in 2022](https://farmoffice.osu.edu/farm-management/enterprise-budgets#2024)
+-   Conventional: 761/acre.
+-   There is no data for organic until 2024, which is 946/acre. For comparison, conventional soy in 2024 was 754/acre.
+-   [Louisiana in 2022](https://www.lsuagcenter.com/articles/page1641147769855)
+-   454/acre
+-   [Alabama in 2025](https://www.aces.edu/blog/topics/farm-management/soybean-enterprise-budget/)
+-   471/acre
+
+```{r}
+
+# Import data
+soybeans <- read_xlsx(
+  "data_raw/coa_cost_per_acre.xlsx", 
+  sheet = "soybeans")
+
+ny_inflation <- soybeans %>% 
+  filter(sample=="NY") %>%
+  pull(percent_diff_mean) 
+
+# Inflate the means/se by the ny inflation number
+soybeans <- soybeans %>% 
+  select(mwbe_fct:se) %>%
+  filter(mwbe_fct != "all") %>% 
+  mutate(
+    mean = mean + (mean*ny_inflation), 
+    se = se + (se*ny_inflation)
+  )
+  
+# Rename
+soybeans <- soybeans %>% 
+  mutate(
+    variable_name = case_when(
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI $1M or more" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_soy_more_mill_nonmwbe_conv", 
+      mwbe_fct=="MWBE" & 
+        sales_class_agg == "GCFI $1M or more" & 
+        organic_fct == "No organic sales" ~
+      "cost_of_production_soy_more_mill_mwbe_conv",
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_soy_less_mill_nonmwbe_conv", 
+      mwbe_fct=="MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "No organic sales" ~ 
+        "cost_of_production_soy_less_mill_mwbe_conv", 
+      mwbe_fct=="Not MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "Organic sales" ~
+        "cost_of_production_soy_less_mill_nonmwbe_org", 
+      mwbe_fct=="MWBE" & 
+        sales_class_agg == "GCFI less than $1M" & 
+        organic_fct == "Organic sales" ~
+        "cost_of_production_soy_less_mill_mwbe_org"))
+
+# add all names so blanks where no data
+names <- tibble(
+  variable_name = c(
+    "cost_of_production_soy_more_mill_nonmwbe_conv", 
+    "cost_of_production_soy_more_mill_mwbe_conv", 
+    "cost_of_production_soy_less_mill_nonmwbe_conv", 
+    "cost_of_production_soy_less_mill_mwbe_conv", 
+    "cost_of_production_soy_more_mill_nonmwbe_org", 
+    "cost_of_production_soy_more_mill_mwbe_org", 
+    "cost_of_production_soy_less_mill_nonmwbe_org", 
+    "cost_of_production_soy_less_mill_mwbe_org", 
+    "cost_of_production_soy_outsideNY")
+)
+
+# Join 
+soybeans <- left_join(names, soybeans)
+
+# Keep columns of interest
+soybeans <- soybeans %>% 
+  select(variable_name, mean, se)
+
+# Rename and add in $ per hectare (1 hectare) = 2.471 acres)
+soybeans <- soybeans %>% 
+  rename(
+    production_cost_acre_mean = mean, 
+    production_cost_acre_se = se) %>% 
+  mutate(
+    production_cost_hectare_mean = production_cost_acre_mean*2.471,
+    production_cost_hectare_se = production_cost_acre_se*2.471)
+
+```
+
+#### Save
+
+Combine all data into one file and save. [Final cost of production data](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/production_cost.xlsx)
+
+```{r}
+
+# Combine dry bean and soybean data
+production_cost <- bind_rows(drybeans, soybeans) 
+
+# Write to file
+wb <- createWorkbook()
+
+# Add info
+info <- tibble(
+  sheet_name = "production_cost", 
+  description = "Mean and standard deviation for cost of production per acre and hectare for dry bean and soybean growers. Costs are by crop, location (in NY/outside NY), scale (under/over $M), organic, and MWBE).",
+  notes = "Missing data means there were no farms of that type in the data.", 
+  source = "Restricted access census of agriculture and crop budgets. See Quarto file for more information."
+)
+
+# Add worksheets and save
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+addWorksheet(wb, "production_cost")
+writeData(wb, "production_cost", production_cost)
+
+saveWorkbook(wb, "data_final/production_cost.xlsx", 
+             overwrite = TRUE)
+
+rm(list=ls())
+```
+
+### Prices
+
+#### NASS prices
+
+For prices for conventionally grown dry beans (dry edible beans, excluding chickpeas) and soybeans, we use price data from [USDA NASS Quick Stats](https://quickstats.nass.usda.gov/). All data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans. For the model, they want everything in terms of kilograms, so we convert to dollars per kg.
+
+```{r}
+
+# Import quick stats data
+price <- read_csv("data_raw/quick_stats_conventional_bean_prices.csv") %>% 
+  janitor::clean_names()
+
+# keep columns of interest
+price <- price %>% 
+  select(year, commodity, value)
+
+```
+
+#### Convert to \$/lb and \$/kg
+
+All data in price per cwt for dry edible beans and bushels for soybeans. Soybean data is based on soybeans for beans.
+
+We convert everything to price per killogram, as required by the model and price per lb.
+
+**Dry beans** 1 cwt = 100 pounds 1 pound = 0.45359 kg 1 cwt = 45.359 kg
+
+**Soybeans** 1 bushel of soybeans = 60 pounds (this is the standard weight) 1 pound = 0.45359 kg 1 bushel of soybeans = 60 × 0.45359 = 27.216 kg
+
+```{r}
+
+# Dry beans- convert to price/kg
+price <- price %>% 
+  mutate(
+    price_per_kg = case_when(
+      commodity == "BEANS" ~ value/45.359, 
+      commodity == "SOYBEANS" ~ value/27.216
+    ), 
+    price_per_lb = case_when(
+      commodity == "BEANS" ~ value/100, 
+      commodity == "SOYBEANS" ~ value/60
+    )
+  ) 
+
+# Rename and select colums of interest
+price <- price %>% 
+  mutate(
+    variable_name = case_when(
+      commodity == "BEANS" ~ "commodity_price_drybean_conv", 
+      commodity == "SOYBEANS" ~ "commodity_price_soy_conv")
+  ) %>% 
+  select(year, commodity, variable_name, starts_with("price"))
+
+```
+
+#### PPI
+
+We present data in 2023 prices used the St. Louis Fed, Producer Price Index by Commodity for [soybeans](https://fred.stlouisfed.org/series/WPU01830131) and [dry beans](https://fred.stlouisfed.org/series/WPU0113011).
+
+The price index for dry beans starts in 2015, we use the 2015 value for 2014.
+
+```{r}
+
+# Import PPI
+ppi_drybeans <- read_csv("data_raw/WPU0113011_drybeans.csv") %>% 
+  rename(
+    drybeans = WPU0113011
+  )
+
+ppi_soybeans <- read_csv("data_raw/WPU01830131_soybeans.csv") %>% 
+  rename(
+    soybeans = WPU01830131
+  )
+
+ppi <- left_join(ppi_soybeans, ppi_drybeans)
+rm(ppi_drybeans, ppi_soybeans)
+
+# Add year and drop data we don't need
+ppi <- ppi %>% 
+  mutate(
+    year = year(observation_date)
+  ) %>% 
+  filter(
+    year <2025 & year > 2013
+  )
+
+# Get average per year
+ppi <- ppi %>% 
+  group_by(year) %>% 
+  summarise(drybeans = mean(drybeans, na.rm = TRUE), 
+            soybeans = mean(soybeans)) %>% 
+  ungroup
+
+# Get index to convert to 2023 dollars
+ppi <- ppi %>% 
+  mutate(
+    drybeans_index = drybeans[year == 2023]/drybeans, 
+    soybeans_index = soybeans[year == 2023]/soybeans
+  )
+  
+# Make 2014 index for dry beans equal to 2015
+ppi <- ppi %>% 
+  mutate(
+    drybeans_index = case_when(
+      is.nan(drybeans_index) ~ drybeans_index[year==2015], 
+      TRUE ~ drybeans_index)
+    )
+
+# Put in correct format to join with price data
+ppi <- ppi %>% 
+  select(year, drybeans_index, soybeans_index) %>% 
+  pivot_longer(
+    cols = !year, 
+    names_to = "commodity", 
+    values_to = "ppi_index"
+  ) %>% 
+  mutate(
+    commodity = case_when(
+      commodity == "drybeans_index" ~ "BEANS", 
+      commodity == "soybeans_index" ~ "SOYBEANS")
+    ) 
+
+# Join price and ppi data
+price <- price %>% 
+  left_join(ppi)
+
+# Convert prices to 2023 dollars
+price <- price %>% 
+  mutate(
+    real_price_kg_2023dollars = price_per_kg * ppi_index
+  ) %>%
+  rename(
+    nominal_price_kg = price_per_kg, 
+    nominal_price_lb = price_per_lb) %>%
+  select(-ppi_index)
+
+# Round
+price <- price %>% 
+  mutate(across(nominal_price_kg:last_col(), 
+                ~round(., 2))) %>% 
+  ungroup()
+
+# Drop commodity
+price <- price %>% 
+  select(-commodity)
+
+# rename
+price_full <- price
+
+```
+
+#### Commodity price
+
+We use the data collected above using 2023 dollars and convert the data to be in a similar format to the cost of production data. In this case, we will have different prices for organic, conventional, and New York beans sold through differentiated channels (not data on soy for this category).
+
+```{r}
+
+# Keep 2023 data only
+price <- price %>% 
+  filter(year == 2023)
+
+```
+
+### Organic
+
+We use data from [The Risk Management Agency (RMA)](https://old.rma.usda.gov/en/Policy-and-Procedure/Bulletins-and-Memos/2023/PM-23-015) on approved the 2023 CY projected prices shown below for the following plans of insurance: Yield Protection, Revenue Protection, and Revenue Protection with Harvest Price Exclusion.
+
+The projected price per pound for drybeans is double for organic compared to conventional. We double all conventional prices.
+
+For soybeans, we use [Price discoverty data from the RMA](https://public-rma.fpac.usda.gov/apps/PriceDiscovery/Reports/CurrentPeriods).
+
+```{r}
+
+# import soy data 
+soy_organic <- read_xlsx("data_raw/RMA_soybeans.xlsx", 
+                         sheet = "Current Periods") %>% 
+  janitor::clean_names()
+
+# Select data of interest 
+soy_organic <- soy_organic %>% 
+  select(commodity_year, practice_name, state_name, projected_price)
+
+# compare prices for organic and conventional for the same state year
+soy_organic <- soy_organic %>% 
+  group_by(commodity_year, practice_name) %>% 
+  summarise(
+    price = mean(projected_price)
+  ) %>%
+  mutate(
+    organic_conventional = 
+      price[practice_name=="Organic"] /
+      price[practice_name=="Conventional"]
+    ) %>% 
+  slice(1) %>%
+  pull(organic_conventional)
+  
+# Get price/per kg. for drybeans and add organic (*2)
+drybean_price <- price %>% 
+  filter(variable_name=="commodity_price_drybean_conv")
+
+drybean_price <- drybean_price %>%
+  bind_rows(
+    drybean_price %>%
+      mutate(
+        across(nominal_price_kg:last_col(), 
+                    ~. * 2), 
+        variable_name = "commodity_price_drybean_organic")
+  )
+
+# Get price/per kg. for soybeans
+soybean_price <- price %>% 
+  filter(variable_name=="commodity_price_soy_conv") 
+
+soybean_price <- soybean_price %>%
+  bind_rows(
+    soybean_price %>%
+      mutate(
+        across(nominal_price_kg:last_col(), 
+                    ~. * soy_organic), 
+        variable_name = "commodity_price_soybean_organic")
+  )
+
+# Bind rows
+price <- bind_rows(drybean_price, soybean_price)
+
+rm(soy_organic, drybean_price, soybean_price)
+```
+
+#### Differentiated price
+
+We use data from the interviews to understand differentiated prices
+
+NY Bean: Breakdown on a 50lb bag: Grower receives \$52; Cleaner \$5; \$57 price out the door
+
+```{r}
+
+# Dry beans ppi for coverting 2024 dollars to 2023 dollars
+ppi_vector <- ppi %>% 
+  filter(year==2024 & commodity=="BEANS") %>% 
+  pull(ppi_index)
+
+# Add differentiated data
+diff_price <- tibble( 
+    year = 2023,
+    variable_name = "differentiated_price_drybean_conventional", 
+    nominal_price_lb = 52/50, 
+    nominal_price_kg = nominal_price_lb * 0.45359237, 
+    real_price_kg_2023dollars = nominal_price_kg * ppi_vector
+)
+
+# Add organic by multiplying by 2
+diff_price <- diff_price %>% 
+  bind_rows(
+    diff_price %>% 
+      mutate(
+        across(nominal_price_lb:last_col(), 
+                    ~. * 2), 
+        variable_name = "differentiated_price_drybean_organic")
+  )
+
+# Bind rows
+price <- bind_rows(price, diff_price)
+
+```
+
+### Save
+
+Combine all data into one file and save. [Final cost of production data](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/farmgate_price_received.xlsx%22)
+
+```{r}
+
+# Add worksheet
+wb <- createWorkbook()
+addWorksheet(wb, "farmgate_price")
+writeData(wb, "farmgate_price", price)
+
+# Add info
+info <- tibble(
+  sheet_name = c("farmgate_price"), 
+  description = "Price received by the producer in $/lb. and $/kg. by year for drybeans and soybeans, conventional and organic, commodity and differentiated (i.e., grown in NY and through a source verified channel). All prices are national, except for the differentiated", 
+  notes = "Nominal prices are reported as the price that was receved in that year. real_price_kg is the price per kg., adjusted for inflation, reported in 2023 dollars. real_price_kg the number that is used in the model. We use 2023 dollars because that is the year of data we are using for school purchases", 
+  source = "USDA NASS Quick stats for conventional prices, RMA data to inflate numbers for organic prices, interview data for differentiated price.")
+
+# Add worksheet
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save
+saveWorkbook(wb, "data_final/farmgate_price_received.xlsx", 
+             overwrite = TRUE)
+
+
+```

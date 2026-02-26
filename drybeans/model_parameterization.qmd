@@ -38,3 +38,5 @@ graph LR;
   ')
 
 ```
+
+## Estimated margins

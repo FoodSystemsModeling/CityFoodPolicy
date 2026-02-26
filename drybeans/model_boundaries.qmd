@@ -14,7 +14,7 @@ In the model, each "agent" represents a type of food system participant—such a
 #| label: drybeans_supply_chain
 #| out-width: "100%"
 
-knitr::include_graphics("../images/dried-bean-supply-chain_12-11-25-02.jpg")
+knitr::include_graphics("../images/dry-bean-supply-chain-diagram_v3.png")
 
 ```
 

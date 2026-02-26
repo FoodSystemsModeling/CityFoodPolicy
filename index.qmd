@@ -13,7 +13,7 @@ As regions across the world leverage public food procurement to meet a combinati
 
 This book contains information and links to all of the data used in this project as well as all project outputs. The goal is to create a framework for our research to be reproducible and to be used to conduct similar research in other cities across the world. 
 
-The chapters in the book are arranged...
+On the left hand side is an outline of the book, you can click on a chapters to navigate to that section of the book. If you click on Dry beans, Beef, or Greens, you will see a list of all of the sub chapters for each commodity. On the right hand side is a more detailed table of contents for the section of the book where you are and can be used to navigate within a chapter. Hyperlinks are included throughout the book to take you to a GitHub site where we house all of the data, links to external websites with additional information, and links to other sections of this book.  
 
 ## License
 This website is (and will always be) free to use, and is licensed under the Creative Commons Attribution 4.0 International License.

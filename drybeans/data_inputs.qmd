@@ -7,15 +7,12 @@ editor: visual
 
 ## Agricultural production
 
-{{< include ../drybeans/farmgate.qmd >}}
+{{< include ../drybeans/data_inputs_code/farmgate.qmd >}}
 
-## Processing
-
-## Distribution
+## Processing and distribution
+{{< include ../drybeans/data_inputs_code/beans_processors_wholesalers.qmd >}}
 
 ## Markets
-
-## Estimated margins
 
 ## Consumption
 

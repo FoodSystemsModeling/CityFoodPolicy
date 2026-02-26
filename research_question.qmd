@@ -8,7 +8,7 @@ Coming soon...
 
 ## How did we choose our commodities?
 
-Our goal was to select items that were purchased in substantial quantity by New York City that were also grown or raised by New York State farmers and that which were not already being purchased locally in substantial quantities.
+In selecting our focus commodities and their supply chains, our goal was to choose items that are purchased in substantial quantities by NYC, are grown or raised by New York State farmers, and are not already being sourced locally in substantial amounts. The decision to focus on (1) salad bar greens & cabbage, (2) edible beans, and (3) beef (cull dairy) was guided by data (see the GitHub site for details) and made jointly by the City Food Policy team and the NYC Mayor's Office of Food Policy staff.
 
 ### New York City purchasing (demand)
 

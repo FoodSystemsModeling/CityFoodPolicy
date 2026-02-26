@@ -4,7 +4,7 @@ project:
 	
 book:
   title: "CityFoodPolicy"
-  author: "Becca Jablonski, Randall Boone, Jasmine Dillon, Frank Ge, Miguel Gomez, Jon Guez, McKenna Short, Rebecca Whipple Silverstein, Allison Bauman"
+  author: "Becca Jablonski, Jasmine Dillon, Randall Boone, Frank Ge, Miguel Gomez, Jon Guez, McKenna Short, Rebecca Whipple Silverstein, Allison Bauman"
   cover-image: images/cover.png
   date: "December 2025"
   favicon: images/favicon.png
@@ -44,8 +44,8 @@ knitr:
   opts_chunk: 
     message: false
     warning: false
-    
-# Add echo: true or false for different versions with and without the code
-
+    eval: false
+	
+  
 
 

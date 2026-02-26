@@ -5,3 +5,5 @@ echo: false
 ---
 
 # Model validation
+
+## Estimated margins

@@ -6,7 +6,7 @@ Coming soon...
 ## New York City public food procurment
 {{< include cityfoodpolicies/legal_basis_report.qmd >}}
 
-## New York City food policy actions
+## New York City food policy actions {#sec-nyc-food-policy-actions}
 In 2022, New York City formally established the Good Food Purchasing initiative, which guides City agencies in aligning food spending with six core values: nutrition, local economies, environmental sustainability, animal welfare, valued workforce, and transparency. These values shape how agencies design procurements, how vendors and supply chain stakeholders develop and price products, and how bids are evaluated and selected. The Food Policy Actions featured in this dashboard were identified in partnership with the Mayor’s Office of Food Policy. The first part of each Food Policy Action name reflects its Good Food Purchasing value alignment, while the second describes how New York City is advancing (or considering advancing) progress toward that value.
 
 #### Business As Usual
@@ -18,6 +18,9 @@ Business as Usual represents our best estimate of current NYC purchasing practic
 Bid allowance or requirement for organic certification by the producer, as defined by the [U.S. Department of Agriculture’s National Organic Program](https://www.ams.usda.gov/about-ams/programs-offices/national-organic-program).
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Organic.png")
 ```
 
@@ -25,6 +28,9 @@ knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Organic.pn
 Bid allowance or requirement for purchasing from certified minority or women owned businesses as defined by New York City or New York State. 
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_MWBE.png")
 ```
 
@@ -43,6 +49,9 @@ This definition applies to processed products only. Under this definition, the p
 This definition applies to processed products only. Under this definition, the processed product can be aggregated, processed, and distributed from anywhere, but at least 51% of the raw ingredients must come from NYS producers. 
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Local.png")
 ```
 
@@ -50,6 +59,9 @@ knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Local.png"
 Bid allowance or requirement for products grown or raised by small- or medium-sized farms. Farm size is measured by annual gross cash farm income (GCFI)—a measure of the farm's revenue (before deducting expenses) that includes sales of crops and livestock, payments made under agricultural federal programs, and other farm-related cash income including fees from production contracts. The U.S. Department of Agriculture’s Economic Research Service Farm Typology defines small- and mid-sized farms as those with less that $1,000,000 in GCFI. Small- and medium-sized farms were selected as a proxy for “community hiring” as, on average, these operations have lower total household income.
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Hiring.png")
 ```
 
@@ -57,6 +69,9 @@ knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Hiring.png
 An investment in a New York State aggregator, primary or secondary processor that expands the availability of New York-grown or -raised products and/or increases access to further processed items.
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Infrastructure.png")
 ```
 
@@ -65,5 +80,8 @@ knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Infrastruc
 A change in the number of meals per week that are plant-based. This decision changes the relative share of animal-based proteins and plant-based proteins purchased by NYC agencies. 
 
 ```{r, echo=FALSE}
+#| fig-align: center
+#| out-width: "100%"
+
 knitr::include_graphics("images/food_policy_actions/FoodPolicyActions_Menu.png")
 ```

@@ -70,15 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<script src="../site_libs/d3-3.3.8/d3.min.js"></script>
-<script src="../site_libs/dagre-0.4.0/dagre-d3.min.js"></script>
-<link href="../site_libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
-<script src="../site_libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
-<link href="../site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="../site_libs/chromatography-0.1/chromatography.js"></script>
-<script src="../site_libs/DiagrammeR-binding-1.0.11/DiagrammeR.js"></script>
 
 
 </head>
@@ -259,6 +250,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#supply-chain-data" id="toc-supply-chain-data" class="nav-link active" data-scroll-target="#supply-chain-data"><span class="header-section-number">3.1</span> Supply Chain Data</a></li>
+  <li><a href="#estimated-margins" id="toc-estimated-margins" class="nav-link" data-scroll-target="#estimated-margins"><span class="header-section-number">3.2</span> Estimated margins</a></li>
   </ul>
 </nav>
     </div>
@@ -287,12 +279,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="supply-chain-data" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="supply-chain-data"><span class="header-section-number">3.1</span> Supply Chain Data</h2>
 <p>Click on a node of the supply chain to link to the data used in the model for each location along the supply chain.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="DiagrammeR html-widget html-fill-item" id="htmlwidget-5484ae02288458f6c5cb" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-5484ae02288458f6c5cb">{"x":{"diagram":"\ngraph LR;\n  A(Land)--> D(Producer)\n  B(Labor)-->D\n  C(Farm <br/> Inputs)-->D\n  D-->F(\"Aggregator<br>(Cleaner)\")\n  F-->G(Primary <br/> Processor)\n  F-->H(\"Wholesaler<br>(Distributor)\")\n  G-->H\n  G-->I(Secondary <br/> Processor)\n  I-->H\n  H-->K(NYC Agency)\n  G-->K\n  H-->L(Commodity and<br>Differentiated<br>Markets)\n  G-->L\n  \n  classDef whiteBox fill:#ffffff,stroke:#000000,stroke-width:2px\n  class A,B,C,D,E,F,G,H,I,J,K,L whiteBox\n  \n  click D \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers\" \"Producer data\"\n  click G \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Primary_Processors\" \"Primary processor data\"\n  click H \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Wholesalers\" \"Wholesaler data\"\n  click I \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Secondary_Processors\" \"Secondary processor data\"\n  click F \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Aggregators\" \"Cleaner/aggregator data\"\n  click K \"https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Agencies\" \"NYC agency data\"\n  "},"evals":[],"jsHooks":[]}</script>
-</div>
-</div>
+</section>
+<section id="estimated-margins" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="estimated-margins"><span class="header-section-number">3.2</span> Estimated margins</h2>
 
 
 </section>

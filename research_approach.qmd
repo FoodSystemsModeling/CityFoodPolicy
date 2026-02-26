@@ -2,10 +2,12 @@
 Big picture
 
 ## Stakeholder engagement
-There is growing literature that talks about the importance of engaging stakeholders in all aspects of model design, building, and validation (e.g., [Wentworth et al., 2024](https://www.sciencedirect.com/science/article/pii/S1462901123002940). Accordingly, this project incorporated commodity specific advisory committees. These advisory groups helped us to select and recruit relevant stakeholders to participate in focus groups and interviews. The focus groups and interviews were used to validate data, understand decision making, and establish model boundaries and decisions. 
+There is growing literature that talks about the importance of engaging stakeholders in all aspects of model design, building, and validation (e.g., [Wentworth et al., 2024](https://www.sciencedirect.com/science/article/pii/S1462901123002940). Accordingly, this project incorporated commodity specific advisory committees. These advisory groups helped us to select and recruit relevant stakeholders to participate in focus groups and interviews. The focus groups and interviews were used to validate data, understand decision making, and establish model boundaries and decisions.
 
 ### Causal loop diagrams
-Describe why we did causal loop diagrams. The actual diagrams are referenced in the commodity specific sections. 
+As agent-based models are complex, conceptual diagrams such as causal loop diagrams are paramount to understanding and designing the general structure of the model. Using causal loop diagrams in participatory modeling exercises facilitates two important elements of model building. First, developing the causal loop diagrams serves as both a team building exercise and develops a shared understanding of the supply chain of interest. Second, it supports engagement with project stakeholders who may be most knowledgeable about the system being studied but may not have mathematical modeling expertise. Lastly, while it is rarely possible to depict all detail presented in the model in an accessible conceptual diagram, it enables the establishment of the early "building blocks" or general structure of the model including the agents and their connections.
+
+All diagrams can be found in each commodity section. 
 
 ## Modeling approach
 Drawing on publicly available data as well as input from food and agriculture stakeholders around New York State, this three-year research collaborative adapts an agent-based research model, building upon past agent-based modeling work in Denver, Colorado.

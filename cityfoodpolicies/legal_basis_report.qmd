@@ -27,19 +27,7 @@ Cities have begun to leverage their part of this spending to advance impacts bot
 
 #### Policy actions
 
-In support of these values, NYC – in collaboration with research partners at CSU and Cornell – identified six procurement policies for the research team to investigate. These policy actions were selected that could be administratively or legally feasible for NYC, align with existing Mayoral priorities, and have the potential of advancing the values outlined previously. The research team will work to model the social, environmental, and economic implications of adopting these policies, with particular attention to their impacts on the guiding values listed above. These actions are summarized below.
-
--   ***Price premium or purchasing requirement for USDA-certified Organic foods and food products (“Organic preference”)***. Under this policy, NYC would incorporate Organic status into the evaluation of best value bids and solicitations, awarding extra points to certified organic products that fall within10 percent of the lowest bid.
-
--   ***Price premium or purchasing requirement for grown and/or processed in New York State (“local preference”)***. Under this policy, NYC agencies would incorporate local status into the evaluation of best value bids, awarding extra points to products from New York State that fall within 10 percent of the lowest bid.
-
--   ***Price premium or purchasing requirement for proposals from companies that engage in community hiring (“community hiring preference”)***. Under this policy, NYC would evaluate bids or solicitations from small businesses and/or companies employing a substantial percentage of economically disadvantaged candidates as if those bids were 10 percent lower than their submitted bid.
-
--   ***Price premium or purchasing requirement for proposals from companies that are certified minority and women-owned business enterprises (“MWBE preference”)***. Under this current policy, NYC can evaluate best value bids or solicitations from companies that are certified as a Minority- or Women-Owned Business Enterprise (M/WBE) as if those bids were 10 percent lower than their submitted bid.
-
--   ***Public investments in middle food supply chain infrastructure (“Infrastructure investments”)***. Under this policy, NYC and/or NY State would provide direct public investments in supply chain infrastructure, such as processing and cold storage sites in the city or region. Investments could take the form of direct grants, loans, and/or technical assistance.\
-
--   ***Increasing the percentage of plant-based proteins and fruits and vegetables in agency-provided meals and food (“Menu changes”)***. Under this policy, NYC would require changes to agency menus that would result in increased purchases of fruits, vegetables, and/or plant based proteins.
+In support of these values, NYC – in collaboration with research partners at CSU and Cornell – identified six procurement policies for the research team to investigate. These policy actions were selected that could be administratively or legally feasible for NYC, align with existing Mayoral priorities, and have the potential of advancing the values outlined previously. These actions are summarized in the @sec-nyc-food-policy-actions section below. 
 
 The following sections begin by reviewing relevant laws/policies at the Federal, state, and city levels that are either generally applicable across all proposed policy actions and/or specific to a given policy action. Table 1 summarizes all laws/policies reviewed in this document and associated policy actions that may be impacted by each.
 
@@ -69,16 +57,16 @@ The following highlights federal, state, and city legislation or policies that e
 -   [State Finance Law §163:](https://newyork.public.law/laws/n.y._state_finance_law_section_163) State Finance Law §163 defines best value as “the basis for awarding contracts for services to the offeror which optimizes quality, cost and efficiency, among responsive and responsible offerors. Such basis shall reflect, wherever possible, objective and quantifiable analysis. Such basis may also identify a quantitative factor for offerors that are small businesses, certified minority- or women-owned business enterprises as defined in subdivisions one, seven, fifteen and twenty of Executive Law § 310 (Definitions) or service-disabled veteran-owned business enterprises as defined in subdivision one of section forty of the veterans’ services law to be used in evaluation of offers for awarding of contracts for services.”
 -   [Good Food New York Bill](https://www.nysenate.gov/legislation/bills/2023/S6955/amendment/A): Senate Bill S6955A, awaiting governor signature, would allow food contracts to be awarded “to a qualified bidder who fulfills certain values based procurement standards when such bid is not more than 10% higher than the lowest responsible bidder and when the bidder makes publicly available data on where such bidder sources their food items; sets forth the criteria for values based procurement standards to include local economies, environmental sustainability, racial equity, valued workforce, animal welfare, and nutrition.”
 
-#### Key laws & definitions for individual policy actions
+### Key laws & definitions for individual policy actions
 
 The following section summarizes relevant laws/policies specific to each proposed policy action, excluding those already summarized in the previous section. Where relevant, the following sections identify and define key terms relevant to the policy action. These definitions are noted as sub-bullets under the policy/law wherein they are defined/described. Relevant laws/policies under each policy action are organized starting from the Federal level and concluding with local.
 
-##### Certified organic incentives
+#### Certified organic incentives
 
 -   Organic Foods Production Act (OFPA), 7 U.S.C. §§ 6501–6522: The OFPA “authorized the U.S. Secretary of Agriculture to establish regulations, administered by the Agricultural Marketing Service (AMS) within the U.S. Department of Agriculture (USDA), for certifying products as organic under the National Organic Program (NOP).”
     -   Organic: “Organic” products are those certified as such under the U.S. Department of Agriculture’s National Organics Program. See certification requirements at: U[SDA Organic \| USDA](https://www.usda.gov/topics/organic)
 
-##### New York State grown and/or processed incentives
+#### New York State grown and/or processed incentives
 
 -   Federal Procurement Law: Public agencies and programs that use federal funds are not permitted to prefer locally produced products. However, there are specific exceptions for USDA-administered programs that explicitly encourage local purchasing, including the National School Lunch Act, the Child Nutrition Act, and the Child and Adult Care Food Program (“CACFP”).
 -   [NYS Executive Order 32 of 2023](https://www.governor.ny.gov/executive-order/no-32-establishing-state-agency-food-purchasing-goals-new-york-state-agricultural#:~:text=Executive%20Order%2032%20establishes%20goals%20for%20State%20Agencies,products%20grown%2C%20harvested%2C%20or%20produced%20in%20New%20York): New York State EO32 of 2023 established state agency food purchasing goals for NYS agricultural products. It includes the following definitions.
@@ -91,7 +79,7 @@ The following section summarizes relevant laws/policies specific to each propose
 -   ***Regional Local Economies***: Per the Center for Good Food Purchasing Program Standards, food supporting regional local economies is food purchased from small scale and family or cooperatively-owned farms (per the USDA definition of farm size in the most recent USDA Census of Agriculture) AND located within 250 miles (or 500 miles for meat) of New York City.
     -   ***Family Farm***: As defined by the USDA, a majority of the business is owned by the operator and individuals related to the operator.
 
-##### Community hiring incentives enabling legislation
+#### Community hiring incentives enabling legislation
 
 -   [***Senate Bill S7387B***](https://legislation.nysenate.gov/pdf/bills/2023/S7387B): New York State legislation authorized the Office of Community Hiring (OCH) to establish certain rules to preference bidders who employ economically disadvantaged individuals. The Community Hiring Rules will go through the formal rulemaking process under the City Administrative Procedure Act (CAPA), which includes, among other things, notice and opportunity for public comment. The NYC Office of Community Hiring has not yet published rules governing this legislation.
     -   ***Economically Disadvantaged Individual***: an individual “(1) whose income or household income falls below an applicable quantitative threshold determined by the director, provided that such income shall not include any types of public benefits provided by the federal government or a state or local government and identified by the director; and (2) who is certified as meeting all applicable requirements.” While the rules are not final, this will likely mean following within 300% of the federal poverty level. This will only apply to service contracts, not goods.
@@ -101,21 +89,21 @@ The following section summarizes relevant laws/policies specific to each propose
     -   ***Small Business***: “A business which has a significant business presence in the state, is independently owned and operated, not dominant in its field and employs, based on its industry, a certain number of persons as determined by the director, but not to exceed three hundred, except during a declared state disaster emergency as defined pursuant to [State Executive Law §28 (State Declaration of Disaster Emergency)](https://newyork.public.law/laws/n.y._executive_law_section_28), not to exceed three hundred employees who work thirty or more hours per week over the period of fifty-two weeks for a total of one thousand five hundred sixty hours worked, taking into consideration factors which include, but are not limited to, Federal Small Business Administration standards pursuant to 13 CFR part 121 and any amendments thereto. The director may issue regulations on the construction of the terms in this definition. For purposes of this subdivision, an employee may break from employment for up to thirteen weeks without the fifty-two week lookback period resetting.”
     -   ***Note: For the purpose of the CFPP, the modeling team will identify criteria for “small business” that makes sense in the context of the three food products.***
 
-##### Minority and women-owned business enterprise (M/WBE) incentives
+#### Minority and women-owned business enterprise (M/WBE) incentives
 
 -   [***New York City Minority and Women-Owned Business Enterprises (M/WBE) Program***](https://nyc-business.nyc.gov/nycbusiness/description/minority-and-womenowned-business-enterprise-certification-program-mwbe): This program expands opportunities for minority and women entrepreneurs to access government contracts and grow their businesses. When eligible businesses are certified with the City, they become more visible to prospective buyers, including City agencies and private contractors seeking to purchase goods and services. In order to become certified, businesses must meet the criteria outlined in the program pertaining to the business ownership, location, legal status and structure, and operation history.
 -   ***Local Law 1 of 2013*** This law established specific goals for M/WBE participation in NYC contracts based on industry and M/WBE categories.
 -   [***M/WBE Price Preference Rule***](https://www.nyc.gov/assets/mocs/downloads/Regulations/PPB/PPBRules.pdf): Under NYC procurement policy board rules, “if an award will be made based on best value, a vendor that is an M/WBE or State-certified M/WBE must, except with the approval of the chief contracting procurement officer, be given a price preference of 10% and will be evaluated as if the bid price were 10% lower.”
 -   [***M/WBE Procurement & Contract Method***](https://www.nyc.gov/site/mocs/opportunities/about-m-wbe.page): This process rule by the City of New York allows agencies to contract directly with a M/WBE instead of going through formal competitive procurement method on contracts up to \$1.5 million.
 
-##### Public investments in middle food supply chain infrastructure
+#### Public investments in middle food supply chain infrastructure
 
 -   ***Resilient Food Systems Infrastructure Program***. This State-level program, supported by U.S. Department of Agriculture funding, provides grant support for the development of aggregation, processing, manufacturing, storage, transport, wholesaling, or distribution of food products. More information available at <https://agriculture.ny.gov/resilient-food-systems-infrastructure-program>.
 -   ***This analysis did not identify laws/policies providing definitional guidance***. The following definitions are offered by the project team.
     -   ***Middle Food Supply Chain Infrastructure*** – Middle Food Supply Chain Infrastructure refers to the aggregation, processing, and/or distribution infrastructure necessary to move agricultural products to their final market destination and/or to process raw agricultural products into a form usable by the end market destination. These may include, but are not limited to infrastructure such as cold storage facilities for produce aggregation and distribution, processing facilities for beef, cooking/processing facilities needed to create processed food products, etc.
     -   ***Infrastructure Investments*** – This refers to the manner by which the City or State of New York will financially support the development of middle infrastructure both within City Limits and in the rest of New York State. Modes of investment may include providing grants, loans, other financial support or technical assistance to entities seeking to develop critical infrastructure.
 
-##### Menu requirements changes
+#### Menu requirements changes
 
 -   [***USDA Nutrition Standards for School Meals***](https://www.fns.usda.gov/school-meals/nutrition-standards): NYC Department of Education Office of Food and Nutrition Services meals must also meet the USDA nutrition standards set forth in 7 CFR Parts 210 and 220 in addition to the NYC Food Standards (see below).
 -   [***The Child and Adult Care Food Program (CACFP)***](https://www.fns.usda.gov/cacfp): CACFP “is a federal program that provides reimbursements for nutritious meals and snacks to eligible children and adults who are enrolled for care at participating child-care centers, day care homes, and adult day care centers.” Meal and snack programs at NYC Aging, NYC Department of Homeless Services, and NYC Department of Community and Youth Development must meet requirements of the CACFP program in addition to the NYC Food Standards.
@@ -123,7 +111,7 @@ The following section summarizes relevant laws/policies specific to each propose
     -   ***Minimally Processed Plant-Based Proteins***: “Any item with an unprocessed plant-based protein or flour made from unprocessed plant-protein listed as the first or second ingredient on the Nutrition Facts label and that does not contain high-fructose corn syrup, hydrogenated oils or hydrolyzed proteins.
     -   ***Plant-Based Entrees***: “An entree that includes a whole or minimally processed plant-based protein item such as beans, chickpeas, lentils, edamame, tofu, nuts and seeds as the primary protein component.”
 
-#### Key considerations
+### Key considerations
 
 This summary outlines legal and policy factors influencing the implementation of current and potential values-based procurement policies by the City of New York. In this final section, we outline two key lingering questions: definitions around community hiring and whether the Governor will sign the NYS Good Food Purchasing legislation.
 

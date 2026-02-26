@@ -1,0 +1,287 @@
+
+In this file we take the data that was first complied in "processor_data.qmd", exported and then manually added to in the document "CFP_Supply_Chain_Data_070425.xlsx." We use the sheet "beans_inside_model" which indicates the wholesalers and distributors in the bean supply chain that we assume are "inside the model" and all actors in our agent based model. These entities have previously sold to NYC, have sales through local and regional food systems, or were indicated by the qualitative team to be outside of New York but a player in the system.
+
+In the manual data piece, there were general notes made. Observations were dropped if they did not have any bean products or if they were deemed an incorrect entry.
+
+There are a few errors in the data regarding operations that are located in NY or not, those are fixed. We are also missing address information which we need for some of the model calculations. These are added manually.
+
+### Import data
+
+```{r}
+library(tidyverse)
+library(janitor)
+
+df <- readxl::read_xlsx("data_processed/CFP_Supply_Chain_Data_070425.xlsx", 
+                        sheet = "beans_inside_model", 
+                        skip = 1) %>% 
+  clean_names()
+
+# make beans_processor numeric (one entry had a ?)
+df <- df %>% 
+  mutate(
+    beans_processor = as.numeric(beans_processor)
+      )
+
+# Keep columns of interest
+df <- df %>% 
+  select(location, company_name, ny, beans_processor,
+         wholesaler_distributor, primary_processor:interview_data,
+         sales_volume, total_employees, local_employees,
+         locally_owned
+         )
+
+```
+
+### Drop data
+
+The Bush's Best data do not appear to be correct. There are no beans processed near New York.
+
+There are a few businesses that process food for US foods or Sysco under different labels. I was not able to find any address information for these businesses so they are dropped.
+
+METRO COMMODITIES is permanently closed so dropped.
+
+If I wasn't able to find an address, then the business was dropped.
+
+There were multiple entries for Furmano's so we only kept one.
+
+```{r}
+# Drop rows with no data
+df <- df %>% 
+  filter(!is.na(company_name) & 
+           company_name != "Unknown")
+
+# Drop data defined as bad data or no beans or no information
+df <- df %>% 
+  filter(!company_name %in% c(
+    "BGAN, CANADA",
+    "DEL PASADO",
+    "BROWN'S BEST",
+    "CARDINAL FOODS",
+    "CARLSTAD, NJ", 
+    "FOODCO", 
+    "FRESH AND TASTY BAKED PRODUCTS", 
+    "HANOVER, HANOVER, PA",
+    "HANOVER, HOUSTON, TX", 
+    "RANCHER'S BEST WHOLESALE MEATS INC.", 
+    "SECAUCUS, NEW JERSEY", 
+    "SECAUCUS, NJ",
+    "SUNFIELD, CHINA", 
+    "TONY'S FISH & SEAFOOD CORP.", 
+    "WESTSIDE FOODS", 
+    "ZAITOON CORP", 
+    "DEPEW DAIRY", 
+    "G AND C FOOD SERVICE",
+    "GENECCO PRODUCE, INC.", 
+    "GIANFORTE FARMS", 
+    "GILETTE CREAMERY", 
+    "HILLCREST FOODS", 
+    "HUDSON DAIRY",
+    "HUFF", 
+    "LATREMORE PINE RIDGE FARM", 
+    "LUCKI7 LIVESTOCK COMPANY",
+    "MARINA ICE CREAM CORP", 
+    "MCMAHONS FARM", 
+    "MERCERS DAIRY", 
+    "MORNING STAR POULTRY", 
+    "RIVIERA PRODUCE", 
+    "RUSSO PRODUCE CO.", 
+    "SELF DISTRIBUTE - SFOGLINI", 
+    "SLATE FOODS", 
+    "SMITH PACKING COMPANY INC.", 
+    "STEWARTS SHOPS CORP.", 
+    "SYSCO", 
+    "UPSTATE FARMS", 
+    "UPSTATE NIAGARA COOPERATIVE INC.", 
+    "WARDYNSKI & SONS INC.", 
+    "AMERICAN FRUIT AND VEGETABLE CO.", 
+    "BARTLETT DAIRY",
+    "BEHLOG & SONS PRODUCE",
+    "BEST CHOICE", 
+    "BIPPERTS", 
+    "BRIGIOTTAS FARMLAND PRODUCE", 
+    "BURLY BROTHERS COUNTRY BUTCHERY",
+    "BUSH BROTHERS & CO / BUSHS BEST, CHAMBERSBURG, PA",
+    "BUSHS BEST, BEAR, DE", 
+    "CASACLS", 
+    "CATSKILLS AGRARIAN ALLIANCE (607CSA)", 
+    "COMFORT FOOD", 
+    "CULINARY SELECT, BETHLEHEM, PA",
+    "DEL PASADO, MEMPHIS, TN", 
+    "DEL PASADO, NORTHUMBERLAND, PA", 
+    "FURMANO FOODS INC / FURMANOS, NORTHUMBERLAND, PA", 
+    "FURMANO'S, NORTHUMBERLAND, PA",
+    "FURMANO",
+    "FURMANOS",
+    "GOLDEN BAY FOODS LLC / MONARCH, JERSEY CITY, NJ", 
+    "GOLDEN PLATTER", 
+    "HAN/FURM", 
+    "HOUSE FOODS", 
+    "METRO COMMODITIES", 
+    "MONARCH, WESTFIELD, MA", 
+    "MULTIPLE SOURCES / RYKOFF SEXTON, SOUTH BRUNSWICK, NJ",
+    "NASOYA FOODS USA LLC / NASOYA, ALLENTOWN, PA", 
+    "NATURESOY", 
+    "SYS CLS"
+    )
+  )
+
+
+```
+
+### Add address
+
+Here we manually add addresses and fix issues with the ny variable.
+
+For companies with multiple locations, I just chose one.
+
+```{r}
+
+## Add address
+df <- df %>% 
+  mutate(
+    address = case_when(
+      company_name == "ACE ENDICO" ~ "80 International Boulevard Brewster, NY 10509", 
+      company_name=="BELLA VISTA" ~ "770 Cannery Road, Northumberland, PA 17857", 
+      company_name=="CARDINAL FOODS" ~ "130 Grand Street, Carlstadt, NJ 07072", 
+      company_name=="CHEF'S CHOICE CASH & CARRY FOOD DISTRIBUTOR INC" ~ "051 Utica Ave, Brooklyn, NY 11203",
+      company_name=="CHEF'S ORCHID RESTAURANT" ~ "248-05 Union Turnpike
+Bellerose, NY 11426", 
+      company_name=="DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC." ~ "6 Westbelt, Wayne, NJ 07470", 
+      company_name=="FOODCO" ~ "1014 Vine Street Cincinnati, OH 45202", 
+      company_name=="NASOYA ORGANIC, USA" ~ "1 New England Way Ayer, MA 01432", 
+      company_name=="NEW YORK BEAN, LLC" ~ "2905 Caledonia‐Leroy Rd, Caledonia, NY 14423", 
+      company_name=="R&L GOODS DIST INC." ~ "1123 49th Street, Brooklyn, NY 11219", 
+      company_name=="RESTAURANT DEPOT" ~ "566 Hamilton Ave, Brooklyn, NY 11232", 
+      company_name=="TERI NICHOLS" ~ "10101 C Avenue D, Brooklyn, NY 11236",
+      company_name=="THE CHEF'S KINGDOM" ~ "1 Alpine Ct, Spring Valley, NY 10977", 
+      company_name== "US FOODS" ~ "9399 W Higgins Rd Ste 100, Rosemont, IL 60018", 
+      company_name=="DICARLO FOODS" ~ "1630 N Ocean Ave, Holtsville, NY 11742", 
+      company_name == "DRISCOLL FOODS - METRO NY" ~ "6 Westbelt
+Wayne, NJ 07470", 
+      company_name =="DRISCOLL FOODS - UPSTATE NY (AMSTERDAM)" ~ "105 Quist Rd, Amsterdam, NY 12010", 
+      company_name=="DUSO FOOD DISTRIBUTORS INC." ~ "6055 Route 52, Ellenville, NY 12428", 
+      company_name == "FERARRO FOODS" ~ "80 Wilshire Blvd Edgewood NY 11717", 
+      company_name== "GINSBERGS FOODS" ~ "29 Ginsbergs Rd, Hudson, NY 12534", 
+      company_name=="HEADWATER FOOD HUB" ~ "6318 Ontario Center Rd, Ontario, NY 14519",
+      company_name=="HUB ON THE HILL" ~"6700 Main St, Westport, NY 12993", 
+      company_name=="HUDSON HARVEST" ~ "1931 US-9, Germantown, NY 12526", 
+      company_name=="J. KINGS FOODSERVICE PROFESSIONALS" ~ "700 Furrows Rd, Holtsville, New York 11742", 
+      company_name=="JACOBSTEIN FOOD SERVICE" ~ "15 Airline Dr. Rochester, NY 14624", 
+      company_name=="LATINA BOULEVARD" ~ "1 Scrivner Dr Suite #1, Buffalo, NY 14227", 
+      company_name=="MAPLEVALE" ~ "2063 Allen St Ext, Falconer, NY 14733", 
+      company_name=="MIVILA FOODS" ~ "347 Burman Blvd, Calverton, NY 11933", 
+      company_name=="PERFORMANCE FOOD SERVICE METRO" ~ "1 Ikea Drive
+Elizabeth, NJ 07207", 
+      company_name=="RED BARN PRODUCE" ~ "217 Upper North Road, Highland NY 12528", 
+      company_name=="REGIONAL ACCESS" ~ "1609 Trumansburg Rd, Ithaca, NY 14850", 
+      company_name=="RENZI FOODSERVICE" ~ "901 Rail Drive Watertown, NY 13601", 
+      company_name=="SCHRIER FOODSERVICE" ~ "4901 Gleenwood Road, Brooklyn, NY 11234",
+      company_name=="SYSCO ALBANY" ~ "1 Liebich Lane Halfmoon, NY 12065", 
+      company_name=="SYSCO LONG ISLAND" ~"199 Lowell Avenue Central Islip, NY 11722", 
+      company_name=="SYSCO METRO NY" ~ "20 Theodore Conrad Drive Jersey City, NJ 07305", 
+      company_name=="SYSCO SYRACUSE" ~ "2508 Warners Road Warners, NY 13164", 
+      company_name=="THE HUDSON MILK COMPANY" ~ "1000 N Division St, Peekskill, NY 10566", 
+      company_name=="THURSTON FOODS" ~ "30 Thurston Dr, Wallingford, CT 06492", 
+      company_name=="US FOODS ALBANY" ~"755 Pierce Rd, Clifton Park, NY 12065", 
+      company_name=="US FOODS BUFFALO" ~ "125 Gardenville Parkway West
+Buffalo, NY 14224", 
+      company_name=="AIR STREAM FOODS" ~ "3400 Lawson Blvd, Oceanside, NY 11572", 
+      company_name=="AMERICAN ROLAND FOOD CO / ROLAND, DAYTON, NJ" ~ "1 Industrial Rd Suite 199, Dayton, NJ 08810", 
+      company_name=="ANTONNUCI FOODS" ~"274 S Main St, Gloversville, NY 12078", 
+      company_name=="BALDOR FOODS"  ~"155 Food Center Dr, The Bronx, NY 10474", 
+      company_name=="BIG APPLE DELI PRODUCTS" ~ "150 Fedex Way, Rochester, NY 14624", 
+      company_name=="CHEF'S LINE" ~ "2255 High Hill Rd. Bridgeport, NJ 08014", 
+      company_name=="CHEFS WAREHOUSE" ~ "240 Food Center Dr, Bronx, NY 10474", 
+      company_name=="CURTZE FOOD" ~ "1717 E 12th St, Erie, PA 16511",
+      company_name=="DAGELE BROTHERS PRODUCE" ~ "40 Stream Dr, Florida, NY 10921", 
+      company_name=="DR PRAEGER" ~ "9 Boumar Place, Elmwood Park, NJ 07407", 
+      company_name=="FILLO FACTORY INC."  ~"10 Fairway Ct, Northvale, NJ 07647", 
+      company_name=="FURMANO FOODS" ~"770 Cannery Rd, Northumberland, PA 17857", 
+      company_name=="GENESEE VALLEY BEAN CO" ~ "4194 Cameron Rd, Caledonia, NY 14423", 
+      company_name=="HANOVER FOODS" ~ "1125 Wilson Avenue, Hanover, PA 17331", 
+      company_name=="HUDSON  HARVEST" ~"1931 US-9, Germantown, NY 12526", 
+      company_name=="MATRIARK FOODS" ~ "246 5th Ave, New York, NY 10001", 
+      company_name=="QAULI-PACK USA" ~ "1 Market St # 7, Passaic, NJ 07055", 
+      company_name=="RIVERHEAD BEAN COMPANY" ~ "485-17 South Broadway Hicksville, NY 11801",
+      company_name=="ROLAND FOODS" ~ "115 W 18th St Floor 5, New York, NY 10011", 
+      company_name=="SENECA GRAIN AND BEAN" ~ "1333 Nutt Rd, Penn Yan, NY 14527", 
+      company_name=="TRINIDAD BENHAM CORP / JACK RABBIT, LA VERGNE, TN" ~ "140 International Blvd, La Vergne, TN 37086", 
+      company_name=="UNI-PAC" ~"111 Coolidge St, South Plainfield, NJ 07080", 
+      company_name=="VERMONT BEAN CRAFTERS" ~ "284 Vermont Rte 100, Warren, VT 05674", 
+      company_name=="WILD KALE" ~ "211 N End Ave New York, NY 10282", 
+      TRUE ~ location) 
+  )
+
+
+# Make sure ny variable is correct
+df <- df %>% 
+  mutate(
+    ny = case_when(
+      str_detect(address, "NY|New York") ~ 1, 
+      TRUE ~ 0)
+    )
+
+# Keep full address and drop location
+df <- df %>% 
+  select(address, everything()) %>% 
+  select(-location)
+
+```
+
+#### Geocode
+
+```{r}
+
+library(tidygeocoder)
+
+# Geocode
+df <- df %>%
+  geocode(address, 
+          method = 'census', 
+          lat = latitude, 
+          long = longitude,
+          full_results = FALSE)
+
+# Manually fix those missing
+missing <- df %>% 
+  filter(is.na(latitude))
+
+
+# Fix missing
+df <- df %>% 
+  mutate(
+    latitude = case_when(
+      company_name=="GOYA" ~ 40.763031, 
+      company_name=="NEW YORK BEAN, LLC" ~ 42.976151, 
+      company_name=="R & L FOOD, CANADA" ~ 45.412021, 
+      company_name=="WHITSONS CULINARY GROUP" ~ 40.852589, 
+      company_name=="GINSBERGS FOODS" ~ 42.2662037,
+      company_name=="THURSTON FOODS" ~ 41.4783847,
+      company_name=="AMERICAN ROLAND FOOD CO / ROLAND, DAYTON, NJ" ~ 40.3747341, 
+      company_name=="CHEF'S LINE" ~ 39.7808195, 
+      TRUE ~ latitude), 
+    longitude = case_when(
+      company_name=="GOYA" ~ -74.068359, 
+      company_name=="NEW YORK BEAN, LLC" ~ -77.870369, 
+      company_name=="R & L FOOD, CANADA" ~ -75.652283, 
+      company_name=="WHITSONS CULINARY GROUP" ~ -73.390443, 
+      company_name=="GINSBERGS FOODS" ~ -73.731335,
+      company_name=="THURSTON FOODS" ~ -72.7998233,
+      company_name=="AMERICAN ROLAND FOOD CO / ROLAND, DAYTON, NJ" ~ -74.4907604, 
+      company_name=="CHEF'S LINE" ~ -75.3660808, 
+      TRUE ~ longitude)
+    )
+
+# Re-order
+df <- df %>% 
+  select(latitude, longitude, everything())
+
+```
+
+# Save
+
+```{r}
+
+write_csv(df, "data_final/beans_processor_distributor.csv")
+
+```
