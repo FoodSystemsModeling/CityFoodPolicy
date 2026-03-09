@@ -10,7 +10,8 @@ editor: visual
 {{< include ../drybeans/data_inputs_code/farmgate.qmd >}}
 
 ## Processing and distribution
-{{< include ../drybeans/data_inputs_code/beans_processors_wholesalers.qmd >}}
+
+{{< include ../drybeans/data_inputs_code/beans_processors_wholesalers.qmd eval=false >}}
 
 ## Markets
 

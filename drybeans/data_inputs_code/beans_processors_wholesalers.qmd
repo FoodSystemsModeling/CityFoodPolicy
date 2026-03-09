@@ -1,17 +1,15 @@
----
-eval: false
----
 
 ### Description of Data Sources
 
 All of the data from this file will be used to inform the supply chain of the ABM model.
 
-In this file we compile and merge data from three sources:
+In this file we compile and merge data from multiple sources:
 
 1.  Businesses that have previously sold to New York City
-2.  Businesses that are located in New York from the Simply Analytics database that are processors or wholesalers/distributors of beans, leafy greens, or beef
+2.  Businesses that are located in New York from the Simply Analytics database that are processors or wholesalers/distributors of beans
 3.  Businesses that were interviewed as part of this project.
 4.  Businesses that were part of a list of businesses that sell NY Grown and Certified products
+5.  Businesses identified by the research team as key out-of-state players. 
 
 The following information is needed from each business:
 
@@ -21,9 +19,8 @@ The following information is needed from each business:
 -   Does the business sell multiple commodities
 -   MWBE or not
 -   Works with local farms
--   Inventory capacity
 
-In all data sets, the capitalization is different. We just leave all data capitalized so as to not have issues with matching that are a result of capitalization.
+We assume that any business that sells through the local supply chain (i.e., was interviewed by research team, sold to NYC previously, was part of the list of businesses that are NY Grown & Certified, or identified by research as a key out-of-state seller) should be included in the bean supply chain model. For this set of businesses, we gather missing information manually. 
 
 **Location** All data sets have information on if the business is located in NYS or not
 
@@ -39,7 +36,7 @@ In all data sets, the capitalization is different. We just leave all data capita
 
 **Inventory capacity** Data from SimplyAnalytics have sales volumes, data from NYC has sales to NYC from the three commodities of interest, and a few of the respondents from the interview data have inventory capacity. {{Becca ADD here how computed}}.
 
-Note: We have removed business names and phone numbers, but have retained addresses and latitude/longitude. In some cases, businesses were matched in these data using names. Those data are not available in this public repository. 
+Note: For confidentiality reasons, we have removed business names, phone numbers, and addresses from the publicly available data. This code will not run as the source data is not available publicly, but the code can be used to understand our process. 
 
 ### Simply Analytics
 
@@ -91,7 +88,7 @@ library(readxl)
 wb <- createWorkbook()
 
 # Define file path
-file_path <- "data_raw/ToddNAICS4.xlsx"
+file_path <- "../data_raw/ToddNAICS4.xlsx"
 
 # Define sheet names of interest
 sheet_names <- c("Wholesaling (42)", "Transportation (48)", 
@@ -112,7 +109,7 @@ naics_df <- sheet_names %>%
   clean_names()
 
 # Import manufacturing data separately due to different column names 
-mfg <- read_excel("data_raw/ToddNAICS4.xlsx", 
+mfg <- read_excel("../data_raw/ToddNAICS4.xlsx", 
                   sheet = "Mfg2") %>% 
   clean_names() %>% 
   mutate(sheet_name = "Mfg2", 
@@ -139,15 +136,27 @@ naics_df <- naics_df %>%
 
 #### Duplicates
 
-In these data, many companies are listed multiple times if they have multiple locations. In some cases, the data on sales and employees (variables of interest) are repeated and exactly the same across the multiple listings and in some cases they are different. For those observations with different data across the duplicated rows, we want to add up the sales and employment. For those that are the same across duplicated rows, we keep the first row of data.
-
-Of the duplicates, one business is located outside of NY.
+In these data, many companies are listed multiple times if they have multiple locations. In some cases that is because the same company is performs multiple roles in the supply chain (e.g., processing and distribution). 
 
 ```{r}
 
 # Look at duplicates 
 duplicates <- naics_df %>% 
   filter(duplicated(company_name) | duplicated(company_name, fromLast = TRUE))
+
+# How many duplicates have different locations in the supply chain that we care about
+duplicates <- duplicates %>%
+  mutate(
+    supply_chain_location = case_when(
+      sheet_name == "Mfg2" ~ "processor", 
+      TRUE ~ "warehouse/distribution")
+  ) %>%
+  group_by(company_name) %>%
+  summarise(
+    n = n_distinct(supply_chain_location)
+  ) %>% 
+  filter(n>1)
+  
 
 # Create a dummy variable that indicates if sales and employment data is duplicated or not
 naics_df <- naics_df %>% 
@@ -159,7 +168,7 @@ naics_df <- naics_df %>%
          n_distinct(local_employees)==1 ~ 1, 
       TRUE ~ 0)) 
     
-# Summarise data for those that are duplicated and different and return first row for those that are duplicated and the same
+# Summarize data for those that are duplicated and different and return first row for those that are duplicated and the same
 naics_df <- naics_df %>% 
   select(naics, description, company_name, state, sales_volume, 
          total_employees, local_employees, same) %>%
@@ -255,7 +264,7 @@ We want to match data for all businesses listed. For each row there is a column 
 ```{r}
 
 # Import data
-nyc_df <- read_xlsx("data_raw/Public-Dashboard-Data-for-Download-FY19-23.xlsx", 
+nyc_df <- read_xlsx("../data_raw/Public-Dashboard-Data-for-Download-FY19-23.xlsx", 
                  sheet = "Citywide") %>% 
   clean_names()
 
@@ -343,7 +352,7 @@ June collected additional NYC purchasing data from businesses listed in 2023. Th
 ```{r}
 
 # Import data
-nyc_23_df <- read_xlsx("data_raw/nyc_dashboard_2023additions.xlsx")
+nyc_23_df <- read_xlsx("../data_raw/nyc_dashboard_2023additions.xlsx")
 
 # Make business names upper case
 nyc_23_df <- nyc_23_df %>% 
@@ -366,7 +375,7 @@ There are a few files with the same data, we use the file DryBean_SupplyChain_da
 ```{r}
 
 # Import data collected by the qualitative team
-qual_df <- read_xlsx("data_raw/DryBean_SupplyChain_Data.xlsx", 
+qual_df <- read_xlsx("../data_raw/DryBean_SupplyChain_Data.xlsx", 
                      sheet = "Sheet1") %>% 
   clean_names()
 
@@ -433,7 +442,7 @@ I assume the the MWBE certification is for the wholesaler and not for the proces
 ```{r}
 
 # Import data
-ny_foods_df <- read_csv("data_raw/NY Food Products - Approved-Grid View.csv") %>% 
+ny_foods_df <- read_csv("../data_raw/NY Food Products - Approved-Grid View.csv") %>% 
   clean_names()
 
 # Select data of interest
@@ -732,7 +741,7 @@ df <- df %>%
 
 The list of businesses we have here is a complete list of all businesses in the supply chain, but key information is missing and must be found manually.
 
-We assume that any business that sells through the local supply chain (i.e., was interviewed by June, sold to NYC previously, or was part of the list of businesses that are NY Grown & Certified) should be part of the main part of our model. For this set of businesses, we gather additional information manually. All other businesses are in the model, but not explicitly modeled.
+We assume that any business that sells through the local supply chain (i.e., was interviewed by June, sold to NYC previously, or was part of the list of businesses that are NY Grown & Certified, identified by June as a key out-of-state seller) should be included in the bean supply chain model. For this set of businesses, we gather additional information manually. All other businesses are in the model, but not explicitly modeled.
 
 ```{r}
 
@@ -821,7 +830,7 @@ saveWorkbook(wb, "data_final/supply_chain_list.xlsx", overwrite = TRUE)
 
 ### Manual data additions
 
-In this file we take the data that was first complied in "processor_data.qmd", exported and then manually added to in the document "CFP_Supply_Chain_Data_070425.xlsx." We use the sheet "beans_inside_model" which indicates the wholesalers and distributors in the bean supply chain that we assume are "inside the model" and all actors in our agent based model. These entities have previously sold to NYC, have sales through local and regional food systems, or were indicated by the qualitative team to be outside of New York but a player in the system.
+In this file we take the data that was first complied in the first section of this file, exported and then manually added to in the document "CFP_Supply_Chain_Data_070425.xlsx." We use the sheet "beans_inside_model" which indicates the wholesalers and distributors in the bean supply chain that we assume are "inside the model" and all actors in our agent based model. These entities have previously sold to NYC, have sales through local and regional food systems, or were indicated by the qualitative team to be outside of New York but a player in the system.
 
 In the manual data piece, there were general notes made. Observations were dropped if they did not have any bean products or if they were deemed an incorrect entry.
 
@@ -829,10 +838,9 @@ There are a few errors in the data regarding operations that are located in NY o
 
 
 ```{r}
-library(tidyverse)
-library(janitor)
 
-df <- readxl::read_xlsx("data_processed/CFP_Supply_Chain_Data_070425.xlsx", 
+# Import data
+df <- readxl::read_xlsx("../data_processed/CFP_Supply_Chain_Data_070425.xlsx", 
                         sheet = "beans_inside_model", 
                         skip = 1) %>% 
   clean_names()
@@ -866,6 +874,7 @@ If I wasn't able to find an address, then the business was dropped.
 There were multiple entries for Furmano's so we only kept one.
 
 ```{r}
+
 # Drop rows with no data
 df <- df %>% 
   filter(!is.na(company_name) & 
@@ -945,7 +954,6 @@ df <- df %>%
     "SYS CLS"
     )
   )
-
 
 ```
 
@@ -1072,21 +1080,21 @@ missing <- df %>%
 df <- df %>% 
   mutate(
     latitude = case_when(
-      company_name=="GOYA" ~ 40.763031, 
       company_name=="NEW YORK BEAN, LLC" ~ 42.976151, 
       company_name=="R & L FOOD, CANADA" ~ 45.412021, 
       company_name=="WHITSONS CULINARY GROUP" ~ 40.852589, 
       company_name=="GINSBERGS FOODS" ~ 42.2662037,
+      company_name=="SYSCO ALBANY" ~ 42.898884,
       company_name=="THURSTON FOODS" ~ 41.4783847,
       company_name=="AMERICAN ROLAND FOOD CO / ROLAND, DAYTON, NJ" ~ 40.3747341, 
       company_name=="CHEF'S LINE" ~ 39.7808195, 
       TRUE ~ latitude), 
     longitude = case_when(
-      company_name=="GOYA" ~ -74.068359, 
       company_name=="NEW YORK BEAN, LLC" ~ -77.870369, 
       company_name=="R & L FOOD, CANADA" ~ -75.652283, 
       company_name=="WHITSONS CULINARY GROUP" ~ -73.390443, 
       company_name=="GINSBERGS FOODS" ~ -73.731335,
+      company_name=="SYSCO ALBANY" ~ -73.768914,
       company_name=="THURSTON FOODS" ~ -72.7998233,
       company_name=="AMERICAN ROLAND FOOD CO / ROLAND, DAYTON, NJ" ~ -74.4907604, 
       company_name=="CHEF'S LINE" ~ -75.3660808, 
@@ -1099,10 +1107,42 @@ df <- df %>%
 
 ```
 
-##### Save
+#### Save
+Here we save a full version and the version that can be shared publicly with business names and addresses removed. We also drop any columns that are not relevant. 
+
+##### Full data
+```{r}
+
+# Save full file - not to be shared publicly
+write_csv(df, "../data_final/beans_processor_distributor_full.csv")
+
+```
+
+#####  Final data
+Replace business names with an unique id. We also drop beans_processor as it was replaced with primary and secondary and is confusing to include both. Lastly, we drop variables related to scale and local ownership as most of the data is missing and we are relying on other sources. 
 
 ```{r}
 
-write_csv(df, "data_final/beans_processor_distributor.csv")
+# Drop columns not needed
+df <- df %>% 
+  select(!c(beans_processor, nyc_dashboard:last_col()))
 
+# Add a unique identifier for business name
+df <- df %>%
+  mutate(id = row_number() + 9999) %>% 
+  select(id, everything())
+
+# create a file with business name/address and identifier and save
+beans_business_id <- df %>% 
+  select(id, address, company_name)
+
+write_csv(df, "../data_processed/beans_business_id.csv")
+
+# Drop business name/address from file
+df <- df %>% 
+  select(-address, -company_name)
+
+# save
+write_csv(df, "../data_final/beans_processor_distributor.csv")
 ```
+
