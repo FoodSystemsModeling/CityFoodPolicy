@@ -5,16 +5,16 @@ Compile and merge data from:
 3.  Businesses that were interviewed as part of this project.
 4.  Businesses that were part of a list of businesses that sell NY Grown and Certified products
 
+We are only interested in cleaner/aggregators and, primary processors and secondary processors. We assume wholesalers can move all necessary quantities. 
+
 Variable names and description
 -   ny: Location (in NY or not) (0/1)
--   wholesaler_distributor: wholesale, transportation or distribution businesses (0/1)
 -   primary_processor: primary processor (0/1)
 -   secondary_processor: secondary processor (0/1)
 -   aggregator_cleaner: aggregator/cleaner (0/1)
 -   sold_to_NYC: Has the business sold to New York City (0/1)
 -   mwbe: Minority or Women owned business (0/1)
 -   lrfs_business: Works with local farms
--   outofstatebusiness: A key player in the institutional bean supply chain that is located outside of New York
 
 
-We assume that any business that sells through the local supply chain (i.e., was interviewed by research team, sold to NYC previously, was part of the list of businesses that are NY Grown & Certified, or identified by research as a key out-of-state seller) should be included in the bean supply chain model. 
+We assume that any business that sells through the local supply chain (i.e., was interviewed by research team, was part of the list of businesses that are NY Grown & Certified, or identified by research as a key out-of-state seller) should be included in the bean supply chain model. 
