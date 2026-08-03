@@ -40,3 +40,10 @@ graph LR;
 ```
 
 ## Estimated margins
+
+[Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.xlsx)
+
+Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
+
+All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
+

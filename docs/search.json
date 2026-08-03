@@ -256,7 +256,7 @@
     "href": "drybeans/model_parameterization.html#estimated-margins",
     "title": "3  Model parameterization",
     "section": "3.2 Estimated margins",
-    "text": "3.2 Estimated margins",
+    "text": "3.2 Estimated margins\nFinal data: Estimated margins by location along the dry bean supply chain.\nData includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.\nAll data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.",
     "crumbs": [
       "Dry beans",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Model parameterization</span>"
