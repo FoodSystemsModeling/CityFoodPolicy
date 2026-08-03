@@ -1,0 +1,474 @@
+---
+title: "03.beans - additional data pull"
+format: html
+editor: visual
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, 
+                      warning = FALSE)
+```
+
+In this file we use 2022 Census of Agriculture data to create representative groups of dry bean producers in New York State and add information to our previous request from 02.beans.qmd.
+
+## Import data
+
+```{r}
+rm(list=ls())
+
+library(tidyverse)
+library(srvyr)
+library(openxlsx)
+library(broom)
+
+# Import 2022 census of ag data
+load("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/data_processed/coa_22.RData")
+
+# Import my functions 
+source("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/mean_se_function.R")
+source("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/total_function.R")
+
+# Create workbook
+wb <- createWorkbook()
+
+# Define Commodity - dry beans or soybeans and drop all other operations
+## Operations with positive value of sales for dry/soy beans 
+df <- coa_22 %>% 
+  mutate(
+    dry_beans = case_when(
+      k4554>0 ~ 1, 
+      TRUE ~ 0), 
+    soybeans = case_when(
+      k4088>0 ~ 1, 
+      TRUE ~ 0)) %>% 
+  filter(dry_beans==1 | soybeans==1)
+
+# Drop operations with less than $1,000 in sales (no operations were dropped)
+df <- df %>% 
+  filter(tvp>=1000)
+
+```
+
+## Define variables
+
+### MWBE
+
+MWBE is defined as an operation that falls into any of the following:
+
+-   Ethnicity: label a farm as "socially disadvantaged" if at least one decision-maker on the farm checked yes to "Hispanic, Latino, or Spanish origin"
+-   Race: label a farm as "socially disadvantaged" if at least one decision-maker on the farm checked yes to Black or African America, American Indian or Alaska Native, Asian, Native Hawaiian or Other Pacific Islander.
+-   "Majority female" operations -where at least ½ of those involved in making management decisions on the farm were female
+
+```{r}
+
+# Define majority female based on decision making
+df <- df %>% 
+  mutate(
+    op1_female_dm = case_when(
+      op1_female==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_female_dm = case_when(
+      op2_female==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_female_dm = case_when(
+      op3_female==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_female_dm = case_when(
+      op4_female==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_female_dm = op1_female_dm + 
+      op2_female_dm + op3_female_dm + op4_female_dm, 
+    majority_female_dm = case_when(
+      total_female_dm >= (number_operators/2) ~ 1, 
+      TRUE ~ 0))
+
+# Define hispanic decision maker
+df <- df %>% 
+  mutate(
+     op1_hispanic_dm = case_when(
+      op1_hispanic==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_hispanic_dm = case_when(
+      op2_hispanic==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_hispanic_dm = case_when(
+      op3_hispanic==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_hispanic_dm = case_when(
+      op4_hispanic==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_hispanic_dm = op1_hispanic_dm + 
+      op2_hispanic_dm + op3_hispanic_dm + op4_hispanic_dm, 
+    hispanic_dm = case_when(
+      total_hispanic_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define black decision maker
+df <- df %>% 
+  mutate(
+     op1_black_dm = case_when(
+      op1_black==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_black_dm = case_when(
+      op2_black==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_black_dm = case_when(
+      op3_black==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_black_dm = case_when(
+      op4_black==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_black_dm = op1_black_dm + 
+      op2_black_dm + op3_black_dm + op4_black_dm, 
+    black_dm = case_when(
+      total_black_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define asian decision maker
+df <- df %>% 
+  mutate(
+     op1_asian_dm = case_when(
+      op1_asian==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_asian_dm = case_when(
+      op2_asian==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_asian_dm = case_when(
+      op3_asian==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_asian_dm = case_when(
+      op4_asian==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_asian_dm = op1_asian_dm + 
+      op2_asian_dm + op3_asian_dm + op4_asian_dm, 
+    asian_dm = case_when(
+      total_asian_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define indian or opi decision maker
+df <- df %>% 
+  mutate(
+     op1_indian_opi_dm = case_when(
+      op1_indian_opi==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_indian_opi_dm = case_when(
+      op2_indian_opi==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_indian_opi_dm = case_when(
+      op3_indian_opi==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_indian_opi_dm = case_when(
+      op4_indian_opi==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_indian_opi_dm = op1_indian_opi_dm + 
+      op2_indian_opi_dm + op3_indian_opi_dm + op4_indian_opi_dm, 
+    indian_opi_dm = case_when(
+      total_indian_opi_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+## Define MWBE
+df <- df %>% 
+  mutate(
+    mwbe_fct = case_when(
+      majority_female_dm==1 |
+        hispanic_dm==1 | 
+        black_dm==1 | 
+        asian_dm==1 |
+        indian_opi_dm ==1 ~ "MWBE", 
+      TRUE ~ "Not MWBE"), 
+    mwbe = case_when(
+      mwbe_fct == "MWBE" ~ 1, 
+      TRUE ~ 0))
+
+```
+
+### Scale and others
+
+```{r}
+
+# Scale - under $1M and over
+df <- df %>% 
+  mutate(
+    sales_class_agg = case_when(
+      gcfi>=1000000 ~ "GCFI $1 million or more", 
+      TRUE ~ "GCFI less than $1 million"))
+
+# Define net farm income per acre operated
+df <- df %>% 
+  mutate(
+    infi_acre = infi/operated_acres)
+
+# Production cost per acre
+df <- df %>%
+  mutate(
+    exp_acre = exp/operated_acres)
+
+# Harvested acres and yields
+df <- df %>% 
+  mutate(
+    dry_beans_harvested_acres = k554,
+    dry_beans_cwt = k555,
+    dry_beans_yield = case_when(
+      dry_beans_harvested_acres==0 ~ 0, 
+      TRUE ~ dry_beans_cwt/dry_beans_harvested_acres),
+    soybeans_harvested_acres = k88, 
+    soybeans_bushels = k89, 
+    soybeans_yield = csoyxxyd)
+  
+
+# Dummy for primary commodity livestock or dairy operations
+df <- df %>% 
+  mutate(
+    livestock_dairy = case_when(
+      livestock==1 | dairy == 1 ~ 1, 
+      TRUE ~ 0))
+
+# CRP acres (also includes WRP, FWP, CREP)
+df <- df %>% 
+  mutate(
+    crp_fct = case_when(
+      k683>0 ~ 1, 
+      TRUE ~ 0), 
+    crp_acres = k683)
+
+# Current inventory is acres harvested*yield - used to inform max_inventory
+df <- df %>% 
+  mutate(
+    current_inventory_drybeans = dry_beans_harvested_acres*dry_beans_yield, 
+    current_inventory_soybeans = soybeans_harvested_acres*soybeans_yield)
+
+
+# Define tenure variable as owns any land
+df <- df %>% 
+  mutate(
+    owns_any = case_when(
+      fullowner==1 | partowner==1 ~ 1, 
+      TRUE ~ 0)
+    )
+
+# Define proportion of acres devoted to cover crop, reduced till and no till
+df <- df %>% 
+  mutate(
+    cropland_total = cropland_harvested_acres + cropland_failed_acres + cropland_summer_fallow_acres + cropland_idle_acres,
+    cover_crop_pct_cropland = cover_crop_acres/cropland_total,
+    no_till_acres_pct_cropland = no_till_acres/cropland_total,
+    reduced_till_acres_pct_cropland = reduced_till_acres/cropland_total, 
+    intensive_till_acres_pct_cropland = intensive_till_acres/cropland_total,
+  )
+
+# Define operations with all organic sales
+df <- df %>% 
+  mutate(
+    all_organic_sales = case_when(
+      organic_sales_tvp==1 ~ 1, 
+      TRUE ~ 0)
+  )
+
+```
+
+## Summary stats
+
+### Organic, MWBE, Scale
+```{r}
+
+# Define varlist
+varlist <- df$variables %>% 
+  select(
+    starts_with("current_inventory"),
+    exp_acre,
+    operated_acres,
+    dry_beans_harvested_acres,
+    dry_beans_cwt,
+    dry_beans_yield,
+    soybeans_harvested_acres,
+    soybeans_bushels, 
+    soybeans_yield,
+    young, beginning, livestock_dairy,  
+    organic_farm, 
+    no_till, reduced_till, intensive_till,
+    no_till_acres, reduced_till_acres, intensive_till_acres,
+    no_till_acres_pct_cropland, reduced_till_acres_pct_cropland, 
+    intensive_till_acres_pct_cropland,
+    crp_fct, 
+    partowner, fullowner, fulltenant,
+    owns_any,
+    differentiated_farm,
+    infi, exp, tvp) %>% 
+  names()
+
+
+# Define groupby list
+groupbylist <- df$variables %>% 
+  select(sales_class_agg, mwbe_fct, organic_fct) %>% 
+  names()
+
+# Define crop list
+croplist <- c("dry_beans", "soybeans")
+
+# Mean/se
+sum <- map(croplist, function(croplist){
+  df %>% 
+    filter(!!sym(croplist)==1) %>%
+    mean_se_function(varlist, groupbylist) %>% 
+    mutate(crop = croplist)
+}) %>% 
+  bind_rows() %>% 
+  select(crop, everything())
+
+
+# Add Worksheet
+addWorksheet(wb, "summary_organic")
+writeData(wb, "summary_organic", sum)
+
+```
+### MWBE, scale
+
+```{r}
+
+# Not by organic due to small sample sizes
+
+# Define groupby list
+groupbylist <- df$variables %>% 
+  select(sales_class_agg, mwbe_fct) %>% 
+  names()
+
+# Mean/se
+sum <- map(croplist, function(croplist){
+  df %>% 
+    filter(!!sym(croplist)==1) %>%
+    mean_se_function(varlist, groupbylist) %>% 
+    mutate(crop = croplist)
+}) %>% 
+  bind_rows() %>% 
+  select(crop, everything())
+
+# Add Worksheet
+addWorksheet(wb, "summary")
+writeData(wb, "summary", sum)
+```
+
+### Land use by organic
+
+```{r}
+
+# Land use by organic
+varlist <- df$variables %>% 
+  select(no_till_acres_pct_cropland, reduced_till_acres_pct_cropland, 
+    intensive_till_acres_pct_cropland, 
+    organic_sales_tvp, all_organic_sales) %>% 
+  names()
+
+# Define groupby list
+groupbylist <- df$variables %>% 
+  select(organic_fct) %>% 
+  names()
+
+# Mean/se
+sum <- map(croplist, function(croplist){
+  df %>% 
+    filter(!!sym(croplist)==1) %>%
+    mean_se_function(varlist, groupbylist) %>% 
+    mutate(crop = croplist)
+}) %>% 
+  bind_rows() %>% 
+  select(crop, everything())
+
+# Add Worksheet
+addWorksheet(wb, "summary_landuse_organic")
+writeData(wb, "summary_landuse_organic", sum)
+
+```
+
+### Soybeans cost of production
+
+Keep operations with soy only to compute cost of production per acre.
+
+```{r}
+
+# Keep operations with soybean production only 
+soy <- df %>% 
+  filter(k4088==tvp)
+
+# Summary stats
+# Define varlist
+varlist <- c("exp_acre")
+
+# Define groupbylist
+groupbylist <- c("sales_class_agg", "mwbe_fct", "organic_fct")
+
+# Average for US
+sum_us <- soy %>% 
+  mean_se_function(varlist, groupbylist) %>% 
+  mutate(sample = "US")
+
+# Average for NY by organic only
+groupbylist <- "organic_fct"
+
+sum_ny <- soy %>% 
+  filter(state_name=="New York") %>% 
+  mean_se_function(varlist, groupbylist) %>% 
+  mutate(sample = "New York")
+
+# Average for US by organic only
+sum <- soy %>% 
+  mean_se_function(varlist, groupbylist) %>% 
+  mutate(sample = "US")
+
+
+sum <- bind_rows(sum_us, sum, sum_ny)
+rm(sum_us, sum_ny)
+
+
+# Add worksheet
+addWorksheet(wb, "soybeans_production_cost")
+writeData(wb, "soybeans_production_cost", sum)
+
+```
+
+## OLS
+
+```{r}
+
+# Define model
+results <- lm(
+  infi ~ mwbe + sales_class_agg + current_inventory_drybeans + dry_beans_harvested_acres + young + organic_farm + partowner + exp_acre,
+  data = df$variables, 
+  weight = weight)
+
+# Tidy
+tidied <- tidy(results)
+glanced <- glance(results)
+
+
+addWorksheet(wb, "ols_tidy")
+writeData(wb, "ols_tidy", tidied)
+
+addWorksheet(wb, "ols_glance")
+writeData(wb, "ols_glance", glanced)
+```
+
+## Save
+
+```{r}
+
+# Add info
+info <- tibble(
+  sheet_name = c("summary_organic", "summary", 
+                 "ols_tidy", "ols_glance"), 
+  description = c(
+    "Summary stats for dry bean and soybean producers by scale, MWBE",
+    "Summary stats for dry bean and soybean producers by scale, MWBE, organic",
+    "OLS regression results", 
+    "OLS model statistics including number of observations (nobs)"), 
+  sample = c(
+    "Dry bean and soybean producers in New York"))
+ 
+# Add worksheet
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save 
+saveWorkbook(wb, "../data_final/03.beans_final_results.xlsx", 
+             overwrite = TRUE)
+
+```

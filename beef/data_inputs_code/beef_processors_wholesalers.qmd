@@ -1,0 +1,1044 @@
+---
+execute:
+  eval: false
+  echo: true
+---
+### Description of Data Sources
+
+All of the data from this file will be used to inform the supply chain of the ABM model.
+
+**Processors** We include all USDA inspected meat processing facilities
+
+The following information is needed for all businesses:
+
+- Location (in NY or not)
+- Address
+- Role in the supply chain
+- Has the business sold to New York City
+- If the business sold to NYC, was the product from NY
+- MWBE or not
+- Works in the local and regional food supply chain
+
+**Auctions** We define a list of livestock auctions in New York from
+
+- [AllHay.com](https://allhay.com/livestock-auctions-by-state/new-york/)
+- [USDA AMS, Market Agency Selling on Commision or Stockyard Owner](https://www.ams.usda.gov/rules-regulations/packers-and-stockyards-act/regulated-entities/market-agency)
+
+**Wholesalers and Distributors** We define the list of wholesale/distributor businesses from the SimplyAnalytics database of businesses located in New York State (NYS) that could carry beans. We assume that any wholesaler/distributor can carry MWBE identified product or local identified product. We also assume that wholesalers in NYS can supply all product demanded by New York City (NYC).
+
+The only businesses that are explicity included in the model are those that are identified as MWBE businesses or those that sold to NYC previously.
+
+**Location** All data sets have information on if the business is located in NYS or not
+
+**Address** We include an address for each business and then convert this to latitude and longitude coordinates to be included in the map. This data is not available for the majority of businesses so addresses are gathered and input manually.
+
+**Role in the supply chain** For those businesses that are wholesalers/distributors, we have that information in all data sets.
+
+**Has the business sold to NYC** Any business that is in the NYC data we indicate has sold to NYC, we assume all other businesses have not.
+
+**MWBE** These data are listed in the NYC data and the interview data. For the SimplyAnalytics data, in order to determine if businesses are MWBE, we use a [New York State database](https://ny.newnycontracts.com/FrontEnd/searchcertifieddirectory.asp) and a [NYC database](https://sbsconnect.nyc.gov/certification-directory-search/).
+
+**Works with local farms** Businesses that sell locally are assumed to be those that were interviewed as part of this project and those found in the [Vendor Contact List in the NY Food Product Database](https://airtable.com/appNXQOhJImA3BVPc/shrCt48jrimPvahnI/tbliBTDzNm9JyA4vF/viwddIxh0H1NqtqHG?blocks=bipgl599cpG2pS1XM).
+
+**Max inventory** This represents the maximum inventory that can flow through the businesses. If there is no supply contraints then we use the number of pounds of beans that NYC purchased as the max inventory with the goal that this number makes it so there is no constraint on how much the business can purchase in the model.
+
+**Organic** We assume that all wholesalers/distributors can carry organic producers. Organic processors are identified in FSIS data if organic is in their name, there is no formal identifier in the data.
+
+### Meat, Poultry and Egg product inspection directory
+
+We pull publicly available data from the [U.S. Department of Agriculture, Food Safety and Inspection Service USDA FSIS), Meat, Poultry and Egg Product Inspection Directory](https://www.fsis.usda.gov/inspection/establishments/meat-poultry-and-egg-product-inspection-directory). The data is updated weekly and downloaded on 5/15/2026.
+
+We keep only those establishments that listed activities livestock slaughter or livestock processing.
+
+The Meat, Poultry and Egg Product Inspection (MPI) Directory is a listing of establishments that produce meat, poultry, and/or egg products regulated by FSIS. The Establishment Demographic Data includes additional establishment information about FSIS regulated establishments, including size, species slaughtered and aggregate categorical production information. These data are updated weekly, and the current edition replaces all previous editions.
+
+**Size** The size of the establishment based on the business class. The options are Large, Small, and Very Small. Note: This variable does not correlate highly with production volume.
+
+- Large establishments are defined as establishments with 500 or more employees
+- Small establishments are defined as establishments with 10 or more employees but fewer than 500 employees
+- Very Small establishments are defined as establishments with fewer than 10 employees or annual sales of less than \$2.5 million
+
+#### Import and clean
+
+```{r}
+rm(list=ls())
+
+library(tidyverse)
+library(openxlsx)
+library(janitor)
+library(readxl)
+library(fuzzyjoin)
+
+# Create workbook
+wb <- createWorkbook()
+
+# Import data
+df <- read_csv("../data_raw/MPI_Directory_by_Establishment_Name.csv")
+
+# Keep New York only
+df <- df %>% 
+  filter(state=="NY")
+
+# Split activity column a dummy variable per relevant activity
+df <- df %>% 
+  mutate(
+    secondary_processor = case_when(
+      str_detect(activities, "Meat Processing") ~ 1, 
+      TRUE ~ 0), 
+    harvester_processor = case_when(
+      str_detect(activities, "Meat Slaughter") ~ 1, 
+      TRUE ~ 0)
+  )
+    
+# Keep only those businesses that are harvester_processor or secondary_processor
+df <- df %>% 
+  filter(harvester_processor==1 | 
+           secondary_processor==1)
+
+```
+
+#### Define variables
+
+```{r}
+
+# Define additional columns, no businesses say organic in their title
+df <- df %>% 
+  mutate(
+    ny = 1, 
+    organic = case_when(
+      str_detect(establishment_name, "organic") ~ 1, 
+      TRUE ~ 0)
+    )
+
+# Rename columns make zip 5 digits
+df <- df %>% 
+  rename(company_name = establishment_name, 
+         street_address = street) %>% 
+  mutate(zip_code = str_sub(zip, 1,5)
+  )
+  
+# Keep columns of interest
+df <- df %>% 
+  select(company_name, street_address, city, state, zip_code,
+         ny, harvester_processor, secondary_processor, organic)
+
+# Define data
+fsis_df <- df
+
+rm(df)
+
+# save
+write_csv(fsis_df, "../data_processed/fsis_interim.csv")
+
+```
+
+### Auctions
+
+We create a list of livestock auctions from three sources:
+
+- [AllHay.com](https://allhay.com/livestock-auctions-by-state/new-york/)
+- New York Agriculture and Markets
+- USDA Agricultural Marketing Service - Packers and Stockyards Division
+
+Data is imported from each source and aggregated into one file. 
+
+```{r}
+
+# Import data
+df <- read_xlsx("../data_raw/NYS Auction Houses with Sources and Zip Codes.xlsx") %>% 
+  clean_names()
+  
+# Drop "unable to locate" and source
+df <- df %>% 
+  filter(zip_code != "Unable to locate") %>% 
+  select(!source_of_information)
+
+# rename 
+df <- df %>% 
+  rename(company_name = business_name)
+
+# Add additional variables
+df <- df %>% 
+  mutate(
+    street_address = NA, 
+    city = NA, 
+    state = "NY",
+    ny = 1, 
+    auction = 1, 
+    organic = NA)
+
+# Reorder
+df <- df %>% 
+  select(
+    company_name, street_address, city, state, 
+    zip_code, ny, auction, organic
+  )
+
+# rename
+auction_df <- df
+```
+
+### SimplyAnalytics
+
+This data is used for the wholesale businesses.
+
+[Simply Analytics](https://johnson.library.cornell.edu/database/simplyanalytics) is a web-based mapping application that allows users to map bushiness by name or by industry. Data are available to Cornell researchers through the Management Library. We collected data from (ADD YEAR) on the NAICS codes that are relevant to processing, distribution and wholesaling of dry beans, beef and leafy greens.
+
+We use data aggregated at the 6-digit NAICS code.
+
+The NAICS codes of interest for us include:
+
+- 424420 Packaged Frozen Food Merchant Wholesalers
+- 424410 General Line Grocery Merchant Wholesalers
+- 424420 Packaged Frozen Food Merchant Wholesalers
+- 424470 Meat and Meat Product Merchant Wholesalers
+- 424490 Other Grocery and Related Products Merchant Wholesalers
+- 484110 General Freight Trucking, Local
+- 484121 General Freight Trucking, Long-Distance, Truckload
+- 484122 General Freight Trucking, Long-Distance, Less Than Truckload
+- 493110 General Warehousing and Storage
+- 493120 Refrigerated Warehousing and Storage
+- 493130 Farm Product Warehousing and Storage
+- 493190 Other Warehousing and Storage
+
+#### Import and clean data
+
+```{r}
+
+# Define file path
+file_path <- "../data_raw/ToddNAICS4.xlsx"
+
+# Define sheet names of interest
+sheet_names <- c("Wholesaling (42)", "Transportation (48)", 
+                 "Warehousing & Storage (49)")
+
+# Import data
+naics_df <- sheet_names %>% 
+  set_names() %>% 
+  map_dfr(~suppressWarnings(read_excel(file_path, 
+                      sheet = .x)) %>% 
+            select(NAICS, Description, `Company Name`, `Street Address`, 
+                   City, State, `Zip Code`) %>%
+            mutate(
+              `Zip Code` = as.character(`Zip Code`)), 
+          .id = "sheet_name") %>% 
+  clean_names()
+
+# Filter NAICS of interest
+wholesale_dist <- c("424420", "424410", "424420", "424470", 
+                    "424490", "484110", "484121", "484122", 
+                    "493110", "493120", "493130", "493190") 
+
+naics_df <- naics_df %>% 
+  filter(naics %in% wholesale_dist)
+
+
+# Only keep businesses located in NY
+naics_df <- naics_df %>% 
+  filter(state=="NY")
+
+# Make zip code only 5 digits
+naics_df <- naics_df %>% 
+  mutate(zip_code = str_sub(zip_code, 1,5))
+
+```
+
+#### Define variables
+
+**Supply chain role** For the the processing sectors of the supply chain, we specify the commodity, and for the wholesale/distribution sectors we assume the sell all three commodities.
+
+**Located in NY or not** We create a dummy variable with a 1 if in NY and 0 otherwise. All of these businesses are located in NYS.
+
+```{r}
+
+# Supply chain role
+naics_df <- naics_df %>% 
+  mutate(
+    wholesaler_distributor = 1)
+
+# Define NY dummy (this will be used later, all businesses here are in NY)
+naics_df <- naics_df %>% 
+  mutate(
+    ny = case_when(
+      state=="NY" ~ 1, 
+      TRUE ~ 0))
+
+# Keep columns of interest
+naics_df <- naics_df %>% 
+  select(-c(naics, description, sheet_name))
+
+# Add source
+naics_df <- naics_df %>% 
+  mutate(
+    simply_analytics=1)
+
+```
+
+### New York City Purchasing
+
+Overall, we use the NYC purchasing data to get a list of processor businesses that are located in NYS and have sold to NYC or are located outside of NYS but sell NYS source identified products to NYC.
+
+We also include a list of wholesalers that we will match with the Simply Analytics database to add additional information to the existing Simply Analytics data.
+
+Here we want the data from Citywide, which is what is downloaded when you download the full purchasing data from the [NYC Food Policy Dashboard](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page).
+
+We keep all data relevant for the year 2023, based on primary food product category equal to beef. In these data we have company names but we do not have information on their location.
+
+The column called ny_state_spend_y_n indicates if an item is grown, processed, manufactured, or distributed by businesses located within New York State. The challenge is that the data includes up to three companies per line (origin_detail, distributor, and vendor) and for all three of these only one value for ny_state_spend_y_n. Therefore at least one, but not necessarily all of these businesses are in NYS. We want to identify businesses that sold NYS identified products to NYC, but using these data, we can't know which of the three businesses in each row was the one identified. As a first step, we assume all businesses in the row (i.e., origin_detail, distributor, and vendor) are assumed to supply NYS product.
+
+We assume all businesses listed under origin_detail are processors and get the beef based on the products they sold and all other businesses are wholesaler/distributors.
+
+We want to include all businesses from this data set that are located in NYS and all out-of-state businesses that purchased NY identified products and sold to NYC (i.e., ny_state_spend_y_n=="y"), indicated by the variable "nys_product_purchase" equal to 1 if purchased source identified NY product and 0 otherwise.
+
+While we do have a column in this dataset that indicates MWBE, we do not know from this data which business along the supply chain is MWBE. But since we have a list of all certified MWBE businesses for NYC and NYS, we rely on that list to confirm if a business is MWBE or not (rather than using the NYC purchasing database).
+
+We want to match data for all businesses listed. For each row there is a column called origin detail, distributor and vendor. We create a new column called company_name that includes all of the businesses listed in each column. We do not retain the columns pertaining to how much was purchased by NYC.
+
+#### Import and clean
+
+```{r}
+
+# Import data
+nyc_df <- read_xlsx("../../drybeans/data_raw/Public-Dashboard-Data-for-Download-FY19-23.xlsx", 
+                 sheet = "Citywide") %>% 
+  clean_names()
+
+# filter data of interest
+nyc_df <- nyc_df %>% 
+  filter(time_period ==2023 & 
+           primary_food_product_category == "Beef" | 
+           (food_product_category=="Meals" & 
+              (str_detect(product_name, "beef")))
+         ) %>% 
+  filter(!str_detect(product_name, "meatless|vegan"))
+
+# Keep variables of interest
+nyc_df <- nyc_df %>% 
+  select(
+    origin_detail, distributor, vendor,
+    primary_food_product_category, ny_state_spend_y_n
+    )
+
+# Add supply chain role, ny, sold to nyc
+nyc_df <- nyc_df %>% 
+  mutate(nys_product_purchased = case_when(
+           ny_state_spend_y_n=="Y" ~ 1, 
+           TRUE ~ 0), 
+         sold_to_NYC = 1) %>% 
+  select(!c(ny_state_spend_y_n))
+   
+# Make all business names capitalized to join with Simply Analytics data
+nyc_df <- nyc_df %>% 
+  mutate(across(c(origin_detail, vendor, distributor),
+                ~str_to_upper(.)))
+
+# Get one column with all business names from origin_detail, vendor, distributor
+nyc_df <- nyc_df %>% 
+  pivot_longer(
+    cols = !c(primary_food_product_category, nys_product_purchased, sold_to_NYC), 
+    names_to = "name", 
+    values_to = "company_name") 
+
+# Add supply chain location - the only businesses NAICS we included were
+nyc_df <- nyc_df %>% 
+  mutate(
+    secondary_processor = case_when(
+      name == "origin_detail" ~ 1, 
+      TRUE ~ 0), 
+    wholesaler_distributor = case_when(
+      name %in% c("vendor", "distributor") ~ 1, 
+      TRUE ~ 0))
+
+# Some company names have location information included, drop everything after and including the first comma
+nyc_df <- nyc_df %>% 
+  mutate(company_name = str_remove(company_name, ",.*")) %>% 
+  filter(company_name!="")
+
+# Drop trailing spaces
+nyc_df <- nyc_df %>% 
+  mutate(
+    company_name = str_trim(company_name, side = "right")
+  )
+
+# Drop if "(BLANK)"
+nyc_df <- nyc_df %>% 
+  filter(company_name != "(BLANK)")
+
+# Keep distinct observations only and drop blanks
+nyc_df <- nyc_df %>% 
+  distinct(company_name, .keep_all = TRUE) %>% 
+  filter(!company_name %in% c("(BLANK)", "NA"))
+
+# Drop columns we don't need
+nyc_df <- nyc_df %>% 
+  select(company_name, nys_product_purchased, sold_to_NYC, 
+         secondary_processor:last_col())
+
+# Add data source
+nyc_df <- nyc_df %>% 
+  mutate(
+    nyc_dashboard = 1)
+
+```
+
+#### Join NYC with SimplyAnalytics
+
+Here we take the NYC wholesale data information and join it with the Simply Analytics data.
+
+##### NYC data is the base
+
+We add addresses from the SA data to wholesalers that sold to NYC. And then we manually add in any missing addresses. This is one set of wholesale businesses that will be included in the model.
+
+```{r}
+
+# Keep NYC wholesale data only
+nyc_wholesale_df <- nyc_df %>% 
+  filter(wholesaler_distributor==1)
+
+# Join with NYC data to get addresses from SimplyAnalytics data
+nyc_wholesale_df <- stringdist_left_join(
+  nyc_wholesale_df, naics_df, by = "company_name", 
+  max_dist = 0.15, method = "jw")
+
+# keep only one name and Drop duplicates 
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  select(-ends_with(".y"))
+
+# remove .x at the end of some variables
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  rename_with(~str_remove(.x, "\\.x$"), ends_with(".x"))
+
+# List missing
+missing <- nyc_wholesale_df %>% 
+  filter(is.na(street_address)) 
+
+# Manually looked at missing, only manually added addresses for NY businesses
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  mutate(
+    street_address = case_when(
+      company_name == "TERI NICHOLS" ~ "10101c Avenue D",
+      company_name == "WHITSONS CULINARY GROUP" ~ "1140 Motor Pkwy",
+      company_name == "DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC." ~ "105 Quist Road",
+      company_name == "WESTSIDE FOODS" ~ "355 Food Center Dr", 
+      company_name == "FRESH AND TASTY BAKED PRODUCTS" ~ "1568 Stillwell Ave",
+      company_name == "ROMEO WHOLESALE MEAT CORP." ~ "7801 15th Ave",
+      TRUE ~ street_address), 
+    city = case_when(
+      company_name == "TERI NICHOLS" ~ "Brooklyn",
+      company_name == "WHITSONS CULINARY GROUP" ~ "Central Islip",
+      company_name == "DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC." ~ "Amsterdam",
+      company_name == "WESTSIDE FOODS" ~ "Bronx",
+      company_name == "FRESH AND TASTY BAKED PRODUCTS" ~ "Bronx",
+      company_name == "ROMEO WHOLESALE MEAT CORP." ~ "Brooklyn",
+      TRUE ~ city),
+    state = case_when(
+      company_name == "TERI NICHOLS" ~ "NY",
+      company_name == "WHITSONS CULINARY GROUP" ~ "NY",
+      company_name == "DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC." ~ "NY",
+      company_name == "WESTSIDE FOODS" ~ "NY",
+      company_name == "FRESH AND TASTY BAKED PRODUCTS" ~ "NY",
+      company_name == "ROMEO WHOLESALE MEAT CORP." ~ "NY",
+      TRUE ~ state),
+    zip_code = case_when(
+      company_name == "TERI NICHOLS" ~ "11236",
+      company_name == "WHITSONS CULINARY GROUP" ~ "11722",
+      company_name == "DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC." ~ "12010",
+      company_name == "WESTSIDE FOODS" ~ "10474",
+      company_name == "FRESH AND TASTY BAKED PRODUCTS" ~ "10461",
+      company_name == "ROMEO WHOLESALE MEAT CORP." ~ "11228",
+      TRUE ~ zip_code)
+  )
+
+# Drop businesses with missing information (i.e., out of NYS), all other businesses are in NYS
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  filter(!is.na(street_address))
+
+# Keep columns of interest
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  select(company_name, street_address, 
+         city, state, zip_code, 
+         wholesaler_distributor, 
+         nys_product_purchased, sold_to_NYC)
+
+# Add NY variable
+nyc_wholesale_df <- nyc_wholesale_df %>% 
+  mutate(
+    ny = 1)
+
+rm(missing)
+```
+
+##### Simply Analystics is the base
+
+```{r}
+
+## To join with other data
+# Keep NYC wholesale data only
+wholesale_df <- nyc_df %>% 
+  filter(wholesaler_distributor==1)
+
+# Join NYC and SimplyAnalytics data using a fuzzy join, we want to keep all data and remove duplicates, there are no matches with the interview data
+joined_df <- stringdist_left_join(
+  naics_df, wholesale_df, by = "company_name", 
+  max_dist = 0.15, method = "jw")
+
+# Visually inspect, they are all the same, naics_df has address information for most businesses, so we want to keep the company name as listed in the Simply Analytics data
+joined_df <- joined_df %>% 
+  rename(company_name = company_name.x) 
+
+# Keep Simply Analytics
+joined_df <- joined_df %>% 
+  select(-ends_with(".y")) 
+
+# remove .x at the end of some variables
+joined_df <- joined_df %>% 
+  rename_with(~str_remove(.x, "\\.x$"), ends_with(".x"))
+
+# rename
+naics_df <- joined_df
+
+rm(joined_df)
+
+```
+
+### NY Food Product Database
+
+We use data the [NY Food Product Database](https://airtable.com/appNXQOhJImA3BVPc/shrCt48jrimPvahnI/tbliBTDzNm9JyA4vF/viwddIxh0H1NqtqHG?blocks=bipgl599cpG2pS1XM) to identify businesses that sell New York branded products (lrfs==1).
+
+Bean processors include any manufacturer that lists the following values for Sub Category: "Meat".\
+We do not rely on the MWBE certification from this database as it is unclear whether is it for the processor or wholesaler. Rather we use the list of businesses certified MWBE by NYC and NYC.
+
+#### Import and clean data
+
+```{r}
+
+# Import data
+ny_foods_df <- read_csv("../data_raw/NY Food Products - Approved-Grid View.csv") %>% 
+  clean_names()
+
+# Select data of interest
+ny_foods_df <- ny_foods_df %>% 
+  select(sub_category, manufacturer, distributors)
+
+# Multiple distributors are listed in each row separated by a comma, make into a separate list
+ny_foods_df <- ny_foods_df %>%
+  separate_rows(distributors, sep = ",\\s*(?!\\s*Inc)") %>%
+  mutate(distributors = str_trim(distributors), 
+         distributors = str_remove_all(distributors, '["\']'))
+
+# Define businesses that have beef
+ny_foods_df <- ny_foods_df %>% 
+  filter(sub_category == "Meat") %>% 
+  select(-sub_category)
+
+# Pivot longer, define supply chain variables and drop duplicates
+ny_foods_df <- ny_foods_df %>% 
+  pivot_longer(
+    cols = everything(), 
+    values_to = "company_name", 
+    names_to = "type") %>%
+  mutate(
+    wholesaler_distributor = case_when(
+      type=="distributors" ~ 1, 
+      TRUE ~ 0), 
+    secondary_processor = case_when(
+      type == "manufacturer" ~ 1, 
+      TRUE ~ 0)
+    )
+
+# Drop NAs, duplicates and type
+ny_foods_df <- ny_foods_df %>% 
+  filter(!is.na(company_name)) %>% 
+  select(-type) %>% 
+  distinct(company_name, .keep_all = TRUE)
+  
+
+# Make upper case and add lrfs column
+ny_foods_df <- ny_foods_df %>% 
+  mutate(company_name = toupper(company_name), 
+         lrfs_business = 1)
+
+# Add source
+ny_foods_df <- ny_foods_df %>% 
+  mutate(
+    food_product_database = 1, 
+    ny = 1
+  )
+
+```
+
+#### Join to SimplyAnalytics
+
+Here we take the NY food product data base wholesale data information and join it with the Simply Analytics data.
+
+```{r}
+
+# Keep  wholesale data only
+wholesale_df <- ny_foods_df %>% 
+  filter(wholesaler_distributor==1)
+
+# Join with SimplyAnalytics data using a fuzzy join
+joined_df <- stringdist_left_join(
+  naics_df, wholesale_df, by = "company_name", 
+  max_dist = 0.15, method = "jw")
+
+# Visually inspect, they are all the same, naics_df has address information for most businesses, so we want to keep the company name as listed in the Simply Analytics data
+joined_df <- joined_df %>% 
+  rename(company_name = company_name.x) 
+
+# Keep Simply Analytics
+joined_df <- joined_df %>% 
+  select(-ends_with(".y")) 
+
+# remove .x at the end of some variables
+joined_df <- joined_df %>% 
+  rename_with(~str_remove(.x, "\\.x$"), ends_with(".x"))
+
+# remove columns we don't need
+joined_df <- joined_df %>%
+  select(!c(secondary_processor))
+
+# rename
+naics_df <- joined_df
+
+rm(joined_df)
+
+```
+
+### MWBE
+
+We join the NYS and NYC MWBE certified businesses with all of our data sets.
+
+New York State provides a database with all [New York State Contractors that are certified MWBE](https://ny.newnycontracts.com/FrontEnd/searchcertifieddirectory.asp) and by [New York City](https://sbsconnect.nyc.gov/certification-directory-search/). We download the entire directory from both.
+
+We select the following [commodity codes](https://www.nyc.gov/assets/sbs/downloads/pdf/businesses/certification/new-york-city-commodity-code-listing.pdf):
+
+- 040 - ANIMALS, BIRDS, MARINE LIFE, AND POULTRY, INCLUDING ACCESSOR
+- 160 - BUTCHER SHOP AND MEAT PROCESSING EQUIPMENT
+- 375 - FOODS: BAKERY PRODUCTS (FRESH)
+- 385 - FOODS, FROZEN
+- 390 - FOODS: PERISHABLE
+- 393 - FOODS: STAPLE GROCERY AND GROCER'S MISCELLANEOUS ITEMS
+
+#### Import data
+
+```{r}
+
+# Import MWBE directories, keep data of interest and make capital
+mwbe_ny <- read_csv("../data_raw/Directory_2026-05-18_380.csv", 
+                    skip = 5) %>% 
+  clean_names() %>%
+  select(company_name) %>% 
+  mutate(company_name = str_to_upper(company_name))
+
+mwbe_nyc <- read_xlsx("../data_raw/OnlineDirectory05182026.xlsx", 
+                      skip = 6) %>% 
+  clean_names() %>% 
+  mutate(company_name = str_to_upper(vendor_formal_name)) %>% 
+  select(company_name)
+
+# Join data (convert to UTF-8 format in order to join)
+mwbe <- full_join(mwbe_ny, mwbe_nyc) %>% 
+  mutate(mwbe = 1, 
+         company_name = iconv(company_name, from = "", to = "UTF-8"))
+
+# Drop duplicates
+mwbe <- mwbe %>% 
+  distinct(.keep_all = TRUE)
+
+rm(mwbe_ny, mwbe_nyc)
+
+```
+
+#### Join to FSIS
+
+```{r}
+
+# Join with other data so see if overlap
+joined_df <- stringdist_inner_join(fsis_df, mwbe, 
+                                       by = "company_name",
+                                       max_dist = 0.03, 
+                                       method = "jw")
+
+joined_df <- joined_df %>% 
+  select(company_name.x, company_name.y, everything())
+
+joined_df <- joined_df %>% 
+  rename(company_name = company_name.x) %>% 
+  distinct(company_name)
+      
+# Create a list of mwbe businesses and use that to add mwbe to df
+mwbe_list <- joined_df %>% 
+  pull(company_name)
+
+fsis_df <- fsis_df %>% 
+  mutate(
+    mwbe = case_when(
+      company_name %in% mwbe_list ~ 1, 
+      TRUE ~ 0))
+
+```
+
+#### Join to Auctions
+
+```{r}
+
+# Join with other data so see if overlap - no matches
+joined_df <- stringdist_inner_join(auction_df, mwbe, 
+                                       by = "company_name",
+                                       max_dist = 0.03, 
+                                       method = "jw")
+
+```
+
+#### Join to SimplyAnalytics
+
+```{r}
+
+# Join with other data so see if overlap
+joined_df <- stringdist_inner_join(naics_df, mwbe, 
+                                       by = "company_name",
+                                       max_dist = 0.03, 
+                                       method = "jw")
+
+joined_df <- joined_df %>% 
+  select(company_name.x, company_name.y, everything())
+
+joined_df <- joined_df %>% 
+  rename(company_name = company_name.x) %>% 
+  distinct(company_name)
+      
+# Create a list of mwbe businesses and use that to add mwbe to df
+mwbe_list <- joined_df %>% 
+  pull(company_name)
+
+naics_df <- naics_df %>% 
+  mutate(
+    mwbe = case_when(
+      company_name %in% mwbe_list ~ 1, 
+      TRUE ~ 0))
+
+# Keep MWBE only
+naics_df <- naics_df %>%
+  filter(mwbe==1) %>%
+  arrange(company_name)
+
+# Drop duplicates, unless they have separate addresses
+naics_df <- naics_df %>% 
+  distinct(.keep_all = TRUE)
+
+
+# Fill NAs with 0
+naics_df <- naics_df %>% 
+  mutate(across(nys_product_purchased:last_col(), 
+                ~case_when(is.na(.) ~ 0, 
+                           TRUE ~ .)))
+
+# Make zip code 5 digits
+naics_df <- naics_df %>% 
+  mutate(zip_code = str_sub(zip_code, 1,5))
+
+# Keep only columns of interest
+naics_df <- naics_df %>% 
+  select(
+    company_name:ny, 
+    nys_product_purchased, sold_to_NYC, 
+    mwbe, lrfs_business)
+
+```
+
+#### Join to NY Food Product database
+
+We match MWBE to NY food database processor data and find one match.
+
+All NYC purchasing data from a wholesaler will be in the SimplyAnalytics data.
+
+```{r}
+
+# One match
+joined_df <-  stringdist_inner_join(
+  ny_foods_df %>%
+    filter(secondary_processor==1), 
+  mwbe, by = "company_name",
+  max_dist = 0.2, method = "jw")
+
+# Add to ny_foods_df
+ny_foods_df <- ny_foods_df %>% 
+  mutate(
+    mwbe = case_when(
+      company_name == "SLATE FOODS" ~ 1, 
+      TRUE ~ 0)
+  )
+```
+
+### Interim Final data
+
+Here we keep wholesaler data from SimplyAnalytics (with any additional information from other data sets included) and processor data from all other data sources.
+
+Here we add in the columns for the address data that will be added manually. At this step, the data is saved as an excel file and then addresses and other missing information are manually added by the qualitative team. After these additions, the data is imported, geocoded and then exported in its final format.
+
+```{r}
+
+# Drop wholesale data from the NYC data
+final_nyc_df <- nyc_df %>% 
+  filter(secondary_processor==1)
+
+# Drop wholesale data from the NY food product data
+final_ny_foods_df <- ny_foods_df %>% 
+  filter(secondary_processor==1)
+
+# Combine processor data from all sources
+df <- bind_rows(
+  fsis_df,
+  auction_df,
+  final_nyc_df, 
+  final_ny_foods_df)
+
+rm(fsis_df, auction_df, final_ny_foods_df, final_ny_foods_df)
+
+# Arrange
+df <- df %>% 
+  arrange(company_name)
+
+#  Manually drop duplicates with slightly different names
+df <- df %>% 
+  filter(!company_name %in% 
+           c("ADVANCE PIERRE", 
+             "BALLPARK", "BEECH-NUT", "BEECH NUT"))
+
+
+# Add columns we need and put in correct order
+df <- df %>% 
+  mutate(
+    auction_scale = NA,
+    harvester_processor_scale = NA, 
+    secondary_processor_scale = NA,
+    max_inv = NA) %>% 
+  select(
+    company_name, street_address, city, state, zip_code, 
+    ny, harvester_processor,
+    secondary_processor,
+    auction, 
+    harvester_processor_scale,
+    secondary_processor_scale,
+    auction_scale,
+    max_inv, 
+    lrfs_business,
+    mwbe, 
+    sold_to_NYC, nys_product_purchased
+  )
+
+# Add in zero's for the columns that should be correct
+df <- df %>% 
+  mutate(across(c(mwbe, sold_to_NYC), 
+                ~case_when(
+                  is.na(.) ~ 0, 
+                  TRUE ~ .))
+  )
+
+# Add information on what data means
+info <- tibble(
+  variable_name = c(
+    "company_name", "street_address", "city", "state", 
+    "zip_code", "ny", "harvester_processor" , 
+    "secondary_processor", "auction",
+    "harvester_processor_scale", 
+    "secondary_processor_scale",
+    "auction_scale",
+    "max_inv", 
+    "lrfs_business", 
+    "mwbe", 
+    "sold_to_NYC",
+    "nys_product_purchased"), 
+  variable_description = c(
+    "Company name", 
+    "Street address (e.g., 1038 COURT ST)", 
+    "City",
+    "State abbreviation (e.g., NY)", 
+    "Zip code as 5 digits", 
+    "0/1 variable indicating if the business is located in NY or not",
+    "0/1 variable indicating if the business is a harvester processor or not",
+    "0/1 variable indicating if the business is a secondary processor or not",
+    "0/1 variable indicating if the business is an auction or not",
+    "Scale of harvester processor business. If not a primary processor then leave blank, otherwise fill in with small, medium, large",
+    "Scale of secondary processor business. If not a secondary processor then leave blank, otherwise fill in with small, medium, large",
+     "Scale of auction business. If not an auction then leave blank, otherwise fill in with small, medium, large",
+    "Maxiumum inventory capacity for this scale of processor", 
+    "0/1 variable indicating if the business is sells NYS source identified product or not",
+    "0/1 variable indicating if the business is an MWBE processor or not",
+    "0/1 variable indicating if the business is sold to NYC or not",
+    "0/1 variable indicating if the business was part of a supply chain that sold NYS source identified product previously to NYC agencies"), 
+  notes = c(
+    "",                                                                   
+    "Can be lower case or upper case, fine to just copy and paste from whatever source. Do NOT include state or zip code.",  # street_address
+    "",                                                                   
+    "Ideally it will be the state abbreviation (NY) but you can also include the full name New York.",  # state
+    "",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)",
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)", 
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)", 
+    "Choose one representative business from each category (e.g., small primary processor) and report the max inventory for all businesses in that category", 
+    "1 indicates yes and 0 indicates no. Please correct if you know the business sells source identified NYS product",
+    "1 indicates yes and 0 indicates no. Do not change data in this column.", 
+    "1 indicates yes and 0 indicates no. Do not change data in this column.", 
+    "1 indicates yes and 0 indicates no. Do not change data in this column.")
+  )
+    
+# Add worksheets
+wb <- createWorkbook()
+addWorksheet(wb, "data")
+writeData(wb, "data", df)
+
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save
+saveWorkbook(wb, "../data_processed/beef_processor_ADD_DATA.xlsx", 
+             overwrite = TRUE)
+
+```
+
+### Processed data
+
+The data that was saved in the step above was sent to the qualitative team and they manually added addresses, indicated those businesses that do not sell beans, added in data on the businesses location along the supply chain where missing (notably if the business was a primary or secondary processor), and estimated values for max inventory capacity.
+
+We add the wholesale data that are MWBE to the data.
+
+#### Import and clean
+
+```{r}
+
+# Remove all df's except for the wholesale data of interest
+rm(list=setdiff(ls(), c("naics_df", "nyc_wholesale_df")))
+
+# Combine to have one list of wholesalers
+wholesale <- bind_rows(naics_df, nyc_wholesale_df)
+
+# Import -- UPDATED cleaned data 
+df <- read_xlsx("../data_processed/beef_processor_ADD_DATA MPH.xlsx") %>% 
+  clean_names()
+  
+# Assume an entry with ? is zero
+df <- df %>% 
+  mutate(
+    lrfs_business = case_when(
+      is.na(lrfs_business) | lrfs_business=="?" ~ 0,
+      TRUE ~ as.numeric(lrfs_business)
+      )
+  )
+
+# Drop those without an address
+df <- df %>% 
+  filter(!is.na(street_address))
+
+#Drop if a business is not located in NYS and does not sell NYS identified product (lrfs_business==1)
+df <- df %>% 
+  filter(state=="NY" |
+           (state != "NY" & (lrfs_business==1 | mwbe==1)))
+
+# Join wholesale data
+df <- df %>% 
+  full_join(wholesale)
+
+# Assume all wholesalers can sell organic and for other supply chain actors only if indicated
+df <- df %>% 
+  mutate(
+    organic = case_when(
+      wholesaler_distributor==1 ~ 1, 
+      TRUE ~ 0)
+  )
+
+# Make NA's zero and rearrange
+df <- df %>% 
+  select(company_name:ny, wholesaler_distributor, everything()) %>% 
+  mutate(across(wholesaler_distributor:last_col(), 
+                ~case_when(is.na(.) ~ 0, 
+                           TRUE ~ .))
+  )
+```
+
+#### Geocode
+
+```{r}
+
+library(tidygeocoder)
+
+# Add full address
+df <- df %>% 
+  mutate(
+    address = str_c(street_address, ", ", 
+                    city, ", ", 
+                    state, " ", 
+                    zip_code)
+  )
+
+# Geocode
+df <- df %>%
+  geocode(address, 
+          method = 'census', 
+          lat = latitude, 
+          long = longitude,
+          full_results = FALSE)
+```
+
+#### Re-geocode missing with ArcGIS
+
+For addresses that the Census geocoder could not resolve, we use ArcGIS as a fallback via `tidygeocoder`. Results are merged back into the main data frame.
+
+```{r}
+
+# Identify rows still missing after Census
+missing <- df %>% 
+  filter(is.na(latitude))
+
+# Re-geocode using ArcGIS - all fixed
+if (nrow(missing) > 0) {
+  missing_geocoded <- missing %>% 
+    geocode(address,
+            method = 'arcgis',
+            lat = lat_arcgis,
+            long = lon_arcgis,
+            full_results = FALSE)
+  
+  # Merge ArcGIS results back, filling only where Census returned NA
+  df <- df %>% 
+    left_join(
+      missing_geocoded %>% select(address, lat_arcgis, lon_arcgis),
+      by = "address"
+    ) %>% 
+    mutate(
+      latitude  = coalesce(latitude, lat_arcgis),
+      longitude = coalesce(longitude, lon_arcgis)
+    ) %>% 
+    select(-lat_arcgis, -lon_arcgis)
+}
+
+# Drop those with duplicated names/address
+df <- df %>%
+  distinct(company_name, address, .keep_all = TRUE)
+
+# Report how many are still missing
+still_missing <- df %>% filter(is.na(latitude))
+message(nrow(still_missing), " addresses could not be geocoded by Census or ArcGIS.")
+
+rm(missing, still_missing, missing_geocoded)
+
+```
+
+#### Save
+
+Here we save a full version and the version that can be shared publicly with business names and addresses removed. We also drop any columns that are not relevant.
+
+##### Full data
+
+```{r}
+
+# Save full file
+write_csv(df, "../data_final/beef_processor_distributor_full.csv")
+
+```
+

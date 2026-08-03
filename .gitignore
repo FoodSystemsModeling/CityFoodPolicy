@@ -5,5 +5,11 @@
 ignore/
 .quarto/
 *.DS_Store
+drybeans/old/
+drybeans/data_final/old/
+drybeans/data_raw/qs.census2022.txt
 
 /.quarto/
+.positai
+
+**/*.quarto_ipynb

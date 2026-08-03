@@ -1,0 +1,24 @@
+---
+title: "Data inputs"
+format: html
+editor: visual
+---
+
+## Agricultural production
+
+### Farm inputs and production costs
+
+## Processing and distribution
+{{< include ../beef/data_inputs_code/beef_processors_wholesalers.qmd eval=false >}}
+
+## Markets
+
+## Estimated margins
+
+## Consumption
+
+## Institutional purchasing in New York State
+
+## LCA
+
+Jasmine and Elsie add.

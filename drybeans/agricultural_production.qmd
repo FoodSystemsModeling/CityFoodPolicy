@@ -1,7 +1,0 @@
----
-title: "Agricultural production"
-format: html
-editor: visual
----
-
-Add NYS supply

@@ -1,0 +1,433 @@
+id,company_name,address,latitude,longitude,ny,wholesaler_distributor,harvester_processor,secondary_processor,auction,harvester_processor_scale,secondary_processor_scale,auction_scale,max_inv,lrfs_business,mwbe,sold_to_nyc,nys_product_purchased,sold_to_NYC,organic
+10000,458 1/2 South Broadway Meat Inc,"458 1/2 South Broadway, Yonkers, NY 10705",40.917641284237,-73.896575888364,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10001,A & A Finest,"5342 98th Street, Corona, NY 11368",40.739964818376,-73.863308704921,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10002,A.A. Rubashkin & Sons,"4310 14th Ave, Brooklyn, NY 11219",40.636995528083,-73.986575795261,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10003,"AVA Pork Products, Inc.","383 West John Street, Hicksville, NY 11801",40.766409121735,-73.540975757037,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10004,"Alex & George Wholesale Meats, Inc.","2 Rockwood Street - Suite 100, Rochester, NY 14610",43.145725923643,-77.552518740691,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10005,Alex's Meat & Provisions,"5600 1st Avenue  Unit B-16, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10006,"America New York Ri Wang Food Group Co., Ltd.","58-85 58th Avenue, Maspeth, NY 11378",40.721122594288,-73.908905599459,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10007,"America New York Ri Wang Food Group Co., Ltd.","30 Inez Drive, Bay Shore, NY 11706",40.764407260092,-73.267799500084,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10008,Atlantic Veal & Lamb Inc,"275 Morgan Avenue, Brooklyn, NY 11211",40.714093589186,-73.935204612002,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10009,Aztec Imperio,"971 Intervale Ave, Bronx, NY 10459",40.822240110912,-73.896953607403,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10010,"Bare Bones Butchering, LLC","5786 County Route 17, Friendship, NY 14739",42.252424815085,-78.147549781079,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10011,Beech-Nut Nutrition Corporation,"1 Nutritious Place, Amsterdam, NY 12010",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10012,Berger Wholesale Meat Co.,"13 New Street, Huntington, NY 11743",40.870509168978,-73.427388629968,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10013,Berk Lombardo Packing Co.. Inc.,"50 Constance Court, Hauppauge, NY 11788",40.812258053206,-73.225382706058,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10014,"Berkshire View Custom Cut Meats, LLC","838 Alcove Road, Hannacroix, NY 12087",42.438792985755,-73.911931808971,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10015,Big Mouth/Cudlins,"8 Cox Road, Newfield, NY 14867",42.347127848215,-76.617382704209,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10016,"Bills Market, Inc.","2095 Route 336, Romulus, NY 14531",42.808400052576,-76.82586506797,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10017,Bimmy's Food Made With Love,"4700 33rd Street 2nd Floor, Long Island City, NY 11101",40.742610670175,-73.932168672639,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10018,Blue Star Meat Corp.,"520 Craven Street, Bronx, NY 10474",40.809776960554,-73.89194109298,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10019,Bonavista foods Inc.,"2033 State Route 96A, Ovid, NY 14521",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10020,Borenstein Caterers Inc.,"179-29 150th Road, Jamaica, NY 11434",40.656260778509,-73.766892479688,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10021,"Bostrom Farms, LLC","2200 State Routes 5 and 20, Stanley, NY 14561",42.857899985405,-77.106543829185,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10022,Brother's Halal Meat Packing,"56 Railroad Avenue, Stamford, NY 12167",42.406746744544,-74.61996278509,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10023,"Buffalo SAV, Inc.","1550 William Street, Buffalo, NY 14206",42.884840408512,-78.814095785214,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10024,Burly Brothers Country Butchery,"4154 East Main Street, Attica, NY 14011",42.860730026968,-78.2083099057,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10025,CAFE SPICE LLC,"677 LITTLE BRITAIN ROAD, NEW WINDSOR, NY 12553",41.490252613932,-74.062226180543007,1,0,0,1,0,0,0,0,0,0,1,0,0,NA,0
+10026,CYRE Inc.,"876 Neighborhood Road, Lake Katrine, NY 12449",41.977754313956,-73.997270348016,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10027,"Cafe Spice, LLC","511 Fishkill Avenue, Beacon, NY 12508",41.51707293216,-73.944808969502,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10028,"Camellia General Provision Co., Inc.","1333 Genesee Street, Buffalo, NY 14211",42.905795229542,-78.830638357954,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10029,Caribbean Food Delights,"117 Route 303, Tappan, NY 10983",41.033215875649,-73.945154683644,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10030,"Casanova Market, Inc.","430 Wireless Boulevard, Hauppauge, NY 11788",40.813657369619,-73.258855641834,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10031,Catskill Food Company LLC,"53 Main Street, Delhi, NY 13753",42.275430288327,-74.919320289495,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10032,Cavo Greco Foods,"532 East Meadow Avenue, East Meadow, NY 11554",40.711339989626,-73.556006439383,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10033,Chef's Choice Cash & Carry Food Distribution Inc,"1051 Utica Avenue, Brooklyn, NY 11203",40.647229527188,-73.929822156334,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10034,"Chef's Delight Packing Co., Inc.","94 North 8th Street, Brooklyn, NY 11211",40.719906184084,-73.959687269473,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10035,Chihuly,"2301 Borden Avenue, Long Island City, NY 11101",40.740044883048,-73.947510940839,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10036,"Constance Food Group, DBA Norris Food Services, LLC","545 Johnson Avenue Suite 10, Bohemia, NY 11716",40.776521140776,-73.094517704601,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10037,"Copper City Meats, DBA Gold Medal Packing","8269 River Road, Rome, NY 13440",43.190584769899,-75.340645727755,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10038,"Crescent Prime Cuts, Ltd.","1970 New Highway, Farmingdale, NY 11735",40.755724652705,-73.414960752181,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10039,"Crescent Specialty Foods, LLC","30 Central Avenue, Farmingdale, NY 11735",40.753050561017,-73.413134349286,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10040,"Croghan Meat Market ,Inc.","9824 State Route 812, Croghan, NY 13327",43.89536264293,-75.392382437972,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10041,"Crown I Foods, Inc.","85 Saxon Avenue, Bay Shore, NY 11706",40.734569015113,-73.228545455157,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10042,"Cup and Char Pepperoni, Inc.","81 Dingens Street, Buffalo, NY 14206",42.877824545006,-78.813081677429,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10043,D'Empanadas,"1110 Rogers Avenue, Brooklyn, NY 11226",40.642780448131,-73.951698174999,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10044,DAIRY MAID RAVIOLI MFG. CORP.,"214 AVENUE U, BROOKLYN, NY 11223",40.596594706185,-73.976168103147,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10045,Damn Good Foods Inc.,"1002 Hudson Ave., Stillwater, NY 12170",42.947004565852,-73.64536751182,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10046,Damn Good Foods Inc.,"7 Tent Lane, Stillwater, NY 12170",42.954247901046,-73.636451238996,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10047,"David Mosner, Inc.","355 Food Center Drive, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10048,Davis Bros. Inc.,"4521 County Route 4, Oswego, NY 13126",43.447486791255,-76.468041729394,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10049,Davis Livestock Sales,"952 US-11, Gouverneur, NY 13642",44.311848078562,-75.498257209577,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10050,DeSola Provisions Corp.,"355 Food Center Drive Building B18, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10051,"Del Caribe Meat, Inc","1212 Brook Avenue, Bronx, NY 10456",40.831310944445,-73.909104163078,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10052,Delicious Specialty Foods Corp.,"1698 Main Street 1st Floor, Peekskill, NY 10566",41.293725553621,-73.907404087277,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10053,"Dim Sum Factory, Inc.","15011 14th Avenue, Whitestone, NY 11357",40.788960071939,-73.813536465511,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10054,"Dim Sum Factory, Inc.","4235 Main Street Unit CC, Flushing, NY 11355",40.75437951929,-73.827798823617,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10055,"Dino's Sausage & Meat Co., Inc.","722 Catherine Street, UTICA, NY 13501",43.099572298104,-75.216257065311,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10056,"Diverse Food Products, LLC","8242 Loop Road, Baldwinsville, NY 13027",43.170182626624,-76.302623897948,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10057,Double L Ranch Inc.,"7181 Dunnsville Road, Altamont, NY 12009",42.746402847988,-74.015209332966,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10058,"Down the Road Butchery, LLC","174 Battenfield Road, Milan, NY 12571",41.98068740299,-73.804697501042,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10059,DuFour Gourmet,"4337 9th Street, Long Island City, NY 11101",40.751347228368,-73.950595132333,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10060,Dudley Poultry Company,"910 State Route 245, Middlesex, NY 14507",42.718981881152,-77.264452690121,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10061,"E123 Enterprises, LLC","355 Food Center Drive E3, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10062,Eagle Bridge Custom Meat and Smokehouse,"139 Center Road, Eagle Bridge, NY 12057",42.960883380481,-73.392152239612,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10063,"Edelweiss Meat Company, LLC","12 Old Myers Drive, Albany, NY 12205",42.690463225002,-73.783222337516,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10064,"Elk Provision Co., Inc.","1260 Clinton Street, Buffalo, NY 14206",42.8754567767,-78.828658734277,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10065,Empire Custom Processing LLC,"430 NYS Route 8, Bridgewater, NY 13313",NA,NA,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10066,Empire Livestock Marketing,"7418 NY-415, Bath, NY 14810",NA,NA,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10067,Empire Livestock Marketing,"872 NY-30A, Central Bridge, NY 12035",42.727777496124,-74.335843605854,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10068,Empire Livestock Marketing,"11 Ruth St, Vernon, NY 13476",NA,NA,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10069,"Espuna, LLC","20 Harrison Street, Gloversville, NY 12078",43.03399830034,-74.354563571981,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10070,"European Food Market, LLC","364 Ryer Road, Narrowsburg, NY 12764",41.59662946458,-74.923726563251,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10071,F-16 Custom Cuts LLC,"355 Food Center Drive Unit F16, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10072,"Farmingdale Meat Market, Inc., DBA Main Street Wholesale Meats","210 Main Street, Farmingdale, NY 11735",40.733580314666,-73.446070655814,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10073,"Finger Food Products, LLC","6400 Inducon Drive West, Sanborn, NY 14132",43.111908154675,-78.918087668874,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10074,"Five Goods, Inc.","239 54th Avenue, Long Island City, NY 11101",40.740710215968,-73.958563810251,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10075,"Five Star Food Products, Inc.","999 South Oyster Bay Road Building 400, Bethpage, NY 11714",40.750538402597,-73.501902095334,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10076,"Five Star Meat, Inc., DBA Emir Halal","69-80 75th Street, Middle Village, NY 11379",40.707453010509,-73.87576411075,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10077,"Fleish Yavesh, Inc.","11 Prospect Ave., Hewlett, NY 11557",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10078,Flushing Meat,"306 Stagg Street, Brooklyn, NY 11206",40.710074483573,-73.93683088655,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10079,Ford Brothers Wholesale Meats Inc,"9129 Rt 219, West Valley, NY 14171",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10080,"Forest Pork Store, Inc.","6639 Forest Avenue, Ridgewood, NY 11385",40.706679059436,-73.902876952543,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10081,"Frank Wardynski & Sons, Inc.","336 Peckham Street, Buffalo, NY 14206",42.887910822145,-78.841957154129,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10082,"G & L Meat Company, Inc.","111 Gateway Park Drive, North Syracuse, NY 13212",43.123534501133,-76.129144279896,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10083,"GB Green Gastronome, LLC","220-13 Jamaica Avenue, Queens Village, NY 11428",40.719084734031,-73.734234429598,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10084,Gabriele Properties Holding LLC,"255 Mohawk Avenue, Scotia, NY 12302",42.827433896933,-73.967331884955,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10085,"Garden Manor Farms, Inc.","355 Food Center Unit F-11, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10086,Glatt Boy's Inc.,"355 Food Center Drive E-14, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10087,Glazier Packing Company Inc.,"7170 US HIghway 11, Potsdam, NY 13676",44.648746547774,-75.049981209821,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10088,Golden Krust Patties Inc.,"3958 Park Avenue, Bronx, NY 10457",40.841723280599,-73.902355514624,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10089,"Golden Meat Co., LLC","355 Food Center Drive Units #D22, D23, D24, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10090,"Gondola Brand Macaroni Products, Inc","1985 Niagara Street, Buffalo, NY 14207",42.938068421724,-78.904006704173,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10091,"Gourmet Boutique, LLC","144-02 158th Street, Jamaica, NY 11434",40.665603190338,-73.779077448099,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10092,"Gourmet Boutique, LLC SAT","165-35 145th Drive, Jamaica, NY 11434",40.662210103008,-73.775148982608,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10093,Green Top Farms,"324 Maujer Street, Brooklyn, NY 11206",40.712023422615,-73.936998920536,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10094,Grizzly's Custom Cutting Inc.,"10042 South River Road, Hunt, NY 14846",42.540225301408,-78.030291126672,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10095,Grossglockner Inc.,"2640 Brickyard Road, Canandaiqua, NY 14424",42.902736835794,-77.304365231719,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10096,"Grossglockner, Inc.","5560 Airport Road, Canadaigua, NY 14424",42.912225521527,-77.30760113428,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10097,HM Halal Munchies Corp.,"300 Michael Drive, Syosset, NY 11791",40.803340449611,-73.516077641435,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10098,HTE Food Corp.,"1510  130th Street Unit C, College Point, NY 11356",40.784505134885,-73.838619668545,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10099,"HVFG, LLC","346 Airport Road, Mongaup Valley, NY 12762",41.696392142038,-74.798518286784,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10100,"Ham Slices, LLC","600 East 132nd Street Unit B, Bronx, NY 10454",40.802835947232,-73.92025355187,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10101,Hamilton Meats Supply Inc.,"1451 Pennsylvania Avenue, Pine City, NY 14871",42.041774904304,-76.858309503431,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10102,Hanzlian's Sausage & Deli,"2351 Genesee Street, Cheektowaga, NY 14225",42.919150008994,-78.796199915088,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10103,Hartland Abattoir Corp,"7968 Ridge Road, Gasport, NY 14067",43.240187982647,-78.589204413651,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10104,"Hearty Acquisitions, LLC","276 Stagg Street, Brooklyn, NY 11206",40.70995408711,-73.938120717684,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10105,"Heinsen Products, Inc.","320 Casanova Street, Bronx, NY 10474",40.806700580443,-73.888204005248,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10106,Hempstead Foodservice Inc.,"52 Chasner Street, Hempstead, NY 11550",40.703331908571,-73.629149392841,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10107,"Highland Hollow Farm, LLC","322 Colby Road, Schoharie, NY 12157",42.652687484259,-74.287122033618,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10108,Hilltown Country Smokehouse LLC,"786 US Route 20, New Lebanon, NY 12125",42.466923380725,-73.41521746832,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10109,Hilltown Pork Inc.,"12948 State Route 22, Canaan, NY 12029",42.369375405757,-73.431167714274,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10110,Hofmann Sausage,"6196 Eastern Avenue, Syracuse, NY 13211",43.09469751522,-76.090568618898,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10111,Hoskie Co. Inc.,"132 Harrison Place, Brooklyn, NY 11237",40.706831006943,-73.928554594026,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10112,Hosking Sales,"6096 NY-8, New Berlin, NY 13411",42.707789731748,-75.318716255141,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10113,"House of Solomon, LLC","611 Bergen Street, Brooklyn, NY 11238",40.679720123905,-73.969364421608,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10114,Huang's Meat Trading,"4114 3rd Avenue Store Front, Brooklyn, NY 11232",40.65272378152,-74.00964732357,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10115,"Hudson Foods Venture, LLC","7 Dock Street, Hudson, NY 12534",42.258387385717,-73.792960668792,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10116,"Hudson Valley Charcuterie, LLC","111 County Route 34, East Chatham, NY 12060",42.466474806281,-73.463665591676,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10117,Hudson Valley Craft Sausage LLC,"72 Grace Church Street, Port Chester, NY 10573",40.995338732651,-73.664753948158,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10118,"Ian's Corporation, DBA Hudson River Foods","22 Hamilton Way, Castleton, NY 12033",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10119,"JAS Meats, Inc.","136 21st Street, Brooklyn, NY 11232",40.663444096878,-73.997008877198,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10120,JD Meat Market,"1375 Ogden Avenue, Bronx, NY 10452",40.841895755288,-73.924641238346,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10121,JDM Specialty Foods,"250 East 14th Street, Elmira, NY 14903",42.129301918105,-76.821970287953,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10122,JOSEF MEILLER SLAUGHTERHOUSE INC.,"ROUTE 199 P.O. BOX 131, PINE PLAINS, NY 12567",NA,NA,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10123,Jack Toney Wholesale Meats,"3872 Main Street, Warrensburg, NY 12885",43.496952843319,-73.776248254679,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10124,Jackiscooking LLC,"90 Wiltsie Bridge Road, Ancramdale, NY 12503",42.07167659607,-73.58797879614,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10125,"Jamaican Flavors Patties, Inc.","147-95A Farmers Boulevard, Jamaica, NY 11434",40.659679694565,-73.773604725162,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10126,Janowski Hamburgers,"15 South Long Beach Road, Rockville Centre, NY 11570",40.654410446513,-73.634367552507,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10127,"Japan Premium Beef, Inc.","B23 Hunts Point Co-Op Market Unit 2F, Bronx, NY 10474",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10128,"Jimmy E, Inc.","5600 1st Avenue Unit A23, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10129,Joe Pagliuso & Brothers Inc.,"6845 North Slocum Rd, Ontario, NY 14519",43.246013585116,-77.324428527397,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10130,"John W. Williams, Inc.","355 Food Center Drive Units F14, 15, and 15A, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10131,"John's Meats, LLC","998 Montgomery Street, Brooklyn, NY 11213",40.664287771282,-73.931618903294,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10132,John's Ravioli Company Inc.,"15 Drake Avenue, New Rochelle, NY 10805",40.902456639291,-73.78939047278,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10133,Johnson's Premium Sausage,"606 South Main Street, Elmira, NY 14904",42.075344550582,-76.801579882074,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10134,K-D Market Inc.,"88 Mulberry Street, New York, NY 10013",40.716638427363,-73.998790857189,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10135,Kassian Farms LLC,"500 East 132nd Street, Bronx, NY 10454",40.803600689719,-73.922050239223,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10136,Kelley Meats LLC,"8937 Beckwith Road, Taberg, NY 13471",43.288586056779,-75.615410886431,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10137,Kennedy Meat Market,"280 Route 394, Randolph, NY 14772",42.167533553137,-78.999180339891,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10138,Kerr's Custom Butchering,"149 Cottage Rd, South Dayton, NY 14138",42.43878696734,-79.071078692875,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10139,King Solomon Foods inc.,"5600 1st Avenue  Unit B, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10140,Kingsland Food Processing Corp.,"57-11 49th Place, Maspeth, NY 11378",40.721931899665,-73.919181697992,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10141,Kiryas Joel Poultry Processing Plant,"7 Dinev Road, Monroe, NY 10950",41.337375151732,-74.159263535367,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10142,Kosher R Us,"5600 First Avenue Unit A8, Brooklyn, NY 11204",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10143,Kraft Heinz Foods Company,"140 Spring Street, Avon, NY 14414",42.906420743564,-77.753420948784,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10144,Kroll Farms Inc.,"155 Bethlehem Road, New Windsor, NY 12553",41.458122790524,-74.095837309666,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10145,"LIC COM, LLC","509 Manida Street, bronx, NY 10474",40.810240096877,-73.887358106361,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10146,La Salumina LLC,"210 Main Street, Hurleyville, NY 12747",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10147,"La Trafila, LLC","65 15th Street, Brooklyn, NY 11215",40.668051005141,-73.994309201747,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10148,La mina Meat& Provisions Corp.,"119 Stockholm Street, Brooklyn, NY 11221",40.698296941233,-73.924065344373,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10149,"LaGustosa Food Products & Imports Co., Inc.","402 Franklin Avenue, Franklin Square, NY 11010",40.69748501596,-73.68241453391,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10150,Lake View Holsteins,"2456 NY-14, Penn Yan, NY 14527",42.643629960122,-76.943914869844,1,0,0,0,1,0,0,0,0,0,0,0,0,NA,0
+10151,Lamoy Meat Market Corp.,"427 39th Street, Brooklyn, NY 11232",40.652296928526,-74.005498595258,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10152,"Lancaster Quality Pork, Inc.","5600 First Avenue Building A-25, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10153,"Latina Boulevard Foods, LLC","1 Scrivner Drive, Cheektowaga, NY 14227",42.870349532456,-78.750331422177,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10154,Les Chateaux DeFrance Inc,"1 Craft Avenue, Inwood, NY 11096",40.613794615948,-73.754284150925,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10155,"Li Chuen Company, Inc.","861 Grand Street, New York, NY 11211",40.712347581955,-73.939317219002,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10156,"LiDestri Foods, Inc.","1020 Lee Road, Rochester, NY 14606",43.184471532153,-77.680400330893,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10157,"LiDestri Foods, Inc.","815 W Whitney Road, Fairport, NY 14450",43.10843245282,-77.448772032228,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10158,"Lo Fuk Yuen By Dim Sum Shop, Inc.","7303 New Utrecht Avenue, Brooklyn, NY 11204",40.617324062524,-73.999433880377,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10159,Locust Grove Farm,"4725 State Route 40, Argyle, NY 12809",43.217185881022,-73.488295618772,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10160,London Manhattan Corp.,"355 Food Center Drive Units C23 and C24, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10161,Loose Goose Kitchenworks,"13056 State Route 22, Canaan, NY 12029",42.376483826936,-73.428969780193,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10162,"Los Olivos, Ltd.","105 Bi County Boulevard, Farmingdale, NY 11735",40.72567118867,-73.4283262306,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10163,Los Primos Meats Inc.,"305 Maujer Street, Brooklyn, NY 11206",40.712016202359,-73.937471224279,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10164,Lou G Siegel,"58 Dobbin Street, Brooklyn, NY 11222",40.72419303687,-73.953952925478,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10165,Lupo's Quality Deli,"625 Dickson Street, Endicott, NY 13760",42.09466648289,-76.076270882899,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10166,M&P Production LTD,"830 39th Street, Brooklyn, NY 11232",40.646804034388,-73.996649931086,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10167,MEAT BAR INC.,"153-07 ROCKAWAY BLVD., JAMAICA, NY 11434",40.670254298551,-73.783249868171,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10168,MELONE BROTHERS INC,"17 Hooker Place, Staten Island, NY 10302",40.630519581007,-74.14038112243,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10169,MF Meats,"2063 Allen Street Extension, Falconer, NY 14733",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10170,Macelleria DeMaria LLC,"500 Croton Avenue, Cortland Manor, NY 10567",41.269730013166,-73.853552449822,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10171,Making Ends,"254 36th Street, Brooklyn, NY 11232",40.656180991553,-74.00764047504,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10172,"Malafy's Meat Processing, LLC","287 Milan Hill Road, Red Hook, NY 12571",41.984235539301,-73.792225263905,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10173,Mannino's Wholesalers Corp,"35 Marcus Boulevard, Hauppauge, NY 11788",40.809496089887,-73.246854090663,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10174,Marathon Enterprises Inc.,"787 East 138th Street, Bronx, NY 10454",40.803922306332,-73.910496430722,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10175,"Master Purveyors, Inc.","355 Food Center Drive Unit B14, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10176,Mastroianni Food Distributor,"20 Sam Stratton Road, Amsterdam, NY 12010",42.929257302301,-74.166130923808,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10177,"Mathew's Prime Meats, Inc.","245 Route 109, West Babylon, NY 11704",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10178,Meat & Fisheries Processing Laboratory,"State University of New York - Cobleskill 114 Rockland Lane, Cobleskill, NY 12043",42.671244960239,-74.503685122333,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10179,"Meat King, Inc.","100 Van Brunt Street, Brooklyn, NY 11231",40.683341466705,-74.006060570571,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10180,Meat Palace Corp.,"640 Atkins Avenue, Brooklyn, NY 11208",40.663310050803,-73.873770507427,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10181,Mecca Halal Poultry,"36-27 32nd Street, Astoria, NY 11106",40.755718147054,-73.929266067605,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10182,Mega Meats,"2824 Boston Post Rd, Bronx, NY 10469",40.867112651671,-73.860188617237,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10183,"Midland Meat Packing NY, Inc.","5600 First Avenue A-21, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10184,"Milan Provision Co., Inc.","108-15 Roosevelt Avenue, Corona, NY 11368",40.750905399556,-73.858322692887,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10185,"Milmar Food Group II, LLC","One 6 1/2 Station Rd., Goshen, NY 10924",41.398046987843,-74.35870041106,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10186,Mineo and Sapio's,"410 Connecticut Street, Buffalo, NY 14213",42.906651069581,-78.886292659646,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10187,"Modern Market Wholesale, LLC","3538 California Road, Orchard Park, NY 14127",42.787085715998,-78.786569951508,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10188,Mongiello Italian Cheese Specialties,"250 Hilldale Road, Hurleyville, NY 12747",41.773321414852,-74.683096121614,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10189,"Moores Specialty Meat Products, Inc.","355 Food Center Drive Unit B22, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10190,Morning Star Poultry,"188 Tanners Rd, Fort Plain, NY 13339",42.884910451094,-74.667667338258,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10191,Mr. Pierogi,"126 12th St, Brooklyn, NY 11215",40.669849431428,-73.993079627566,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10192,N S Brandon Packing Inc.,"28 Church Street, Otego, NY 13825",42.393418227239,-75.174312721573,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10193,"NAT KAGAN MEAT & POULTRY, INC.","8 GREEN AVENUE, WOODRIDGE, NY 12789",41.709563957243,-74.572002318448,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10194,NY Delicacy Inc.,"18006 Union Tpke, Fresh Meadows, NY 11366",40.726924323247,-73.787952231068,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10195,"NYS DOCS, OFFICE OF NUTRITIONAL SERVICES/FOOD PRODUCTION CENTER","EVANS DRIVE, P.O. BOX 4110 BUILDINGS #50 & #55, ROME, NY 13422",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10196,Nathan's Soup & Salad,"900 Jefferson Road Bldg. 3, Rochester, NY 14623",43.08725036825,-77.614634818401,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10197,National Packing Corp.,"538 Craven Street, Bronx, NY 10474",40.810101801229,-73.892025800206,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10198,Natures Way Food Corp,"336 Barretto Street, Bronx, NY 10474",40.807131615766,-73.887352680504,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10199,New Cheung's Meat Wholesale In,"55-57 Montrose Ave, Brooklyn, NY 11206",40.706948704996,-73.94775065475,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10200,"New S & N Meat Market, Inc","5600 First Avenue Building A, Unit A14, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10201,"New York Beef Company, LLC","41 Stringham Road, Poughkeepsie, NY 12603",41.651968896508,-73.802529287714,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10202,"New York Food Service, Inc.","C-16 Hunts Point Co-op Market, Bronx, NY 10474",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10203,New York Meat and Fish Market,"125-127 Saint Ann's Avenue, Bronx, NY 10454",40.804980228,-73.918852295606,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10204,"New York Meat, Inc.","A-19 Hunt's Point Co-op Market, Bronx, NY 10474",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10205,"Niagara Food Specialties USA, Inc.","10190 Roosevelt Highway, Lyndonville, NY 14098",43.346356390684,-78.463763958052,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10206,"Niagara Specialty Foods, Inc.","2760 Elmwood Avenue, Kenmore, NY 14217",42.972681808543,-78.878788641933,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10207,"Nom Nom Dumplings, LLC.","168 Bowery, New York, NY 10012",40.720160650092,-73.994181515919,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10208,"Northern Culinary Brands, LLC","190 Banker Road, Plattsburgh, NY 12901",44.707734323481,-73.540481680079,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10209,Nuevo Mundo Foods LLC,"42-12 Junction Blvd., Corona, NY 11368",40.746172612169,-73.868305945178,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10210,O. K. Food Products,"Rathbone Avenue, Valatie, NY 12184",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10211,OMH Cook Chill Production Center,"145 Old Orangeburg Road, Orangeburg, NY 10962",41.044011382326,-73.979327791276,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10212,Old Country Jerky,"49 Atlantic Avenue, Lynbrook, NY 11563",40.655783575563,-73.671740912141,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10213,Old World Provisions Inc.,"12 Industrial Park Rd., Troy, NY 12180",42.705908108622,-73.67556963853,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10214,"Orchard Sausages, Inc.","340 Johnson Avenue, Brooklyn, NY 11206",40.707326483632,-73.934898248423,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10215,Oscar's Hickory House Inc.,"22 Raymond Lane, Warrensburg, NY 12885",43.500955674334,-73.780368798094,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10216,Owasco Meat Company,"61 Oak Hill Rd, Moravia, NY 13118",42.717381989307,-76.419041404048,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10217,PDH Markets,"935 Taft Avenue, Endicott, NY 13760",42.123900467833,-76.039451107856,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10218,Palmer Food Service,"171 Weidner Road, Rochester, NY 14624",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10219,Pane Vita LLC,"10 White Street, Rochester, NY 14608",43.166147725921,-77.62363715855,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10220,Papa Pasquale Ravioli and Pasta Company,"7813 15th Ave, Brooklyn, NY 11228",40.615782905715,-74.004859621187,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10221,Parillo Sausage,"90 Washington Street, Saratoga Springs, NY 12866",43.080263092784,-73.790292541563,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10222,"Patla Enterprises, Inc.","7360 State Route 46, Rome, NY 13440",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10223,Pede Brothers Incorporated,"582 Duanesburg Road, Schenectady, NY 12306",42.787120598038,-73.999484566509,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10224,Peking Food LLC,"47 Stewart Avenue, Brooklyn, NY 11237",40.707449610965,-73.925471947131,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10225,Peter's Wholesale Meat Corporation,"148-09 Guy R. Brewer Blvd., Springfield Gardens, NY 11434",40.659363217884,-73.767738952683,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10226,Piatkowski Riteway Meats Inc.,"3555 Witmer Road, Niagara Falls, NY 14305",43.129930070498,-79.014926369367,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10227,"Piccinini Brothers, Inc","633 Ninth Avenue, New York, NY 10036",40.760135110953,-73.991476316391,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10228,Picone Meat Specialties LTD,"180 Jefferson Ave, Mamaroneck, NY 10543",40.955919666313,-73.737083173623,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10229,"Plymouth Beef Company, Inc.","355 Food Center Drive, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10230,"Pork King Sausage, Inc.","F-22 Hunts Point Coop Market, Bronx, NY 10474",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10231,Premier Meat Processing LLC,"36-16 23rd Street, Astoria, NY 11106",40.758868593199,-73.935343042813,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10232,"Prime Food Distributor, Inc.","80 Seaview Boulevard, Port Washington, NY 11050",40.814009942722,-73.664011379601,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10233,"Prime Food Processing, LLC","300 Vandervoort Ave., Brooklyn, NY 11211",40.715007559233,-73.933640143286,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10234,Punto Rojo Empanadas Corp.,"305 Font Street, Hempstead, NY 11550",40.706307477491,-73.623266665732,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10235,"Queen City Fresh Foods, LLC","2520 Hamburg Turnpike, Lackawanna, NY 14218",42.816557492992,-78.846286860707,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10236,"RHOSEY LLC   Rhosey, LLC","1677 McDonald Avenue, Brooklyn, NY 11230",40.612087460644,-73.973538655356,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10237,"ROMA SAUSAGE, INC.","2029 BLEECKER STREET, UTICA, NY 13501",43.091512480554,-75.195672655615,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10238,"Red Barn Meats, Inc.","9095 Briot Road, Croghan, NY 13327",43.872933864662,-75.349690640295,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10239,Red Bowl Food Corporation,"6904 8th Ave, Brooklyn, NY 11228",40.63032751147,-74.015031116681,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10240,Reliable Brothers,"185 Cohoes Ave, Green Island, NY 12183",42.758340094785,-73.695239131674,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10241,Reliable Wholesale Meats,"306 Van Brunt Street, Brooklyn, NY 11231",40.679270549918,-74.010752909047,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10242,Romeo Foods Inc,"7807 15th Avenue, Brooklyn, NY 11228",40.61581157939,-74.004829560078,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10243,"Rosenkrans Natural Beef Company, LLC","900 Jefferson Road Suite 5, Rochester, NY 14623",43.08725036825,-77.614634818401,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10244,"Rosina Food Products, Inc.","3100 Clinton Street, West Seneca, NY 14224",42.860576977007,-78.765268786064,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10245,"Rosina Food Products, Inc.","75 Empire Drive, West Seneca, NY 14224",42.862855777122,-78.759160286799,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10246,"Rosina Food Products, Inc.","160 Empire Drive, Buffalo, NY 14224",42.86139926524,-78.760633910989,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10247,Rosina Food Products. Inc.,"75 Industrial Parkway, Cheektowaga, NY 14227",42.869437948421,-78.748016878567,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10248,"Rural Foods, LLC","41 North Union Street, Cambridge, NY 12186",43.033461672767,-73.381828145555,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10249,SALARINO'S ITALIAN FOOD INC.,"110 JAMES STREET, CANASTOTA, NY 13032",43.076431293267,-75.752233402072,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10250,SON AND SONS TRADING CO. INC.,"518 GARDNER AVENUE, BROOKLYN, NY 11222",40.725523470132,-73.931378815199,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10251,"Sahlen Packing Co., Inc.","327 Howard Street, Buffalo, NY 14206",42.883293472894,-78.842024498237,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10252,"Sahlen Packing Company, Inc.","318 Howard Street, Buffalo, NY 14206",42.883409547236,-78.841907944967,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10253,Salsabil Meat Processing,"12 Ehle Street, Nelliston, NY 13410",42.927294269594,-74.608751843232,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10254,Salumeria Biellese Inc.,"376-378 8th Avenue, NYC, NY 10001",40.748934348444,-73.995745452266,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10255,Samossa Bites,"35-27 31st Street, Long Island City, NY 11106",40.757666187304,-73.928786495187,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10256,Santora Foods LLC,"2928 Walden Avenue, Depew, NY 14043",42.909537650785,-78.728288608703,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10257,Schneider's Fish and Seafood Corp.,"2150 Old Union Road, Cheektowaga, NY 14227",42.8698706391,-78.757949796897,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10258,"Schonwetter Enterprises, Inc., DBA Bilinski's Sausage Mfg Co.","41 Lark Street, Cohoes, NY 12047",42.758514917192,-73.704753404214,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10259,"Schrader Farms, LLC","1937 Somerville Road, Romulus, NY 14541",42.744429923596,-76.838003556392,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10260,Schreiber Processing Corporation,"56-20 59th Street, Maspeth, NY 11378",40.724748258714,-73.908848357857,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10261,Seven Nation Food Company,"389 East 3rd Street, Mount Vernon, NY 10550",40.909937443992,-73.822353621227,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10262,"Seviroli Foods, LLC","60 Davids Drive, Hauppauge, NY 11530",40.818855162488,-73.261352992832,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10263,"Seviroli Foods, LLC","601-557-563-579 Brook Street, Garden City, NY 11530",40.728255460326,-73.611035072461,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10264,Shah's Halal Food & Products Inc.,"138 - 62 94th Avenue, Jamaica, NY 11435",40.697837775048,-73.810418338126,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10265,"Shahs Halal New Horizons Processing, Inc.","6500 New Horizons Blvd, Amityville, NY 11701",40.703403787704,-73.397826132926,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10266,"Shale Spring Meats, LLC","10647 Kelsey Road West, Clyde, NY 14433",43.112395189511,-76.878845590827,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10267,Sir Delicious,"1717 Clifford Ave, Rochester, NY 14609",43.175764915375,-77.575721687887,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10268,Slaughter House Inc.,"151-24 Beaver Road, Jamaica, NY 11433",40.699506437516,-73.802550262687,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10269,Sonny's 10th Avenue Meat Market Inc.,"758 10th Avenue, New York, NY 10019",40.765631460056,-73.991011036872,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10270,Stamford Smokehouse LLC,"103 Main Street, Stamford, NY 12167",42.408284101479,-74.617133984449,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10271,Star Natural Meats LLC,"4505 Ditmars Boulevard, Astoria, NY 11105",40.770813222032,-73.903060909508,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10272,Steuben Foods Inc.,"1150 Maple Road, Elma, NY 14059",42.800150393391,-78.621477329907,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10273,"Stevens Brothers, LLC","392 Goshen Road, Panama, NY 14767",42.016504009875,-79.499430597637,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10274,Sun Ming Jan Inc.,"145 Noll Street, Brooklyn, NY 11206",40.703163395679,-73.930991211443,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10275,Sunny Savory,"36-12 48th Avenue, Long Island City, NY 11101",40.740413305653,-73.929507619049,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10276,Swan Market,"433 Parsells Avenue, Rochester, NY 14609",43.165784019336,-77.566697092367,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10277,T & B Food Corp.,"15-10 130th Street, College Point, NY 11356",40.784505134885,-73.838619668545,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10278,T&L Creative Salads,"148 Allen Blvd, Farmingdale, NY 11735",40.716038216464,-73.416024736591993,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10279,"TC Provisions, Inc.","31 Heisser Court, Farmingdale, NY 11735",40.725919338314,-73.45328690277,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10280,TCM Foods,"175 Clearbrook Road, Elmsford, NY 10523",41.073234039369,-73.814144008552,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10281,"TMAC Food Services, Inc.","116 Michigan Avenue, Buffalo, NY 14204",42.874186378765,-78.871464458997,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10282,"TOWER ISLE'S FROZEN FOODS, LTD","2025 ATLANTIC AVENUE, BROOKLYN, NY 11233",40.676552861968,-73.913764191344,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10283,"Table 87 Frozen, LLC","145 42nd Street, Brooklyn, NY 11232",40.654351854346,-74.01342744627,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10284,"Textured Food Innovations, LLC","552 Westbury Ave, Carle Place, NY 11514",40.751421587042,-73.603612544616,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10285,"The Alps Provision Co., Inc.","22-70 45th Street, Long Island City, NY 11105",40.769606078833,-73.904753751219,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10286,The Craft Cannery,"7100 Apple Tree Avenue, Bergen, NY 14416",43.072037528383,-77.940780675992,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10287,"The Gilded Kitchen, Inc.","228 Duffield Street, Brooklyn, NY 11201",40.69157676531,-73.984443490356,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10288,"The Original Crunch Roll Factory, LLC","75 Bourne Street, Westfield, NY 14787",42.331926483995,-79.579728562665,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10289,The Pierogi Guy,"462 Elmridge Center Drive, Rochester, NY 14626",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10290,"Timberline Meats, LLC","4342 John Green Rd, Dundee, NY 14837",42.553508876173,-77.035010100872,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10291,"Tomoe Food Services, Inc.","355 Food Center Drive, Building D18-D-21, Bronx, NY 10474",40.806204912953,-73.871041997208,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10292,"Top Taste Food, Inc.","95 13th Street, Brooklyn, NY 11215",40.670296422307,-73.995470068039,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10293,Total Product Distributor Inc.,"48 Brooklyn Terminal Market, Brooklyn, NY 11236",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10294,Treasure Isle Foods,"164 Second Street, Mineola, NY 11501",40.741947802706,-73.638710307861,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10295,Tri-Town Packing Corporation,"922 County Route 53, Brasher Falls, NY 13613",44.860711739671,-74.789785865681,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10296,Trinity Meat Company LLC,"3487 State Highway 205, Hartwick, NY 13348",42.653707523286,-75.049361909391,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10297,Tuv Taam Corp,"502 Flushing Avenue, Brooklyn, NY 11205",40.699339340399,-73.953435160491,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10298,"Twin Marquis, LLC","7 Bushwick Place, Brooklyn, NY 11206",40.707857052875,-73.938481044297,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10299,"U.F.S. Industries, Inc.","300 North MacQuesten Parkway, Mount Vernon, NY 10550",40.917937228091,-73.845158917424,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10300,US Foods Inc,"4900 Lake Avenue, Blasdell, NY 14219",42.796856853993,-78.799646973604,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10301,"US Meat Processing, LLC","1973 Steinway  Street, Astoria, NY 11105",40.776916860238,-73.900993157845,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10302,"United Meat Products, Inc.","50 SawGrass Drive, Bellport, NY 11713",40.802789445898,-72.948956303944,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10303,VM LA Sultana Products Corp,"6978 75th Street, Middel Village, NY 11379",40.707506728489,-73.875792578055,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10304,"VSM NY Distribution, LLC/Fairway Market Distribution Center","400 Walnut Ave, Bronx, NY 10454",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10305,Valley Meat Packing Corp.,"2812 Settle Road, Newark Valley, NY 13811",42.191327434672,-76.117897289526,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10306,"Veselka Lorimer Commissary, LLC","646 Lorimer Street, Brooklyn, NY 11211",40.71642807779,-73.949674098375,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10307,Victor Provisions,"340 B Stagg Street, Brooklyn, NY 11206",40.710248905413,-73.935083363476,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10308,"Vito A Sindoni & Son Packing Co., LLC","1070 Settles Hill Road, Altamont, NY 12009",42.748758379794,-74.045159703306,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10309,WING Y Meats Inc.,"14 Varick Street, Brooklyn, NY 11222",40.726468658338,-73.935985862022,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10310,"Wan Rong Trading Corp., DBA Taihe Trading Corp.","4843 32nd Place, Long Island City, NY 11101",40.740199224045,-73.93344620091,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10311,"Wang Cai Enterprise, Inc.","3912 47th Avenue, Sunnyside, NY 11104",40.741915572775,-73.926139747369,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10312,Wang Shi Corporation,"47-31 35th Street, Long Island City, NY 11101",40.741847389365,-73.9302711571,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10313,Warsaw Packing Co.,"3865 Miller Rd   PO Box 137, Warsaw, NY 14569",42.700064295769,-78.130265749386,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10314,"Water Lilies Food, LLC","1724 5th Avenue, Unit 3, Bayshore, NY 11706",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10315,Wegmans Food Markets,"360 Wegmans Market Street, Rochester, NY 14624",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10316,"Wei Ming USA, Inc.","5301 Grand Avenue Number B, Maspeth, NY 11378",40.717838124821,-73.918006252148,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10317,Weichsel Beef,"310 Van Brunt Street, Brooklyn, NY 11231",40.679196292891,-74.010840381304,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10318,White Eagle Packing Company Inc.,"922 Congress Street, Schenectady, NY 12303",42.79863291276,-73.953207420536,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10319,"White Lake Foods, LLC","14 Chicken Plant Lane, Ferndale, NY 12762",NA,NA,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10320,Whiteman Meat Processing,"3 Dock Street, Dansville, NY 14437",42.562132413635,-77.706730585317,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10321,"Whitsons Food Services (Bronx), LLC","5600 First Avenue Building C, Brooklyn, NY 11220",40.647141229419,-74.022635037924,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10322,Wilson Beef Farms LLC,"10751 Hess Road, Canaseraga, NY 14822",42.466426173393,-77.751639592776,1,0,1,1,0,0,0,0,0,0,0,0,0,NA,0
+10323,Zweigle's Inc.,"651 Plymouth Ave North, Rochester, NY 14608",43.16396711832,-77.625638287888,1,0,0,1,0,0,0,0,0,0,0,0,0,NA,0
+10324,"3G WAREHOUSE, INC.","565 BROADHOLLOW RD STE 1, FARMINGDALE, NY 11735",40.721016038179,-73.425408823944,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10325,A&J CRANE SERVICE INC.,"121 WYANDANCH AVE, WYANDANCH, NY 11798",40.741699011248,-73.359750347162,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10326,"AFM TRUCKING, LLC","26 AVERILL DR, MAHOPAC, NY 10541",41.387744515189,-73.732665704696,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10327,"ALLEN & DAUGHTERS TRUCKING, LLC","219 WHITE CREEK RD, NEWPORT, NY 13416",43.166316964309,-74.998463072863,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10328,APM SERVICES GROUP CORP,"146 WALWORTH ST, BROOKLYN, NY 11205",40.694388190795,-73.954303924443,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10329,APOLLO TRUCKING INC.,"953 MAPLE AVE APT 2, SCHENECTADY, NY 12307",42.805176850585,-73.928413918907,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10330,"ASTRAL EXTRACTS, LTD.","150 EILEEN WAY UNIT 6, SYOSSET, NY 11791",40.803511886407,-73.520050353016,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10331,B PARISO TRANSPORT INC,"2647 WHITEHAVEN RD, GRAND ISLAND, NY 14072",43.021322981704,-78.990168325929,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10332,"B. STRONG TRUCKING, INC.","119 COPIAGUE ST, VALLEY STREAM, NY 11580",40.676189347636,-73.718083617937,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10333,"BAGEL GROVE, INC.","7 BURRSTONE RD, UTICA, NY 13502",43.089167523287,-75.256509327551,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10334,BATTERY BUYERS INC.,"51 UNION ST, BROOKLYN, NY 11231",40.685069222452,-74.005225608129,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10335,BIO-USA INC.,"72 5TH ST, RONKONKOMA, NY 11779",40.811141428489,-73.118285101745,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10336,BLUE WOLF ENTERPRISES LLC,"458 JEFFERSON AVE APT 3, STATEN ISLAND, NY 10306",40.577759679064,-74.092964792695,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10337,BLUERITE LLC,"20 CONCORD ST, LYNBROOK, NY 11563",40.662956078943,-73.685391316511,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10338,BUCKY'S TRUCKING INC,"11656 130TH ST, SOUTH OZONE PARK, NY 11420",40.676762707407,-73.80948465264,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10339,C&T DISTRIBUTION LLC,"14 CRITTENDEN WAY APT 6, ROCHESTER, NY 14623",43.104031452693,-77.632454406346,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10340,C. FRANCIS CONSTRUCTION CORP.,"501 E 93RD ST APT 1, BROOKLYN, NY 11212",40.655358768556,-73.918931932783,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10341,"CARDIAC LIFE PRODUCTS, INC.","507 W COMMERCIAL ST STE 1, EAST ROCHESTER, NY 14445",43.116620041125,-77.498160874785,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10342,"CNY URBAN RENOVATIONS, LLC","359 NORTHERN LIGHTS DR, SYRACUSE, NY 13212",43.110946157587,-76.141618316696,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10343,CONRI SERVICES INC,"250 CLEARBROOK RD STE 112, ELMSFORD, NY 10523",41.071848939494,-73.813794616832,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10344,"CONTINENTAL TRADING & SERVICES, INC.","22 LAWRENCE LN UNIT 3, LAWRENCE, NY 11559",40.609741539826,-73.733204887738,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10345,CORNERSTONE REALTY PROPERTIES CORP.,"177 E MAIN ST STE 307, NEW ROCHELLE, NY 10801",40.916045981005,-73.770270978116,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10346,"COUNTRY SWEET SAUCE, INC.","50 WESTGATE DR, EAST AURORA, NY 14052",42.749221800488,-78.622147075873,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10347,"CRISTO DEMOLITION, INC.","241 N PEARL ST, ALBANY, NY 12207",42.658012214803,-73.749285082151,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10348,CTK TRUCKING & LOGISTICS INC.,"1850 AMSTERDAM AVE, NEW YORK, NY 10031",40.829394583419,-73.944653559057,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10349,DAGEN TRUCKING INC,"566 BROADWAY STE 1, MENANDS, NY 12204",42.703270123756,-73.715347786704,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10350,DANA CONTRACTING INC.,"11415 149TH AVE, SOUTH OZONE PARK, NY 11420",40.669650783678,-73.826266778095,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10351,DAWSONS HAULING LLC,"2 SCHUYLER LN, WATERVLIET, NY 12189",42.707081673728,-73.710953154805,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10352,DELUXE DELIVERY SYSTEMS INC.,"729 7TH AVE FL 2, NEW YORK, NY 10019",40.760383034119,-73.983698707635,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10353,"DIG IT OF NEW YORK, LLC","4549 CLINTON ST, WEST SENECA, NY 14224",42.858069291712,-78.715336974005,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10354,DJI TRUCKING LLC,"5 ABBOTTSFORD DR, ROCHESTER, NY 14606",43.172323465504,-77.720302816151,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10355,"DORAN TRUCKING COMPANY & SITE DEVELOPMENT, INC.","2520 CAYUGA ST, NIAGARA FALLS, NY 14304",43.101100005563,-78.909350734579,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10356,DUFOUR PASTRY KITCHENS INC.,"251 LOCUST AVE, BRONX, NY 10454",40.803119832957,-73.906391109902,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10357,"E.A.T. W/ CULINARY PROFESSIONALS, INC.","1650 UTOPIA PKWY, WHITESTONE, NY 11357",40.78299279677,-73.794601601067,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10358,EASE TRUCKING LLC,"109 GRIFFIN ST, SYRACUSE, NY 13207",43.014249782948,-76.159272115875,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10359,EMPIRE STATE BASICS LLC,"15711 ROCKAWAY BLVD # 210, JAMAICA, NY 11434",40.666286679575,-73.779433704452,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10360,EMPIRE STATE TRUCKING INC.,"63 E 1ST ST, MOUNT VERNON, NY 10550",40.911780289638,-73.833714239364,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10361,"EXCELSIOR LTL, LLC","1 SADORE LN APT 4K, YONKERS, NY 10710",40.956354672835,-73.841960062355,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10362,FELICIFIC INC.,"10416 150TH ST, JAMAICA, NY 11435",40.697733291143,-73.802382962959,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10363,"FOXY DELIVERY SERVICE, INC.","256 TWO MILE CREEK RD, TONAWANDA, NY 14150",42.981969191527,-78.906814452354,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10364,"FREIGHTLINER & WESTERN STAR OF BATAVIA, LLC.","8190 STATE STREET RD, BATAVIA, NY 14020",43.017000819034,-78.179689499873,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10365,GOLDEN KRUST CARIBBEAN BAKERY INC.,"399 KNOLLWOOD RD STE 115, WHITE PLAINS, NY 10603",41.053924570786,-73.798524368403,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10366,"HNS ENTERPRISE, INC.","13939 228TH ST, LAURELTON, NY 11413",40.669381572482,-73.746647369603,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10367,"HOME TOWN HAULING & RECYCLING, LLC","1074 COUNTY HIGHWAY 36, WORCESTER, NY 12197",NA,NA,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10368,INTIVITY INC.,"214 DUFFIELD ST APT 38E, BROOKLYN, NY 11201",40.691822692072,-73.98443143511,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10369,INUMIDUN INTERNATIONAL INC.,"600 RICHMOND TER, STATEN ISLAND, NY 10301",40.64560910055,-74.092115953831,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10370,J2T ENTERPRISE LLC,"100 GARY ST, STATEN ISLAND, NY 10312",40.561220443171,-74.181543974579,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10371,"JAMSHIDI GROUP, LLC","2 W 90TH ST APT 4C, NEW YORK, NY 10024",40.78783508973,-73.96755119295,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10372,JFY HAULING INC,"1208 OREGON RD, CORTLANDT MANOR, NY 10567",41.331768397006,-73.875245585668,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10373,JMM TRANSPORTATION CORP,"21 HERBERT CIR, PATCHOGUE, NY 11772",40.783334240227,-73.011175858003,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10374,JOEY TRANSPORTATION LLC,"124 SHERMAN AVE, TROY, NY 12180",42.699985088744,-73.681250372939,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10375,KIPER MOVING AND TRANSPORTATION LIMITED LIABILITY COMPANY,"1279 KENMORE AVE, BUFFALO, NY 14217",42.95874081044,-78.86519109693,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10376,MARJORIE MC KEOWN,"5617 ROUTE 380, SINCLAIRVILLE, NY 14782",NA,NA,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10377,"MILLER DRUCK SPECIALTY CONTRACTING, INC.","765 E 133RD ST, BRONX, NY 10454",40.801150999699,-73.913918171687,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10378,"MRI USA, INC.","770 LEXINGTON AVE FL 11, NEW YORK, NY 10065",40.763245088932,-73.967527856532,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10379,"NEW YUNG WAH TRADING, LLC","465 MORGAN AVE, BROOKLYN, NY 11222",40.719974485038,-73.937828948474,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10380,"NEW YUNG WAH TRADING, LLC","311 RICHARDSON ST, BROOKLYN, NY 11222",40.719854976238,-73.939206167772,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10381,ONLINE MR INC.,"86 DENTON AVE, NEW HYDE PARK, NY 11040",40.739748662116,-73.671500561484,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10382,PANOPLY FOODS CORP.,"1512 UNION ST, SCHENECTADY, NY 12309",42.807650793846,-73.912149706282,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10383,PARCE TRUCKING INC,"1315 C ST, ELMONT, NY 11003",40.694987816302,-73.689812866418,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10384,PATCHOGUE TRUCK & EQUIPMENT CORP.,"375 N DUNTON AVE UNIT A, EAST PATCHOGUE, NY 11772",40.769048928411,-72.963736525256,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10385,"PDS CONSTRUCTION, INC.","700 COOK RD, HAMLIN, NY 14464",43.356164484067,-77.992440279678,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10386,PHANTOM CARTING INC.,"170 13TH ST, BETHPAGE, NY 11714",40.750711516895,-73.493563115087,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10387,"PJP INSTALLERS, INC.","150 S MACQUESTEN PKWY, MOUNT VERNON, NY 10550",40.910629873854,-73.850964913706,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10388,"PRESSLEY, PLLC","1232 SCHENECTADY AVE, BROOKLYN, NY 11203",40.642697956979,-73.932418821847,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10389,"REPAVE, INC.","67 HUNT DR, JERICHO, NY 11753",40.783283928787,-73.559560994617,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10390,RICCELLI TRUCKING INC,"6800 W HENRIETTA RD, RUSH, NY 14543",43.017811467427,-77.667620292909,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10391,"RICCELLI TRUCKING, INC.","6201 E TAFT RD, NORTH SYRACUSE, NY 13212",43.125230804111,-76.091870880081,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10392,RJ TURNER LLC,"1742 WESTCHESTER AVE, PEEKSKILL, NY 10566",41.297333106698,-73.905730273668,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10393,"ROAD FLEX COURIER, LLC","828 HEMPSTEAD TPKE, FRANKLIN SQUARE, NY 11010",40.707013028748,-73.670588576806,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10394,"ROSE STAR TRANSPORTATION, LLC","820 COLGATE AVE APT 17H, BRONX, NY 10473",40.819642905556,-73.879815229581,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10395,"SC RUSSELL TRUCKING, INC.","275 WETMORE PARK, ROCHESTER, NY 14606",43.164714544512,-77.657084502586,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10396,SDI TRUCKING LLC,"360 BROADWAY FL 1, STATEN ISLAND, NY 10310",40.632435733541,-74.1168690244,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10397,SPEEDWAY TRANSPORTATION INC.,"21 MARIAN DR, NEWBURGH, NY 12550",41.533833408517,-74.034608256112,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10398,"SUPERIOR WASTE AND CARTING, INC.","634 ROUTE 303, BLAUVELT, NY 10913",41.081964330217,-73.948447120892,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10399,"T&J HAULING, LLC","1 MEADOW LN, BALLSTON SPA, NY 12020",43.005449582367,-73.857638213935,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10400,THE TORRENCE GROUP INC,"3508 E GENESEE ST, SYRACUSE, NY 13214",43.042273011697,-76.089915622665,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10401,TLC HAULING INC,"43 NIAGARA ST, MILLER PLACE, NY 11764",40.946979547273,-72.977619372684,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10402,TRACEY TRUCKING INC,"400 N MAIN ST, HOLLAND, NY 14080",42.650471186988,-78.550436082837,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10403,TSI AUTO TRANSPORT LLC,"1309 CROMWELL AVE, BRONX, NY 10452",40.838667191227,-73.92100989946,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10404,"TYGA-BOX SYSTEMS, INC.","3842 REVIEW AVE, LONG ISLAND CITY, NY 11101",40.731446895489,-73.935033179016,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10405,WASHINGTON BLACKTOP AND TRUCKING LLC,"133 MEREDITH AVE, NEDROW, NY 13120",42.975951139911,-76.144706077128,1,1,0,0,0,0,0,0,0,0,1,0,0,NA,1
+10406,DRISCOLL FOODS FOOD SERVICE / METROPOLITAN FOODS INC.,"105 Quist Road, Amsterdam, NY 12010",42.926389038545,-74.172107118971,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10407,TERI NICHOLS,"10101c Avenue D, Brooklyn, NY 11236",40.651956516369,-73.904542962984,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10408,WHITSONS CULINARY GROUP,"1140 Motor Pkwy, Central Islip, NY 11722",NA,NA,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10409,US FOODS,"4900 LAKE AVE, BLASDELL, NY 14219",42.796856853993,-78.799646973604,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10410,US FOODS,"702 POTENTIAL PKWY SCOTIA, SCOTIA, NY 12302",NA,NA,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10411,US FOODS,"125 GARDENVILLE PKWY W, BUFFALO, NY 14224",42.864369602618,-78.756705097355,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10412,US FOODS,"755 PIERCE RD, CLIFTON PARK, NY 12065",42.897094854382,-73.787356390169,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10413,US FOODS,"95 MAIN ST, GLENS FALLS, NY 12803",43.301148013183,-73.636974841688,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10414,US FOODS,"1250 SCOTTSVILLE RD 3C, ROCHESTER, NY 14624",43.117716339204,-77.658326813903,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10415,US FOODS,"1510 LYELL AVE, ROCHESTER, NY 14606",43.164736018707,-77.665436734421,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10416,US FOODS,"125 GARDENVILLE PKWY W, BUFFALO, NY 14224",42.864369602618,-78.756705097355,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10417,US FOODS,"755 PIERCE RD, CLIFTON PARK, NY 12065",42.897094854382,-73.787356390169,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10418,US FOODS,"125 GARDENVILLE PKWY W, BUFFALO, NY 14224",42.864369602618,-78.756705097355,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10419,US FOODS,"164 CHERYL LN, DEPEW, NY 14043",42.922848809841,-78.706800774895,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10420,US FOODS,"125 GARDENVILLE PKWY W, BUFFALO, NY 14224",42.864369602618,-78.756705097355,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10421,US FOODS,"177 NGARA FRNTR FD TERMIN, BUFFALO, NY 14206",NA,NA,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+10422,BALDOR SPECIALTY FOODS,"3536 24TH ST, ASTORIA, NY 11106",40.759661856187,-73.933468440006,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10423,DICARLO FOOD SERVICE,"542 WOODBURY RD, PLAINVIEW, NY 11803",40.78953863758,-73.495073798886,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10424,CHEF'S CHOICE CASH & CARRY FOOD DISTRIBUTOR INC,"1039 UTICA AVE, BROOKLYN, NY 11203",40.647527775637,-73.929854008088,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10425,WESTSIDE FOODS,"355 Food Center Dr, Bronx, NY 10474",40.806204912953,-73.871041997208,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10426,FRESH AND TASTY BAKED PRODUCTS,"1568 Stillwell Ave, Bronx, NY 10461",40.854475242044,-73.841913880387,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10427,THE CHEF'S KINGDOM,"1 ALPINE CT, CHESTNUT RIDGE, NY 10977",41.095607544632,-74.048260736353,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10428,TONY'S FISH & SEAFOOD CORP.,"HUNTS PT COOP MKT BLDGS A, BRONX, NY 10474",NA,NA,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10429,ROMEO WHOLESALE MEAT CORP.,"7801 15th Ave, Brooklyn, NY 11228",40.615840253064,-74.004799498969,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10430,NEW PRODUCE TRADING INC.,"1802 OCEAN PKWY APT D2, BROOKLYN, NY 11223",40.604704906846,-73.96713404652,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1
+10431,PERFORMANCE FOOD GROUP,"163 W 133RD ST, NEW YORK, NY 10030",40.813726706776,-73.943825773536,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1

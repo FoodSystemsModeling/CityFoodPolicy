@@ -1,0 +1,345 @@
+---
+title: "01.Beef"
+format: html
+editor: visual
+---
+In this file we use 2022 Census of Agriculture data to create representative groups of dairy/beef producers in New York State. We define operations based on those with primary commodity dairy. 
+
+## Import data
+
+```{r}
+
+rm(list=ls())
+
+library(tidyverse)
+library(srvyr)
+library(openxlsx)
+library(broom)
+
+# Import 2022 census of ag data
+load("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/data_processed/coa_22.RData")
+
+# Import my functions 
+source("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/mean_se_function.R")
+source("P:/pr-usda-nass-jablonski-csu23-coaarmslf/general/total_function.R")
+
+# Create workbook
+wb <- createWorkbook()
+
+# Define Commodity - dairy
+df <- coa_22$variables %>% 
+  filter(dairy==1)
+
+# Define NY only
+df <- df %>% 
+  filter(state_name=="New York")
+
+# Drop operations with less than $1,000 in sales
+df <- df %>% 
+  filter(tvp>=1000)
+
+```
+
+## Define variables
+
+### MWBE
+
+MWBE is defined as an operation that falls into any of the following:
+
+-   Ethnicity: label a farm as "socially disadvantaged" if at least one decision-maker on the farm checked yes to "Hispanic, Latino, or Spanish origin"
+-   Race: label a farm as "socially disadvantaged" if at least one decision-maker on the farm checked yes to Black or African America, American Indian or Alaska Native, Asian, Native Hawaiian or Other Pacific Islander.
+-   "Majority female" operations -where at least ½ of those involved in making management decisions on the farm were female
+
+```{r}
+
+# Define majority female based on decision making
+df <- df %>% 
+  mutate(
+    op1_female_dm = case_when(
+      op1_female==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_female_dm = case_when(
+      op2_female==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_female_dm = case_when(
+      op3_female==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_female_dm = case_when(
+      op4_female==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_female_dm = op1_female_dm + 
+      op2_female_dm + op3_female_dm + op4_female_dm, 
+    majority_female_dm = case_when(
+      total_female_dm >= (number_operators/2) ~ 1, 
+      TRUE ~ 0))
+
+# Define hispanic decision maker
+df <- df %>% 
+  mutate(
+     op1_hispanic_dm = case_when(
+      op1_hispanic==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_hispanic_dm = case_when(
+      op2_hispanic==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_hispanic_dm = case_when(
+      op3_hispanic==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_hispanic_dm = case_when(
+      op4_hispanic==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_hispanic_dm = op1_hispanic_dm + 
+      op2_hispanic_dm + op3_hispanic_dm + op4_hispanic_dm, 
+    hispanic_dm = case_when(
+      total_hispanic_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define black decision maker
+df <- df %>% 
+  mutate(
+     op1_black_dm = case_when(
+      op1_black==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_black_dm = case_when(
+      op2_black==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_black_dm = case_when(
+      op3_black==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_black_dm = case_when(
+      op4_black==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_black_dm = op1_black_dm + 
+      op2_black_dm + op3_black_dm + op4_black_dm, 
+    black_dm = case_when(
+      total_black_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define asian decision maker
+df <- df %>% 
+  mutate(
+     op1_asian_dm = case_when(
+      op1_asian==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_asian_dm = case_when(
+      op2_asian==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_asian_dm = case_when(
+      op3_asian==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_asian_dm = case_when(
+      op4_asian==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_asian_dm = op1_asian_dm + 
+      op2_asian_dm + op3_asian_dm + op4_asian_dm, 
+    asian_dm = case_when(
+      total_asian_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+# Define indian or opi decision maker
+df <- df %>% 
+  mutate(
+     op1_indian_opi_dm = case_when(
+      op1_indian_opi==1 & k1642==1 ~ 1, 
+      TRUE ~ 0), 
+    op2_indian_opi_dm = case_when(
+      op2_indian_opi==1 & k1643==1 ~ 1, 
+      TRUE ~ 0), 
+    op3_indian_opi_dm = case_when(
+      op3_indian_opi==1 & k1644==1 ~ 1, 
+      TRUE ~ 0), 
+    op4_indian_opi_dm = case_when(
+      op4_indian_opi==1 & k1645==1 ~ 1, 
+      TRUE ~ 0), 
+    total_indian_opi_dm = op1_indian_opi_dm + 
+      op2_indian_opi_dm + op3_indian_opi_dm + op4_indian_opi_dm, 
+    indian_opi_dm = case_when(
+      total_indian_opi_dm>0 ~ 1, 
+      TRUE ~ 0))
+
+## Define MWBE
+df <- df %>% 
+  mutate(
+    mwbe_fct = case_when(
+      majority_female_dm==1 |
+        hispanic_dm==1 | 
+        black_dm==1 | 
+        asian_dm==1 |
+        indian_opi_dm ==1 ~ "MWBE", 
+      TRUE ~ "Not MWBE"), 
+    mwbe = case_when(
+      mwbe_fct == "MWBE" ~ 1, 
+      TRUE ~ 0))
+
+```
+
+### Scale and others
+
+```{r}
+
+# Scale - under $1M and over
+df <- df %>% 
+  mutate(
+    sales_class_agg = case_when(
+      gcfi>=1000000 ~ "GCFI $1 million or more", 
+      TRUE ~ "GCFI less than $1 million"))
+
+# Define net farm income per acre operated
+df <- df %>% 
+  mutate(
+    infi_acre = infi/operated_acres)
+
+# Production cost per acre and per cow
+df <- df %>%
+  mutate(
+    exp_acre = exp/operated_acres, 
+    exp_cow = case_when(
+      dairy_herd==0 ~ 0, 
+      TRUE ~ exp/dairy_herd)
+  )
+
+
+# Define dairy as a percent of total sales
+df <- df %>% 
+  mutate(
+    dairy_tvp = dairy_sales/tvp
+    )
+
+# Land use practices
+df <- df %>% 
+  mutate(
+    drained_tile_acres = k3450, 
+    drained_ditches_acres = k3451, 
+    conservation_easement_acres = k3452
+  )
+
+
+# Ohter cattle herd
+df <- df %>% 
+  mutate(
+    other_cattle_herd = k1206, 
+    cattle_herd_500plus = k810 
+  )
+```
+
+## Summary stats
+
+### Organic, MWBE, Scale
+
+```{r}
+
+# Define varlist
+varlist <- df %>% 
+  select(
+    organic_farm, local_farm, 
+    operated_acres, owned_acres, rented_in_acres, rented_out_acres, 
+    partowner, fullowner, fulltenant,
+    totvarexp, exp, infi, exp_acre, exp_cow,
+    beginning,
+    cropland_harvested_acres, 
+    cropland_failed_acres, 
+    cropland_summer_fallow_acres, 
+    cropland_idle_acres, 
+    permanent_pasture_acres, 
+    woodland_pasture_acres,
+    other_pasture_acres,
+    drained_tile_acres,
+    drained_ditches_acres,, 
+    conservation_easement_acres,
+    no_till, reduced_till, intensive_till,
+    no_till_acres, reduced_till_acres, intensive_till_acres,
+    cattle_herd, dairy_herd, other_cattle_herd, cattle_herd_500plus, 
+    rotational_grazing, veal, 
+    fertilizer_cropland_acres, fertilizer_pastureland_acres, 
+    manure_acres, organic_acres, 
+    insects_acres, weeds_acres, nematodes_acres, 
+    diseases_acres, defoliation_acres, 
+    methane_digester) %>% 
+  names()
+
+
+# Define groupby list
+groupbylist <- df %>% 
+  select(sales_class_agg, mwbe_fct, organic_fct) %>% 
+  names()
+
+# Mean/se
+sum <- df %>% 
+  as_survey(weight = weight) %>% 
+  mean_se_function(varlist, groupbylist)
+
+
+# Add Worksheet
+addWorksheet(wb, "summary_organic")
+writeData(wb, "summary_organic", sum)
+
+```
+
+### MWBE, scale
+
+```{r}
+
+# Not by organic
+
+# Define groupby list
+groupbylist <- df %>% 
+  select(sales_class_agg, mwbe_fct) %>% 
+  names()
+
+# Mean/se
+sum <- df %>% 
+  as_survey(weight = weight) %>%
+  mean_se_function(varlist, groupbylist)
+
+# Add Worksheet
+addWorksheet(wb, "summary")
+writeData(wb, "summary", sum)
+```
+
+## OLS
+
+```{r}
+
+# Define model
+results <- lm(
+  infi ~ mwbe + sales_class_agg + dairy_herd + beginning + organic_farm + partowner,
+  data = df, 
+  weight = weight)
+
+# Tidy
+tidied <- tidy(results)
+glanced <- glance(results)
+
+
+addWorksheet(wb, "ols_tidy")
+writeData(wb, "ols_tidy", tidied)
+
+addWorksheet(wb, "ols_glance")
+writeData(wb, "ols_glance", glanced)
+```
+
+## Save
+
+```{r}
+
+# Add info
+info <- tibble(
+  sheet_name = c("summary_organic", "summary", 
+                 "ols_tidy", "ols_glance"), 
+  description = c(
+    "Summary stats for dairy producers by scale, MWBE",
+    "Summary stats for dairy producers by scale, MWBE, organic",
+    "OLS regression results", 
+    "OLS model statistics including number of observations (nobs)"), 
+  sample = c(
+    "Dairy producers in New York"))
+ 
+# Add worksheet
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save 
+saveWorkbook(wb, "../data_final/beef_results.xlsx", 
+             overwrite = TRUE)
+
+```

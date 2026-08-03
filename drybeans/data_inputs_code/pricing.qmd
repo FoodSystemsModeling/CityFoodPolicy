@@ -1,0 +1,646 @@
+---
+format: html
+editor: visual
+---
+
+[Final data: Farmgate pricing for dry beans and soybeans and retail pricing for dry beans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/drybean_soybean_price.xlsx)
+
+Prices come from a variety of sources. All are reported in 2024 dollars using the Producer Price Index (PPI) or the Consumer Price Index (CPI), depending on where they are located along the supply chain. For farmgate prices, we used the St. Louis Fed, Producer Price Index by Commodity for [soybeans](https://fred.stlouisfed.org/series/WPU01830131) and [dry beans](https://fred.stlouisfed.org/series/WPU0113011).
+
+### Differentiated
+
+We have limited data on prices for differentiated beans. Rather than providing a time series of prices, we provide and average and standard deviation of prices. All data is based on interviews and pricing documents.
+
+#### Blank table
+
+Create a blank table to fill.
+
+```{r}
+library(tidyverse)
+library(openxlsx)
+library(readxl)
+
+# Define data frame
+price <- bind_rows(
+  expand_grid(
+    type = "differentiated",
+    organic = c("conventional", "organic"),
+    supply_chain_location = c("farmgate", "aggregator/cleaner"),
+    form = "dried"
+  ),
+  expand_grid(
+    type = "differentiated",
+    organic = c("conventional", "organic"),
+    supply_chain_location = c("primary_processor", "secondary_processor",
+                              "wholesaler/distributor"),
+    form = c("dried", "canned", "frozen")
+  )
+) %>% 
+  mutate(
+    mean_price_lb = NA_real_, 
+    sd_price_lb = NA_real_, 
+    mean_price_kg = NA_real_, 
+    sd_price_kg = NA_real_
+  )
+```
+
+#### Wholesale/distributor
+
+We reviewed the product lists of seven distributors who were identified as carriers of local and regional products who also carry dried or canned beans, and who distribute into New York City and the Hudson Valley. These are reported in
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+## Table that looks nice
+beans <- data.frame(
+  Source = c("conventional", "conventional", "organic", "organic", "conventional", "organic", 
+             "conventional", "organic", "organic", "organic"),
+  Supplier = c("1", "1", 
+               "2",
+               "3", 
+               "2", "2",
+               "4", "5", "5", "5"),
+  Item = c("Canned beans, Black", "Canned beans, Kidney", "Dry Beans – Black",
+           "Dry Beans – Pinto", "Dry Beans – Light Red Kidney", "Dry Beans – Light Red Kidney",
+           "Dry Beans – Cranberry", "Dry Beans – Black", "Dry Beans – Light Red Kidney",
+           "Dry Beans – Pinto"),
+  Unit = c("12 × 15.5 oz", "12 × 15.5 oz", "15 × 1 lb", "15 × 1 lb", "15 × 1 lb",
+           "15 × 1 lb", "12 × 2 lb", "25 lb", "25 lb", "25 lb"),
+  Price_lb = c("$1.67", "$1.61", "$2.96", "$2.80", "$2.69", "$3.33",
+               "$1.88", "$1.75", "$2.16", "$2.02"),
+  Notes = c("Range $1.58–$1.75", "Range $1.58–$1.63", "", "", "", "",
+            "", "Average 3 sources", "Average 3 sources", "Average 3 sources")
+)
+
+kbl(
+  beans,
+  col.names = c("Source", "Supplier", "Item", "Unit", "$/lb", "Notes"),
+  align     = c("c", "l", "l", "c", "r", "l"),
+  caption   = "Distributor Price Ranges"
+) |>
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width        = FALSE,
+    position          = "left",
+    font_size         = 13
+  ) |>
+  column_spec(1, bold = TRUE, width = "1.5cm") |>
+  column_spec(5, monospace = TRUE) |>
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white")
+
+rm(beans)
+
+## Make into a tibble
+diff_wholesaler <- tibble(
+  organic   = c("conventional", "conventional", "organic", "organic", 
+             "conventional", "organic", "conventional", "organic", 
+             "organic", "organic"),
+  supplier = c("Headwater Origins", "Headwater Origins", "Genesee Valley Bean Co.",
+               "Seneca Grain & Bean", "Genesee Valley Bean Co.", "Genesee Valley Bean Co.",
+               "Headwater Origins", "Multiple sources", "Multiple sources", "Multiple sources"),
+  item     = c("Canned beans, Black", "Canned beans, Kidney", "Dry Beans - Black",
+               "Dry Beans - Pinto", "Dry Beans - Light Red Kidney", "Dry Beans - Light Red Kidney",
+               "Dry Beans - Cranberry", "Dry Beans - Black", "Dry Beans - Light Red Kidney",
+               "Dry Beans - Pinto"),
+  unit     = c("12 x 15.5 oz", "12 x 15.5 oz", "15 x 1 lb", "15 x 1 lb", "15 x 1 lb",
+               "15 x 1 lb", "12 x 2 lb", "25 lb", "25 lb", "25 lb"),
+  price_lb = c(1.67, 1.61, 2.96, 2.80, 2.69, 3.33, 1.88, 1.75, 2.16, 2.02),
+  notes    = c("Range $1.58-$1.75", "Range $1.58-$1.63", NA, NA, NA, NA,
+               NA, "Average 3 sources", "Average 3 sources", "Average 3 sources")
+)
+
+## Add type
+diff_wholesaler <- diff_wholesaler %>% 
+  mutate(
+    form = case_when(
+      str_detect(item, "Canned") ~ "canned", 
+      TRUE ~ "dried")
+  )
+
+## summarise
+sum <- diff_wholesaler %>% 
+  group_by(organic, form) %>%
+  summarise(
+    mean = mean(price_lb), 
+    sd = sd(price_lb)
+  )
+rm(diff_wholesaler)
+
+# Add wholesale data
+price <- price %>% 
+  rows_update(
+    sum %>% 
+      mutate(
+        organic = map_chr(str_to_lower(organic), 
+                          ~unique(price$organic)[str_starts(unique(price$organic), .x)]),
+        type = "differentiated",
+        supply_chain_location = "wholesaler/distributor",
+        mean_price_lb = mean,
+        sd_price_lb = sd,
+        mean_price_kg = mean / 0.453592,
+        sd_price_kg = sd / 0.453592
+      ) %>% 
+      select(type, organic, supply_chain_location, form,
+             mean_price_lb, sd_price_lb, mean_price_kg, sd_price_kg),
+    by = c("type", "organic", "supply_chain_location", "form")
+  )
+
+## CV from wholesale data
+cv_wholesale <- sum %>% 
+  mutate(cv = sd / mean) %>% 
+  summarise(cv = mean(cv)) %>% 
+  pull(cv)
+
+```
+
+#### Secondary processor
+
+Data on secondary processors comes from pricing sheets and interviews. Data is based on frozen black bean patties.
+
+Organic: 5 oz patty, 24 patties/case, \$51 per case. Conventional: 3.30/lb
+
+We don't have variation, so we rely on the variation we saw for wholesalers by taking cv = sd / mean and using that ratio to estimate a standard deviation.
+
+```{r}
+
+# Organic mean/se 
+price <- price %>% 
+  mutate(
+    mean_price_lb = case_when(
+      organic == "organic" & supply_chain_location == "secondary_processor" & form == "frozen" ~ (51/(5*24))*16, 
+      TRUE ~ mean_price_lb), 
+    sd_price_lb = case_when(
+      organic == "organic" & supply_chain_location == "secondary_processor" & form == "frozen" ~ mean_price_lb * cv_wholesale,
+      TRUE ~ sd_price_lb),
+    mean_price_kg = case_when(
+      organic == "organic" & supply_chain_location == "secondary_processor" & form == "frozen" ~ mean_price_lb/0.453592, 
+      TRUE ~  mean_price_kg),
+    sd_price_kg = case_when(
+      organic == "organic" & supply_chain_location == "secondary_processor" & form == "frozen" ~ sd_price_lb / 0.453592,
+      TRUE ~ sd_price_kg)
+  )
+
+# Conventional mean/se 
+price <- price %>% 
+  mutate(
+    mean_price_lb = case_when(
+      organic == "conventional" & supply_chain_location == "secondary_processor" & form == "frozen" ~ 3.3, 
+      TRUE ~ mean_price_lb), 
+    sd_price_lb = case_when(
+      organic == "conventional" & supply_chain_location == "secondary_processor" & form == "frozen" ~ mean_price_lb * cv_wholesale,
+      TRUE ~ sd_price_lb),
+    mean_price_kg = case_when(
+      organic == "conventional" & supply_chain_location == "secondary_processor" & form == "frozen" ~ mean_price_lb/0.453592, 
+      TRUE ~  mean_price_kg),
+    sd_price_kg = case_when(
+      organic == "conventional" & supply_chain_location == "secondary_processor" & form == "frozen" ~ sd_price_lb / 0.453592,
+      TRUE ~ sd_price_kg)
+  )
+
+```
+
+#### Farmer & Aggregator/cleaner
+
+We use data from the interviews to understand differentiated prices.
+
+Breakdown on a 50lb bag: Grower receives \$52; Cleaner \$5; \$57 price out the door. We do not have variation, so we assume a similar variation as is seen in the wholesale data for differentiated beans.
+
+All data was provided in 2023, we convert all prices to be in 2024 dollars, using the
+
+```{r}
+
+## Add data
+price <- price %>%
+  rows_update(
+    tibble(
+      type = "differentiated", 
+      organic = c("conventional", "organic", "conventional", "organic"), 
+      supply_chain_location = c("farmgate", "farmgate", 
+                                "aggregator/cleaner", "aggregator/cleaner"),
+      form = "dried",
+      mean_price_lb = c(52/50, 52/50 * 2, 57/50, 57/50 * 2), 
+      sd_price_lb = mean_price_lb * cv_wholesale,
+      mean_price_kg = mean_price_lb / 0.453592,
+      sd_price_kg = sd_price_lb / 0.453592
+    ),
+    by = c("type", "organic", "supply_chain_location", "form")
+  )
+
+rm(sum)
+
+# Rename diff price
+diff_price <- price
+```
+
+### Commodity
+
+Here we focus on price data for the last 10 years, where available. All prices are reported in 2024 dollars.
+
+#### Farmgate
+
+For soybeans, we use the [global price of soybeans from the Federal Reserve Bank of St. Louis](https://fred.stlouisfed.org/series/PSOYBUSDM)("PSOYBUSDM.csv") for monthly price data. Units are reported as U.S. dollars per metric ton and are not seasonally adjusted. Value represents the benchmark prices which are representative of the global market. They are determined by the largest exporter of a given commodity. Prices are period averages in nominal U.S. dollars. Citation: International Monetary Fund, Global price of Soybeans \[PSOYBUSDM\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/PSOYBUSDM, 2026.
+
+##### PPI
+
+We use the [producer price index by commodity: Farm products: Soybeans](https://fred.stlouisfed.org/series/WPU01830131)("WPU01830131.csv") to put all soybean price data in 2024 dollars. Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Soybeans \[WPU01830131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU01830131, 2026.
+
+We use the [producer price index by commodity: Farm products: drybeans](https://fred.stlouisfed.org/series/WPU0113011)("WPU0113011.csv") to put all dry bean price data in 2024 dollars.
+
+We compute an average yearly PPI and then use that to convert all dollars into 2024 dollars. We keep data starting in 2014 for soybeans. For dry bean data, we do not have information prior to 2015.
+
+```{r}
+# Soy
+soy_ppi <- read_csv("../data_raw/WPU01830131.csv") %>% 
+  filter(observation_date>= as.Date("2014-01-01"))
+
+# PPI get average per year
+soy_ppi <- soy_ppi %>% 
+  mutate(year = year(observation_date)) %>% 
+  group_by(year) %>% 
+  summarise(ppi = mean(WPU01830131, na.rm = TRUE)) %>% 
+  mutate(ppi_index_2024 = ppi[year == 2024] / ppi) %>% 
+  select(-ppi)
+
+# Drybeans
+drybeans_ppi <- read_csv("../data_raw/WPU0113011.csv")
+
+# PPI get average per year
+drybeans_ppi <- drybeans_ppi %>% 
+  mutate(year = year(observation_date)) %>% 
+  group_by(year) %>% 
+  summarise(ppi = mean(WPU0113011, na.rm = TRUE)) %>% 
+  mutate(ppi_index_2024 = ppi[year == 2024] / ppi) %>% 
+  select(-ppi)
+
+```
+
+##### Soybeans
+
+```{r}
+
+# import data
+soy_price <- read_csv("../data_raw/PSOYBUSDM.csv") %>% 
+  filter(observation_date>= as.Date("2014-01-01"))
+
+# Rename soy price and add year
+soy_price <- soy_price %>% 
+  rename(nominal_soy_price = PSOYBUSDM) %>% 
+  mutate(year = year(observation_date)) %>% 
+  select(year, everything())
+
+# Join with ppi
+soy_price <- soy_price %>% 
+  left_join(soy_ppi)
+
+# Create real price and price per kg
+soy_price <- soy_price %>% 
+  mutate(
+    real_soy_price_metricton2024dollars = nominal_soy_price*ppi_index_2024,
+    real_soy_price_perkg2024dollars = (nominal_soy_price*ppi_index_2024) / 1000
+  ) %>%
+  select(-ppi_index_2024)
+
+# Rename date
+soy_price <- soy_price %>% 
+  rename(date = observation_date)
+
+```
+
+##### Drybeans
+
+We do not have the same price series for the global price of drybeans (as we did for soybeans).
+
+We utilize the [USDA AMS Bean Market News Summary (Annual)](https://esmis.nal.usda.gov/publication/dry-edible-bean-market-news-summary-annual) from [2024](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), [2019](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), and [2018](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/3f462c42c/mg74qt23r/LSABA.PDF). All data are reported as pdfs, not in spreadsheet format.
+
+We convert to 2024 prices using the [producer price index by commodity: Farm products: drybeans](https://fred.stlouisfed.org/series/WPU0113011)("WPU0113011.csv").
+
+The first full year of data available is 2015.
+
+Data are reported for some of the larger bean producing states/groups of states. New York is not one that is reported. We rely on Michigan as they are often reported as having a similar growing climate for drybeans.
+
+We use Grower Monthly Average Price Per Cwt By Crop Year Fob, Michigan. I copy and paste the tables of interest into ClaudeAI and copies the code that coverts the table in a data frame.
+
+```{r}
+
+# Copy and paste price data from PDFs via Claude
+price_2024 <- tribble(
+  ~Region,            ~Year,        ~SEP,  ~OCT,  ~NOV,  ~DEC,  ~JAN,  ~FEB,  ~MAR,  ~APR,  ~MAY,  ~JUN,  ~JUL,  ~AUG,
+
+  # BLACK - Michigan
+  "BLACK - Michigan", "2020-2021",  28.00, 27.00, 27.50, 27.50, 32.88, 33.25, 34.00, 35.00, 38.25,    NA,    NA,    NA,
+  "BLACK - Michigan", "2021-2022",  46.00, 47.00, 47.75, 48.00, 48.50, 48.31, 48.25, 48.25, 48.25, 47.50, 47.69, 48.25,
+  "BLACK - Michigan", "2022-2023",  47.06, 43.83, 42.82, 41.00, 43.00, 44.50, 45.00, 45.50, 45.50, 40.00, 40.00, 40.00,
+  "BLACK - Michigan", "2023-2024",  41.67, 41.00, 41.00, 45.00, 45.00, 45.56, 40.00, 40.00, 40.00, 40.00, 40.00, 40.00,
+  "BLACK - Michigan", "2024-2025",  33.50, 32.00, 35.00, 38.50,    NA,    NA,    NA,    NA,    NA,    NA,    NA,    NA
+)
+
+
+price_2019 <- tribble(
+  ~Region,            ~Year,        ~SEP,  ~OCT,  ~NOV,  ~DEC,  ~JAN,  ~FEB,  ~MAR,  ~APR,  ~MAY,  ~JUN,  ~JUL,  ~AUG,
+ 
+  # BLACK - Michigan
+  "BLACK - Michigan", "2015-2016",  25.50, 23.25, 23.33, 23.50, 23.50, 23.63, 24.00, 24.63, 26.50, 27.63, 30.25, 33.80,
+  "BLACK - Michigan", "2016-2017",  34.83, 35.00, 35.56, 35.75,    NA,    NA,    NA,    NA,    NA,    NA,    NA,    NA,
+  "BLACK - Michigan", "2017-2018",  32.50, 30.00, 27.00,    NA,    NA, 27.00,    NA, 28.50, 28.50, 28.50, 28.50, 29.00,
+  "BLACK - Michigan", "2018-2019",  29.69, 30.10, 29.50, 29.50, 29.50, 29.50, 29.50, 29.25, 29.00, 28.00, 28.00, 28.00,
+  "BLACK - Michigan", "2019-2020",  27.00, 27.50, 29.00, 29.00,    NA,    NA,    NA,    NA,    NA,    NA,    NA,    NA
+)
+ 
+
+price_2018 <- tribble(
+  ~Region,            ~Year,        ~SEP,  ~OCT,  ~NOV,  ~DEC,  ~JAN,  ~FEB,  ~MAR,  ~APR,  ~MAY,  ~JUN,  ~JUL,  ~AUG,
+
+  # BLACK - Michigan
+  "BLACK - Michigan", "2014-2015",  32.00, 32.00, 32.00, 32.00, 31.25, 37.50, 36.60, 38.50, 38.50, 38.50, 38.50, 38.50,
+  "BLACK - Michigan", "2015-2016",  25.50, 23.25, 23.33, 23.50, 23.50, 23.63, 24.00, 24.63, 26.50, 27.63, 30.25, 33.80,
+  "BLACK - Michigan", "2016-2017",  34.83, 35.00, 35.56, 35.75,    NA,    NA,    NA,    NA,    NA,    NA,    NA,    NA,
+  "BLACK - Michigan", "2017-2018",  32.50, 30.00, 27.00,    NA,    NA, 27.00,    NA, 28.50, 28.50, 28.50, 28.50, 29.00,
+  "BLACK - Michigan", "2018-2019",  29.69, 30.10, 29.50, 29.50,    NA,    NA,    NA,    NA,    NA,    NA,    NA,    NA
+)
+
+# Combine and remove individual data frames
+drybean_price <- bind_rows(price_2018, price_2019, price_2024) %>% 
+  mutate(n_missing = rowSums(is.na(across(SEP:AUG)))) %>% 
+  group_by(Region, Year) %>% 
+  slice_min(n_missing, n = 1, with_ties = FALSE) %>% 
+  ungroup() %>% 
+  select(-n_missing)
+
+rm(price_2018, price_2019, price_2024)
+
+# Reorganize to monthly data with calendar dates
+drybean_price <- drybean_price %>% 
+  pivot_longer(SEP:AUG, names_to = "month", values_to = "price_cwt") %>% 
+  mutate(
+    year_start = as.integer(str_sub(Year, 1, 4)),
+    year_end   = as.integer(str_sub(Year, 6, 9)),
+    year = if_else(month %in% c("SEP", "OCT", "NOV", "DEC"), 
+                   year_start, year_end),
+    date = as.Date(paste(year, month, "01"), format = "%Y %b %d")
+  ) %>% 
+  select(Region, date, price_cwt) %>% 
+  arrange(Region, date)
+
+# Drop 2025 data
+drybean_price <- drybean_price %>% 
+  filter(year(date)<2025)
+
+
+# Add ppi 
+drybean_price <- drybean_price %>% 
+  mutate(year = year(date)) %>% 
+  left_join(drybeans_ppi)
+
+# We do not have a PPI for 2014 (series starts in 2015), drop 2015 data
+drybean_price <- drybean_price %>% 
+  filter(year!=2014) %>%
+  mutate(
+    real_price_cwt_2024dollars = price_cwt * ppi_index_2024,
+    real_price_kg_2024dollars = real_price_cwt_2024dollars / 45.359)
+  
+# Drop data we don't need
+drybean_price <- drybean_price %>% 
+  select(!c(Region, ppi_index_2024)) %>% 
+  select(date, year, everything())
+
+# Rename
+drybean_price <- drybean_price %>% 
+  mutate(
+    nominal_drybean_price = price_cwt
+  )
+
+
+```
+
+##### Figures
+
+```{r}
+#| message: false
+
+# Soybeans
+ggplot(soy_price, aes(x = date, 
+                      y = real_soy_price_metricton2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  labs(
+    x = NULL,
+    y = "Price (2024 $/metric ton)",
+    title = "Real monthly soybean price"
+  ) +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
+               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# Drybeans
+ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
+  labs(
+    x = NULL,
+    y = "Price (2024 $/CWT)",
+    title = "Real monthly dry bean price over time"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+##### Organic
+
+We use data from [The Risk Management Agency (RMA)](https://old.rma.usda.gov/en/Policy-and-Procedure/Bulletins-and-Memos/2023/PM-23-015) on approved the 2023 CY projected prices shown below for the following plans of insurance: Yield Protection, Revenue Protection, and Revenue Protection with Harvest Price Exclusion.
+
+The projected price per pound for drybeans is double for organic compared to conventional. We double all conventional prices.
+
+For soybeans, we use [Price discoverty data from the RMA](https://public-rma.fpac.usda.gov/apps/PriceDiscovery/Reports/CurrentPeriods).
+
+```{r}
+
+# import soy data 
+soy_organic <- read_xlsx("../data_raw/RMA_soybeans.xlsx", 
+                         sheet = "Current Periods") %>% 
+  janitor::clean_names()
+
+# Select data of interest 
+soy_organic <- soy_organic %>% 
+  select(commodity_year, practice_name, state_name, projected_price)
+
+# compare prices for organic and conventional for the same state year
+soy_organic <- soy_organic %>% 
+  group_by(commodity_year, practice_name) %>% 
+  summarise(
+    price = mean(projected_price)
+  ) %>%
+  mutate(
+    organic_conventional = 
+      price[practice_name=="Organic"] /
+      price[practice_name=="Conventional"]
+    ) %>% 
+  slice(1) %>%
+  pull(organic_conventional)
+  
+# Get price/per kg. for drybeans and add organic (*2)
+drybean_price <- drybean_price %>% 
+  mutate(across(starts_with("real"), 
+                ~.*2, 
+                .names = "organic_{.col}")
+  )
+
+# Get price/per kg. for soybeans
+soy_price <- soy_price %>% 
+  mutate(across(starts_with("real"), 
+                ~.*2, 
+                .names = "organic_{.col}")
+  )
+
+# Join 
+farmgate_price <- left_join(drybean_price, soy_price,
+                            by = c("date", "year"))
+
+```
+
+#### Retail (consumer price)
+
+[Average Price: Beans, Dried, Any Type, All Sizes (Cost per Pound/453.6 Grams) in U.S. City Average](https://fred.stlouisfed.org/series/APU0000714233)("APU0000714233.csv"). Includes all dried organic and non-organic beans, regardless of package size.
+
+Average consumer prices are calculated for household fuel, motor fuel, and food items from prices collected for the Consumer Price Index (CPI). Average prices are best used to measure the price level in a particular month, not to measure price change over time. It is more appropriate to use CPI index values for the particular item categories to measure price change. Prices, except for electricity, are collected monthly by BLS representatives in the 75 urban areas priced for the CPI.
+
+We report all prices in 2024 dollars using the Federal Reserve of St. Louis [Consumer Price Index for All Urban Consumers: All Items in U.S. City Average](https://fred.stlouisfed.org/series/CPIAUCSL) ("CPIAUCSL.csv")
+
+##### CPI
+
+```{r}
+
+# Import data
+cpi <- read_csv("../data_raw/CPIAUCSL.csv")
+
+# Keep last 10 years and create index to convert to 2024 dollars
+cpi <- cpi %>%
+  filter(observation_date >= as.Date("2014-01-01"),
+         observation_date <= as.Date("2024-12-31")) %>% 
+  mutate(year = year(observation_date)) %>% 
+  group_by(year) %>% 
+  summarise(cpi = mean(CPIAUCSL, na.rm = TRUE)) %>% 
+  mutate(cpi_index_2024 = cpi[year == 2024] / cpi) %>% 
+  select(-cpi)
+
+```
+
+##### Drybeans
+
+```{r}
+
+# Import bean data
+retail_beans <- read_csv("../data_raw/APU0000714233.csv")
+
+# Keep relevant years and rename
+retail_beans <- retail_beans %>% 
+  rename(nominal_drybeans_cost_perlb = APU0000714233) %>% 
+  filter(year(observation_date) >= 2014,
+         year(observation_date) <= 2024) %>% 
+  mutate(year = year(observation_date)) %>% 
+  left_join(cpi) %>% 
+  mutate(
+    real_drybeans_cost_perlb_2024dollars = nominal_drybeans_cost_perlb * cpi_index_2024,
+    real_drybeans_cost_perkg_2024dollars = real_drybeans_cost_perlb_2024dollars / 0.453592
+  ) %>% 
+  select(year, everything(), -cpi_index_2024)
+
+```
+
+##### Figures
+
+```{r}
+#| message: false
+
+ggplot(retail_beans, aes(x = observation_date, 
+                         y = real_drybeans_cost_perlb_2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
+               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+  labs(
+    x = NULL,
+    y = "Price (2024 $/lb)",
+    title = "Real retail dry bean price over time"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+#### Final table
+
+For the model, [we include one worksheet with differentiated prices, one with commodity dry bean and soybean farmgate prices, and one with retail bean prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/drybean_soybean_price.xlsx). These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.
+
+```{r}
+
+# Farmgate
+sum <- farmgate_price %>% 
+  filter(year %in% c(2022, 2023, 2024)) %>% 
+  summarise(
+    drybean_price_kg =
+      mean(real_price_kg_2024dollars), 
+    drybean_organic_price = mean(organic_real_price_kg_2024dollars), 
+    soy_price_kg = mean(real_soy_price_perkg2024dollars), 
+    soy_organic_price_kg = mean(organic_real_soy_price_perkg2024dollars))
+
+# Retail 
+sum_retail <- retail_beans %>% 
+  filter(year %in% c(2022, 2023, 2024)) %>% 
+  summarise(
+    dry_retail_price_kg =mean(real_drybeans_cost_perkg_2024dollars)
+  )
+
+
+# Create workbook
+wb <- createWorkbook()
+
+# Add differentiated
+addWorksheet(wb, "differentiated_price")
+writeData(wb, "differentiated_price", diff_price)
+
+## Add farmgate 
+addWorksheet(wb, "farmgate_price")
+writeData(wb, "farmgate_price", sum)
+
+## Add retail bean
+addWorksheet(wb, "retail_bean_price")
+writeData(wb, "retail_bean_price", sum_retail)
+
+# Add info
+info <- tibble(
+  sheet_name = c(
+    "differentiated_price", "farmgate_price", 
+    "retail_bean_price"), 
+  sheet_description = c(
+    "prices along the supply chain for differentiated dry beans", 
+    "average farmgate price per kg from 2022-2024 (in 2024 dollars)",
+    "average retail price per kg from 2022-2024 (in 2024 dollars), U.S. city average"), 
+  source = c(
+    "interviews", 
+    "For soybeans, we use the global price of soybeans from the Federal Reserve Bank of St. Louis (https://fred.stlouisfed.org/series/PSOYBUSDM) for monthly price data. Units are reported as U.S. dollars per metric ton and are not seasonally adjusted. Value represents the benchmark prices which are representative of the global market. They are determined by the largest exporter of a given commodity. Prices are period averages in nominal U.S. dollars.We use the producer price index by commodity: Farm products: Soybeans (https://fred.stlouisfed.org/series/WPU01830131) to put all soybean price data in 2024 dollars. For dry beans, we utilize the [USDA AMS Bean Market News Summary (Annual)](https://esmis.nal.usda.gov/publication/dry-edible-bean-market-news-summary-annual) from [2024](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), [2019](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), and [2018](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/3f462c42c/mg74qt23r/LSABA.PDF). All data are reported as pdfs, not in spreadsheet format. We convert to 2024 prices using the [producer price index by commodity: Farm products: drybeans](https://fred.stlouisfed.org/series/WPU0113011).", 
+    "Average Price: Beans, Dried, Any Type, All Sizes (Cost per Pound/453.6 Grams) in U.S. City Average (https://fred.stlouisfed.org/series/APU0000714233). Includes all dried organic and non-organic beans, regardless of package size.")
+  )
+
+# Add worksheet
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save workbook 
+saveWorkbook(wb, "../data_final/drybean_soybean_price.xlsx", 
+             overwrite = TRUE)
+
+```
+### Margins
+
+[Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.xlsx)
+
+Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
+
+All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
+

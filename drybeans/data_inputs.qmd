@@ -5,6 +5,10 @@ editor: visual
 
 # Data inputs
 
+## Pricing
+
+{{< include ../drybeans/data_inputs_code/pricing.qmd >}}
+
 ## Agricultural production
 
 {{< include ../drybeans/data_inputs_code/farmgate.qmd >}}
