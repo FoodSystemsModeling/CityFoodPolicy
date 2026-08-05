@@ -4,40 +4,10 @@ format: html
 
 # Model parameterization
 
-## Supply Chain Data
-Click on a node of the supply chain to link to the data used in the model for each location along the supply chain. 
+## Supply Chain
+Complete model data and documentation can be found in the GitHub repository for the project.(Link to be added)
 
-```{r, echo = FALSE}
-library(DiagrammeR)
-
-mermaid('
-graph LR;
-  A(Land)--> D(Producer)
-  B(Labor)-->D
-  C(Farm <br/> Inputs)-->D
-  D-->F("Aggregator<br>(Cleaner)")
-  F-->G(Primary <br/> Processor)
-  F-->H("Wholesaler<br>(Distributor)")
-  G-->H
-  G-->I(Secondary <br/> Processor)
-  I-->H
-  H-->K(NYC Agency)
-  G-->K
-  H-->L(Commodity and<br>Differentiated<br>Markets)
-  G-->L
-  
-  classDef whiteBox fill:#ffffff,stroke:#000000,stroke-width:2px
-  class A,B,C,D,E,F,G,H,I,J,K,L whiteBox
-  
-  click D "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Producers" "Producer data"
-  click G "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Primary_Processors" "Primary processor data"
-  click H "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Wholesalers" "Wholesaler data"
-  click I "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Secondary_Processors" "Secondary processor data"
-  click F "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Aggregators" "Cleaner/aggregator data"
-  click K "https://github.com/FoodSystemsModeling/bean-agent-gen/tree/main/Agencies" "NYC agency data"
-  ')
-
-```
+![](../images/dry-bean-supply-chain-diagram_v3.png)
 
 ## Estimated margins
 
@@ -45,5 +15,7 @@ graph LR;
 
 Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
 
-All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
+All data was gathered through interviews with supply chain actors. See @sec-stakeholder-interviewsfocusgroups for details. 
+
+Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
 

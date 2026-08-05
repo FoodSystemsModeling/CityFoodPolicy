@@ -98,7 +98,7 @@ rm(missing, testing)
 
 ### Summary {#sec-drybeans-NYC-purchasing}
 
-Removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).
+We removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).
 
 Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data.
 
@@ -191,5 +191,56 @@ table %>%
     caption = '<span style="color: black; font-size: 18px; font-weight: bold;">Price per pound for dried and canned beans purchased by New York City in 2022</span>') %>%
   kable_styling()
   
+
+```
+
+#### Figure - Business as usual
+We group all agencies together and show average price per pound by type (bagged, canned). We change the name dried to bagged to be consistent with other figures. 
+
+```{r}
+
+# Rename dried to bagged
+df <- df %>% 
+  mutate(
+    Form = case_when(
+      Form == "Dried" ~ "Bagged", 
+      TRUE ~ Form
+    )
+  )
+
+# Group all agencies together and summarise
+# Summary stats with outliers removed 
+sum <- df %>% 
+  group_by(`Time Period`, Form) %>% 
+  summarise(
+    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
+    sd_lb = sd(`Price per lb`, na.rm = TRUE), 
+    n = n()
+  ) %>% 
+  ungroup()
+
+# Bar chart
+ggplot(sum, aes(x = `Time Period`, y = mean_lb, 
+                fill= Form)) + 
+  geom_col(position = "dodge") + 
+  geom_text(aes(
+    label = round(mean_lb, 1)), 
+    position = position_dodge(width = 0.9), 
+    vjust = -0.5) + 
+  scale_fill_manual(
+    values = c(
+  "Bagged" = "#008ECF",
+  "Canned" = "#FC9328"
+)) + 
+  labs(
+    y = "Average price per lb.", 
+    x = NULL, 
+    fill = NULL
+  )
+
+ggsave("images/NYC_drybean_purchasing.png", 
+       height = 5, 
+       width = 7, 
+       dpi = 300)
 
 ```

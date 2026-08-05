@@ -19,9 +19,15 @@ editor: visual
 
 ## Markets
 
-## Consumption
+### Global
 
-## Institutional purchasing in New York State
+We assume global demand is unlimited. 
+
+### Differentiated
+
+{{< include ../drybeans/data_inputs_code/differentiated_demand.qmd >}}
+
+### Institutional purchasing in New York State
 
 {{< include ../drybeans/institutional_purchasing_NYC.qmd >}}
 

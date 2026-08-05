@@ -1,0 +1,39 @@
+---
+format: html
+editor: visual
+---
+
+[Final data: Total demand for New York State differentiated dry beans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/differentiated_total_demand.xls)
+
+To determine to total market for NYS differentiated beans, four dry bean growers with food grade cleaning capacity who sell directly to buyers were contacted (interviews, emails, phone calls). Sales data was provided by the producer. (Numbers were confirmed to make sure they are not double counted in the totals).
+
+```{r}
+wb <- createWorkbook()
+
+# Create data frame with information
+diff <- tibble(
+  type = "differentiated", 
+  commodity = "drybeans", 
+  variable = "total_demand_kg", 
+  value = 1248762/2.205
+)
+
+## Add worksheet
+addWorksheet(wb, "differentiated_market_size")
+writeData(wb, "differentiated_market_size", diff)
+
+## Info
+info <- tibble(
+  sheet_name = "differentiated_market_size", 
+  description = "Total size of the differentiated market (i.e., NYS source identified) dry beans", 
+  source = "interviews", 
+  notes = "Data are reported in total killograms of dry beans"
+)
+
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save
+saveWorkbook(wb, "../data_final/differentiated_total_demand.xlsx")
+
+```

@@ -23,8 +23,9 @@ book:
       - drybeans/data_inputs.qmd
       - drybeans/model_parameterization.qmd
       - drybeans/agent_behavior_decisions.qmd
-      - drybeans/model_validation.qmd
       - drybeans/model_outputs.qmd
+      - drybeans/model_validation.qmd
+
     - part: "Beef"
       chapters: 
         - beef/beef.qmd
