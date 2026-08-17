@@ -8,15 +8,14 @@ library(tidyverse)
 library(readxl)
 ```
 
-We estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. We get the number of farms and harvested acres by county for dry bean and soybean producers in New York using the public Census of Agriculture data.
+### Farmer characteristics
 
-### Cost of production {#sec-beef-costofproduction}
+We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. [Exported data](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx) and [code](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.01.Beef_approved.qmd) used to generate results.
 
+The sample of farms include farms in New York with primary commodity dairy and at least $1,000 in sales. 
 
-[Final data: Cost of production for dry beans and soybeans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/production_cost.xlsx)
+The sheet titled "summary" includes summary statistics (mean/standard error) for a variety of different farm-level characteristics by scale and MWBE.
 
-Using the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.
+The sheet titled "metadata" contains definitions of all variables and the sheet titled "info" describes the data at a high level along with the sample.
 
-#### Dry beans
-
-To understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of \$525 per acre.
+Notes: Operations with less than 1,000 in sales are dropped, if N\<5 it is not included, (D) indicated not included due to disclosure risk.

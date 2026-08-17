@@ -326,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#agricultural-production" id="toc-agricultural-production" class="nav-link" data-scroll-target="#agricultural-production"><span class="header-section-number">8.2</span> Agricultural production</a>
   <ul class="collapse">
-  <li><a href="#sec-beef-costofproduction" id="toc-sec-beef-costofproduction" class="nav-link" data-scroll-target="#sec-beef-costofproduction"><span class="header-section-number">8.2.1</span> Cost of production</a></li>
+  <li><a href="#farmer-characteristics" id="toc-farmer-characteristics" class="nav-link" data-scroll-target="#farmer-characteristics"><span class="header-section-number">8.2.1</span> Farmer characteristics</a></li>
   </ul></li>
   <li><a href="#processing-and-distribution" id="toc-processing-and-distribution" class="nav-link" data-scroll-target="#processing-and-distribution"><span class="header-section-number">8.3</span> Processing and distribution</a>
   <ul class="collapse">
@@ -631,15 +631,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. We get the number of farms and harvested acres by county for dry bean and soybean producers in New York using the public Census of Agriculture data.</p>
-<section id="sec-beef-costofproduction" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="sec-beef-costofproduction"><span class="header-section-number">8.2.1</span> Cost of production</h3>
-<p><a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/production_cost.xlsx">Final data: Cost of production for dry beans and soybeans.</a></p>
-<p>Using the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.</p>
-<section id="dry-beans" class="level4" data-number="8.2.1.1">
-<h4 data-number="8.2.1.1" class="anchored" data-anchor-id="dry-beans"><span class="header-section-number">8.2.1.1</span> Dry beans</h4>
-<p>To understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of $525 per acre.</p>
-</section>
+<section id="farmer-characteristics" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="farmer-characteristics"><span class="header-section-number">8.2.1</span> Farmer characteristics</h3>
+<p>We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx">Exported data</a> and <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.01.Beef_approved.qmd">code</a> used to generate results.</p>
+<p>The sample of farms include farms in New York with primary commodity dairy and at least $1,000 in sales.</p>
+<p>The sheet titled “summary” includes summary statistics (mean/standard error) for a variety of different farm-level characteristics by scale and MWBE.</p>
+<p>The sheet titled “metadata” contains definitions of all variables and the sheet titled “info” describes the data at a high level along with the sample.</p>
+<p>Notes: Operations with less than 1,000 in sales are dropped, if N&lt;5 it is not included, (D) indicated not included due to disclosure risk.</p>
 </section>
 </section>
 <section id="processing-and-distribution" class="level2" data-number="8.3">
