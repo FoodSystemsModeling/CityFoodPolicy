@@ -1,0 +1,22 @@
+---
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+We estimate cost of production for dry bean and soybean producers using a combination of data sources including the restricted access Census of Agriculture, crop budgets from select states, and interview data. We get the number of farms and harvested acres by county for dry bean and soybean producers in New York using the public Census of Agriculture data.
+
+### Cost of production {#sec-beef-costofproduction}
+
+
+[Final data: Cost of production for dry beans and soybeans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/production_cost.xlsx)
+
+Using the restricted access data from the Census of Agriculture, we use the NASS defined variable, total expense, which includes all production expenses listed in the production expense section of the census and includes both fixed and variable expenses. Data are pulled for producers with dry bean sales. However, these data are at the whole farm level. We do not know the cost of production of beans specifically.
+
+#### Dry beans
+
+To understand cost of production for New York bean producers, we use data from interviews conducted of New York bean producers, which estimate a cost of production of \$525 per acre.

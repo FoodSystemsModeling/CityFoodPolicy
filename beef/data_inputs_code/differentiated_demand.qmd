@@ -1,0 +1,8 @@
+---
+format: html
+editor: visual
+---
+
+[Final data: Total demand for New York State differentiated dry beans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/differentiated_total_demand.xls)
+
+To determine to total market for NYS differentiated beans, four dry bean growers with food grade cleaning capacity who sell directly to buyers were contacted (interviews, emails, phone calls). Sales data was provided by the producer. (Numbers were confirmed to make sure they are not double counted in the totals).

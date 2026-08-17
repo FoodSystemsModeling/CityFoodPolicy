@@ -1,9 +1,16 @@
 ---
-title: "Agent behavior and decision making"
 format: html
 editor: visual
 ---
 
-## How base agents decide which agents to buy from
+# Agent behavior and decision making
+
+To analyze interviews and focus group data, we used the following process:
+
+1.  Open Coding System: Transcripts were coded inductively, guided by the research questions (Glaser, 2016; Saldaña, 2015). The research team developed thematic memos for each producer group (beans, beef/dairy, leafy greens) through collaborative "theming" (Saldaña, 2015), returning to original transcripts throughout to preserve participants' language. This produced four thematic areas: (1) personal values, (2) relationships and reliability, (3) market conditions, and (4) logistics and infrastructure.
+2.  Secondary Coding: Transcripts were recoded using MAXQDA to identify key internal and external drivers within each theme. A structured codebook, which defined core themes as well as internal and external influences, was developed based on thematic memos generated during the analysis.
+3.  Mapping to COM-B Framework: Following prior applications of inductive coding to adapted COM-B frameworks (Ambrose-Oji et al., 2022; Evans et al., 2025; Farrell et al., 2023; Mastenbroek, 2025), our study first inductively identified themes and internal/external factors, then deductively mapping those findings onto the adapted framework's three domains to explore how potential NYC procurement policies might influence current behaviors. 
+
 ## How base agents respond to requests with offers
+
 ## Scoring incoming requests for product in the model

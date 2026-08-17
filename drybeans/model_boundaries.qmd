@@ -10,13 +10,7 @@ echo: false
 
 In the model, each "agent" represents a type of food system participant—such as farms, food businesses, or City agencies—with distinct roles, constraints, decision rules, and characteristics. We refer to these as supply chain stakeholders, each of which has different types of characteristics. For example, a farm can have one or more of the following characteristics: small, certified organic, M/WBE operators.
 
-```{r}
-#| label: drybeans_supply_chain
-#| out-width: "100%"
-
-knitr::include_graphics("../images/dry-bean-supply-chain-diagram_v3.png")
-
-```
+![](../images/dry-bean-supply-chain-diagram_v3.png)
 
 ## Supply Chain Stakeholder Types
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Beef – CityFoodPolicy</title>
+<title>7&nbsp; Model boundaries – CityFoodPolicy</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,7 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../greens/greens.html" rel="next">
+<link href="../beef/data_inputs.html" rel="next">
 <link href="../drybeans/model_validation.html" rel="prev">
 <link href="../images/favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
@@ -86,7 +86,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../beef/beef.html">Beef</a></li><li class="breadcrumb-item"><a href="../beef/beef.html">Beef</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../beef/model_boundaries.html">Beef</a></li><li class="breadcrumb-item"><a href="../beef/model_boundaries.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model boundaries</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -196,8 +196,38 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../beef/beef.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Beef</span></a>
+  <a href="../beef/model_boundaries.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model boundaries</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../beef/data_inputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data inputs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../beef/model_parameterization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Model parameterization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../beef/agent_behavior_decisions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Agent behavior and decision making</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../beef/model_outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model outputs</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../beef/model_validation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Model validation</span></span></a>
   </div>
 </li>
       </ul>
@@ -252,26 +282,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#supply-chain-overview" id="toc-supply-chain-overview" class="nav-link active" data-scroll-target="#supply-chain-overview">Supply chain overview</a></li>
-  <li><a href="#agricultural-production" id="toc-agricultural-production" class="nav-link" data-scroll-target="#agricultural-production">Agricultural production</a>
-  <ul class="collapse">
-  <li><a href="#farm-inputs-and-production-costs" id="toc-farm-inputs-and-production-costs" class="nav-link" data-scroll-target="#farm-inputs-and-production-costs">Farm inputs and production costs</a></li>
-  </ul></li>
-  <li><a href="#processing" id="toc-processing" class="nav-link" data-scroll-target="#processing">Processing</a></li>
-  <li><a href="#distribution" id="toc-distribution" class="nav-link" data-scroll-target="#distribution">Distribution</a></li>
-  <li><a href="#markets" id="toc-markets" class="nav-link" data-scroll-target="#markets">Markets</a></li>
-  <li><a href="#estimated-margins" id="toc-estimated-margins" class="nav-link" data-scroll-target="#estimated-margins">Estimated margins</a></li>
-  <li><a href="#consumption" id="toc-consumption" class="nav-link" data-scroll-target="#consumption">Consumption</a></li>
-  <li><a href="#institutional-purchasing-in-new-york-state" id="toc-institutional-purchasing-in-new-york-state" class="nav-link" data-scroll-target="#institutional-purchasing-in-new-york-state">Institutional purchasing in New York state</a></li>
+  <li><a href="#beef-supply-chain" id="toc-beef-supply-chain" class="nav-link active" data-scroll-target="#beef-supply-chain"><span class="header-section-number">7.1</span> Beef supply chain</a></li>
+  <li><a href="#supply-chain-stakeholder-types" id="toc-supply-chain-stakeholder-types" class="nav-link" data-scroll-target="#supply-chain-stakeholder-types"><span class="header-section-number">7.2</span> Supply Chain Stakeholder Types</a></li>
+  <li><a href="#causal-loop-diagram" id="toc-causal-loop-diagram" class="nav-link" data-scroll-target="#causal-loop-diagram"><span class="header-section-number">7.3</span> Causal loop diagram</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../beef/beef.html">Beef</a></li><li class="breadcrumb-item"><a href="../beef/beef.html">Beef</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../beef/model_boundaries.html">Beef</a></li><li class="breadcrumb-item"><a href="../beef/model_boundaries.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model boundaries</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Beef</h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model boundaries</span></h1>
 </div>
 
 
@@ -288,32 +310,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="supply-chain-overview" class="level2">
-<h2 class="anchored" data-anchor-id="supply-chain-overview">Supply chain overview</h2>
+<section id="beef-supply-chain" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="beef-supply-chain"><span class="header-section-number">7.1</span> Beef supply chain</h2>
+<p>In the model, each “agent” represents a type of food system participant—such as farms, food businesses, or City agencies—with distinct roles, constraints, decision rules, and characteristics. We refer to these as supply chain stakeholders, each of which has different types of characteristics. For example, a farm can have one or more of the following characteristics: small, certified organic, M/WBE operators.</p>
+<p><img src="../images/beef-supply-chain_v6.png" class="img-fluid"></p>
 </section>
-<section id="agricultural-production" class="level2">
-<h2 class="anchored" data-anchor-id="agricultural-production">Agricultural production</h2>
-<section id="farm-inputs-and-production-costs" class="level3">
-<h3 class="anchored" data-anchor-id="farm-inputs-and-production-costs">Farm inputs and production costs</h3>
+<section id="supply-chain-stakeholder-types" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="supply-chain-stakeholder-types"><span class="header-section-number">7.2</span> Supply Chain Stakeholder Types</h2>
+<p><strong>Producer</strong> <br></p>
+<p><strong>Slaughter</strong> <br></p>
+<p><strong>Harvester/Processor</strong> <br></p>
+<p><strong>Secondary Processor</strong> <br></p>
+<p><strong>Auction</strong> <br></p>
+<p><strong>Wholesaler (Distributor)</strong> <br> Businesses that sell a product made by someone else. They can sell items from various stages in the supply chain.</p>
+<p><strong>NYC Agency</strong> <br> A New York City agency that purchases processed bean products from various suppliers.</p>
+<p><strong>Commodity and Differentiated Markets</strong> <br> Commodity markets (domestic or export) have effectively unlimited supply and demand and typically purchase at the lowest available price. They do not pay premiums for value characteristics (such as organic certification). Differentiated markets have more limited demand but often pay higher prices than commodity markets, reflecting preferences for specific product or business characteristics. <br></p>
+<p><strong>Out-of-State-Supply Beef Pathway</strong> <br></p>
+<p><strong>Contract Information Pathway</strong> <br></p>
 </section>
-</section>
-<section id="processing" class="level2">
-<h2 class="anchored" data-anchor-id="processing">Processing</h2>
-</section>
-<section id="distribution" class="level2">
-<h2 class="anchored" data-anchor-id="distribution">Distribution</h2>
-</section>
-<section id="markets" class="level2">
-<h2 class="anchored" data-anchor-id="markets">Markets</h2>
-</section>
-<section id="estimated-margins" class="level2">
-<h2 class="anchored" data-anchor-id="estimated-margins">Estimated margins</h2>
-</section>
-<section id="consumption" class="level2">
-<h2 class="anchored" data-anchor-id="consumption">Consumption</h2>
-</section>
-<section id="institutional-purchasing-in-new-york-state" class="level2">
-<h2 class="anchored" data-anchor-id="institutional-purchasing-in-new-york-state">Institutional purchasing in New York state</h2>
+<section id="causal-loop-diagram" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="causal-loop-diagram"><span class="header-section-number">7.3</span> Causal loop diagram</h2>
+<p>Coming soon…</p>
 
 
 </section>
@@ -726,8 +743,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../greens/greens.html" class="pagination-link" aria-label="Greens">
-        <span class="nav-page-text">Greens</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../beef/data_inputs.html" class="pagination-link" aria-label="Data inputs">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data inputs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

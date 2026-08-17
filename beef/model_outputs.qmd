@@ -1,0 +1,51 @@
+---
+format: html
+editor: visual
+echo: false
+---
+
+# Model outputs
+
+## Overall Impact
+
+Comprehensive view across selected impact categories for the NYC Food Policy Action, Definition, and Implementation Scenario relative to the Business as Usual baseline. The figure shows the status of food system impact across four broad dimensions: NYC agency impact (defined by the indicators “total cost to NYC”, “total number of contracted vendors”, and “total number of new vendors”), Environmental Impact . All impacts are presented relative to Business As Usual (a modeled depiction of what NYC is currently purchasing), which is represented by the black dotted line on the edge of the circle.
+
+## NYC Agency Impact
+
+NYC has a primary responsibility to purchase and serve food to more than 1 million residents daily. The decisions it makes about what food to procure and how to procure it can impact how much the city (tax payers) spend on food. Here we use the following indicators to understand the impact to NYC:
+
+-   Number of Contracts (absolute): Number of businesses that have contracts with NYC by supply chain characteristic: (1) M/WBE (2) local.
+-   Number of Contracts (% change from Business as Usual): The percent change in the number of businesses that have contracts with NYC (compared to Business As Usual) by supply chain characteristic: (1) M/WBE (2) local.
+-   Amount of Beans Purchased (absolute): Total quantity (100 kg) of products purchased by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small. This is measured in 100 kg of beans and based on the food policy action, definition, and implementation scenario that is selected.
+-   Amount of Beans Purchased (% change from Business as Usual): The percent change in the amount of beans purchased (compared to Business As Usual) by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small. This is measured as percent change from Business as Usual and compared to the food policy action, definition, and implementation scenario that is selected. 
+-   Amount Spent on Beans (total): This is the total amount ($) spent on beans (including dried, canned, and processed) by NYC agencies, by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small. This is measured in dollars spent on beans by all NYC agencies and based on the food policy action, definition, and implementation scenario that is selected.
+-   Amount Spent on Beans (unit): This is the average amount ($) spent per pound of beans by NYC agencies, by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small, and based on its level of processing (e.g., dried bean, canned bean, processed bean). Units are displayed as price per pound (lb).
+
+## Environmental Impact
+NYC has a number of ways that it tracks progress towards achieving its environmental sustainability goals. Those include but are not limited to: water quality impacts, global warming, and natural resource use.
+-   Global warming (kg CO2 eq) / GHG emissions
+-   Energy use/kg of food purchased (MJ)
+-   Water quality (kg P eq)
+-   Air quality
+-   Land use and quality (m2 / year)
+-   Materials used/kg of product
+-   Erosion potential
+-   Biodiversity impact
+-   Certified organic acres (New York State): This indicator assesses the amount (acres) under certified organic production in New York State, wherein Business as Usual is compared to the selected Food Policy Action, Definition, and Implementation Scenario. 
+
+## Producer Impact
+There are several measures to track progress towards NYC’s local economy and valued workforce goals, many of which focus on the characteristics of the farms that grow or raise the products purchased by City agencies. This analysis examines how those policies affect New York State producers by tracking: (1) the number of producers with sales to NYC, (2) average yearly producer revenue from NYC agency contracts, (3) the share of producers’ sales going to NYC, and (4) changes in profitability for producers selling into the NYC market.
+
+-   Producers with NYC Agency Contracts: The number of producers with sales to NYC agencies, reported by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small. This indicator reflects the total count of participating producers, for the selected Food Policy Action, Definition, and Implementation Scenario compared to Business as Usual.
+-   Average Yearly Producer Revenue from NYC Agency Contracts (average yearly revenue): This indicator estimates the average revenue that New York State producers receive from products ultimately purchased by NYC agencies. It is calculated by dividing the total dollar value of NYC purchases (by supply chain characteristic) by the number of New York State producers supplying those products, including sales that flow through supply chain intermediaries. The result represents an average dollar value per producer, reported by producer characteristic, and by the selected Food Policy Action, Definition, and Implementation Scenario compared to Business as Usual.
+-   Average Yearly Producer Revenue from NYC Agency Contracts (% change from Business as Usual): This indicator estimates the average revenue that New York State producers receive from products ultimately purchased by NYC agencies. It is calculated by dividing the total dollar value of NYC agency purchases (by supply chain characteristic) by the number of New York State producers supplying those products, including sales that flow through intermediaries in the supply chain. Results are reported as the percent change from Business as Usual for the selected Food Policy Action, Definition, and Implementation Scenario.
+-   Producer reliance on NYC markets: The share of a producer’s gross cash farm income that comes from products ultimately purchased by NYC agencies. This indicator represents the NYC-purchased portion of farm sales, averaged across all farms involved in sales to NYC. Results are reported for Business as Usual, as well as the selected Food Policy Action, Definition, and Implementation Scenario.
+-   Producer profitability: Profitability of farms with positive sales to NYC agencies by supply chain characteristic: (1) M/WBE, (2) organic, (3) local, or (4) small.
+
+## Economic Impact
+-   NYS business relationships with NYC agencies (absolute): This indicator reflects the total number of supply chain stakeholders that have sale relationships with NYC agencies. 
+-   NYS business relationships with NYC agencies (% change from Business as Usual): This indicator reflects the change in the total number of supply chain stakeholders that have sale relationships with NYC agencies for the selected Food Policy Action, Definition, and Implementation Scenario compared to Business as Usual. 
+-   Food Dollar: Marketing bill: The food dollar, marketing bill, analyzes how an average $1 of purchases by NYC is distributed among raw food production (producer) and the portion that goes to food supply chain stakeholders. This is an indicator used by the U.S. Department of Agriculture’s Economic Research Service to describe different aspects of the food supply chain. Here we are interested in the effects of Food Policy Actions, Definition, and Implementation Scenario compared to Business as Usual. 
+-   Economic impact to New York State, regional multiplier effect
+-   Job creation, particularly in the food processing/manufacturing/distribution sector
+

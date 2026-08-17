@@ -1,7 +1,18 @@
 ---
 format: html
 editor: visual
+execute: 
+  message: false
+  warning: false
+  eval: true
 ---
+
+```{r}
+library(tidyverse)
+library(openxlsx)
+library(readxl)
+
+```
 
 [Final data: Farmgate pricing for dry beans and soybeans and retail pricing for dry beans.](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/drybean_soybean_price.xlsx)
 
@@ -16,9 +27,7 @@ We have limited data on prices for differentiated beans. Rather than providing a
 Create a blank table to fill.
 
 ```{r}
-library(tidyverse)
-library(openxlsx)
-library(readxl)
+
 
 # Define data frame
 price <- bind_rows(
@@ -419,7 +428,7 @@ drybean_price <- drybean_price %>%
 #| message: false
 
 # Soybeans
-ggplot(soy_price, aes(x = date, 
+ggplot2::ggplot(soy_price, aes(x = date, 
                       y = real_soy_price_metricton2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
@@ -435,7 +444,7 @@ ggplot(soy_price, aes(x = date,
 
 
 # Drybeans
-ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
+ggplot2::ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
@@ -556,7 +565,7 @@ retail_beans <- retail_beans %>%
 ```{r}
 #| message: false
 
-ggplot(retail_beans, aes(x = observation_date, 
+ggplot2::ggplot(retail_beans, aes(x = observation_date, 
                          y = real_drybeans_cost_perlb_2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
@@ -636,11 +645,11 @@ saveWorkbook(wb, "../data_final/drybean_soybean_price.xlsx",
              overwrite = TRUE)
 
 ```
+
 ### Margins
 
 [Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.xlsx)
 
 Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
 
-All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
-
+All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.

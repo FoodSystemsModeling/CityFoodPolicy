@@ -21,7 +21,7 @@ editor: visual
 
 ### Global
 
-We assume global demand is unlimited. 
+We assume global demand is unlimited.
 
 ### Differentiated
 

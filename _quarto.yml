@@ -28,7 +28,12 @@ book:
 
     - part: "Beef"
       chapters: 
-        - beef/beef.qmd
+      - beef/model_boundaries.qmd
+      - beef/data_inputs.qmd
+      - beef/model_parameterization.qmd
+      - beef/agent_behavior_decisions.qmd
+      - beef/model_outputs.qmd
+      - beef/model_validation.qmd
     - part: "Greens"
       chapters:
         - greens/greens.qmd

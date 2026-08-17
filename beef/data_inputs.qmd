@@ -1,24 +1,37 @@
 ---
-title: "Data inputs"
 format: html
 editor: visual
 ---
 
+# Data inputs
+
+## Pricing
+
+{{< include ../beef/data_inputs_code/pricing.qmd >}}
+
 ## Agricultural production
 
-### Farm inputs and production costs
+{{< include ../beef/data_inputs_code/farmgate.qmd >}}
 
 ## Processing and distribution
+
 {{< include ../beef/data_inputs_code/beef_processors_wholesalers.qmd eval=false >}}
 
 ## Markets
 
-## Estimated margins
+### Global
 
-## Consumption
+We assume global demand is unlimited.
 
-## Institutional purchasing in New York State
+### Differentiated
+
+{{< include ../beef/data_inputs_code/differentiated_demand.qmd >}}
+
+### Institutional purchasing in New York State
+
+{{< include ../beef/institutional_purchasing_NYC.qmd >}}
 
 ## LCA
 
 Jasmine and Elsie add.
+

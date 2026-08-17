@@ -1,25 +1,98 @@
 ---
-title: "Data inputs and model parameterization"
 format: html
 editor: visual
 ---
 
-## Agricultural production
+```{r}
 
-### Farm inputs and production costs
+library(tidyverse)
+library(readxl)
+library(openxlsx)
+library(janitor)
+```
 
-## Processing
+# Model parameterization
 
-## Distribution
+## Supply Chain
+Complete model data and documentation can be found in the GitHub repository for the project.(Link to be added)
 
-## Markets
+![](../images/beef-supply-chain_v6.png)
 
 ## Estimated margins
 
-## Consumption
+[Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_final/beef_margins.xlsx)
 
-## Institutional purchasing in New York State
+We use [Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers](https://www.ers.usda.gov/data-products/meat-price-spreads). We calculate average margins from 2022-2024 (following our price calculations).
 
-## LCA
+Retail margin = (Choice beef retail value - Choice beef wholesale value) / Choice beef retail value
 
-Jasmine and Elsie add.
+Wholesale margin = (Choice beef wholesale value - Choice beef net farm value)/Choice beef wholesale value
+
+Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
+
+```{r}
+
+# Import USDA ERS price spread data
+df <- read_csv("data_raw/history.csv") %>% 
+  clean_names()
+
+# Keep beef data since 2014
+df <- df %>% 
+  filter(year>=2014 & 
+           str_detect(data_item, "beef")
+  )
+
+# Make year-month date
+df <- df %>% 
+  mutate(
+    date = make_date(year, month_number, 1)
+  )
+
+# Pivot wider
+df <- df %>%
+  select(date, data_item, value) %>%
+  pivot_wider(
+    names_from = data_item, 
+    values_from = value) %>%
+  arrange(date)
+
+# Compute margins
+df <- df %>%
+  mutate(
+    retail_margin_pct = (`Choice beef retail value` - `Choice beef wholesale value`) /
+      `Choice beef retail value`,
+    wholesale_margin_pct = (`Choice beef wholesale value` - `Choice beef net farm value`) /
+      `Choice beef wholesale value`
+  )
+
+# Average from 2022-2024
+sum <- df %>% 
+  filter(year(date) %in% c(2022, 2023, 2024)) %>% 
+  summarise(across(retail_margin_pct:wholesale_margin_pct, 
+                   ~mean(.))
+  )
+
+# Add worksheet
+wb <- createWorkbook()
+
+addWorksheet(wb, "beef_margins")
+writeData(wb, "beef_margins", sum)
+
+# Add info
+info <- tibble(
+  sheet_name = "beef_margins", 
+  description = "Beef retail and wholesale margins",
+  source = "Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers(https://www.ers.usda.gov/data-products/meat-price-spreads)",
+  notes = "Retail margin = (Choice beef retail value - Choice beef wholesale value) / Choice beef retail value; Wholesale margin = (Choice beef wholesale value - Choice beef net farm value)/Choice beef wholesale value"
+)
+
+# Add info 
+addWorksheet(wb, "info")
+writeData(wb, "info", info)
+
+# Save
+saveWorkbook(wb, file = "data_final/beef_margins.xlsx", 
+             overwrite = TRUE)
+
+```
+

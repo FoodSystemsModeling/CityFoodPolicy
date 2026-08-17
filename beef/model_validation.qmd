@@ -1,0 +1,9 @@
+---
+format: html
+editor: visual
+echo: false
+---
+
+# Model validation
+
+## Estimated margins
