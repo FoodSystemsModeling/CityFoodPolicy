@@ -2,6 +2,7 @@
 format: html
 editor: visual
 echo: false
+bibliography: ../references.bib
 ---
 
 # Model boundaries
@@ -14,15 +15,15 @@ In the model, each "agent" represents a type of food system participant—such a
 
 ## Supply Chain Stakeholder Types
 
-**Producer** <br> 
+**Producer** <br>
 
-**Slaughter** <br> 
+**Slaughter** <br>
 
-**Harvester/Processor** <br> 
+**Harvester/Processor** <br>
 
-**Secondary Processor** <br> 
+**Secondary Processor** <br>
 
-**Auction** <br> 
+**Auction** <br>
 
 **Wholesaler (Distributor)** <br> Businesses that sell a product made by someone else. They can sell items from various stages in the supply chain.
 
@@ -30,9 +31,9 @@ In the model, each "agent" represents a type of food system participant—such a
 
 **Commodity and Differentiated Markets** <br> Commodity markets (domestic or export) have effectively unlimited supply and demand and typically purchase at the lowest available price. They do not pay premiums for value characteristics (such as organic certification). Differentiated markets have more limited demand but often pay higher prices than commodity markets, reflecting preferences for specific product or business characteristics. <br>
 
-**Out-of-State-Supply Beef Pathway** <br> 
+**Out-of-State-Supply Beef Pathway** <br>
 
-**Contract Information Pathway** <br> 
+**Contract Information Pathway** <br>
 
 ## Causal loop diagram
 

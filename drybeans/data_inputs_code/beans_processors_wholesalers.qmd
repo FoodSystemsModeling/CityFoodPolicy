@@ -70,6 +70,11 @@ The NAICS codes of interest for us include:
 -   493130 Farm Product Warehousing and Storage
 -   493190 Other Warehousing and Storage
 
+```{r}
+#| include: false
+knitr::opts_chunk$set(eval = FALSE)
+```
+
 #### Import and clean data
 
 ```{r}

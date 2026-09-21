@@ -1,16 +1,21 @@
----
-format: html
-editor: visual
-execute: 
-  message: false
-  warning: false
-  eval: true
----
 
 ```{r}
+#| include: false
+# When included in the book, working dir is drybeans/ not data_inputs_code/
+# Detect context: if data_inputs_code/ exists as a subdirectory, we're in the parent (book render)
+if (!dir.exists("../data_raw") && dir.exists("data_inputs_code")) {
+  knitr::opts_knit$set(root.dir = normalizePath("data_inputs_code"))
+}
+```
+
+```{r}
+
 library(tidyverse)
 library(openxlsx)
 library(readxl)
+library(knitr)
+library(kableExtra)
+
 
 ```
 
@@ -22,12 +27,9 @@ Prices come from a variety of sources. All are reported in 2024 dollars using th
 
 We have limited data on prices for differentiated beans. Rather than providing a time series of prices, we provide and average and standard deviation of prices. All data is based on interviews and pricing documents.
 
-#### Blank table
-
-Create a blank table to fill.
 
 ```{r}
-
+#| eval: true
 
 # Define data frame
 price <- bind_rows(
@@ -58,8 +60,7 @@ price <- bind_rows(
 We reviewed the product lists of seven distributors who were identified as carriers of local and regional products who also carry dried or canned beans, and who distribute into New York City and the Hudson Valley. These are reported in
 
 ```{r}
-library(knitr)
-library(kableExtra)
+#| eval: true
 
 ## Table that looks nice
 beans <- data.frame(
@@ -240,6 +241,30 @@ rm(sum)
 
 # Rename diff price
 diff_price <- price
+
+# Display table
+diff_price %>% 
+  mutate(across(where(is.numeric), ~if_else(is.na(.), "", as.character(round(., 2))))) %>%
+  rename(
+    Type = type,
+    Organic = organic,
+    `Supply chain location` = supply_chain_location,
+    Form = form,
+    `Mean ($/lb)` = mean_price_lb,
+    `SD ($/lb)` = sd_price_lb,
+    `Mean ($/kg)` = mean_price_kg,
+    `SD ($/kg)` = sd_price_kg
+  ) %>% 
+  kbl(caption = "Differentiated dry bean prices by supply chain location") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "left",
+    font_size = 13
+  ) %>% 
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white") %>% 
+  column_spec(1, bold = TRUE)
+
 ```
 
 ### Commodity
@@ -259,6 +284,7 @@ We use the [producer price index by commodity: Farm products: drybeans](https://
 We compute an average yearly PPI and then use that to convert all dollars into 2024 dollars. We keep data starting in 2014 for soybeans. For dry bean data, we do not have information prior to 2015.
 
 ```{r}
+#| eval: true
 # Soy
 soy_ppi <- read_csv("../data_raw/WPU01830131.csv") %>% 
   filter(observation_date>= as.Date("2014-01-01"))
@@ -287,7 +313,7 @@ drybeans_ppi <- drybeans_ppi %>%
 ##### Soybeans
 
 ```{r}
-
+#| eval: true
 # import data
 soy_price <- read_csv("../data_raw/PSOYBUSDM.csv") %>% 
   filter(observation_date>= as.Date("2014-01-01"))
@@ -331,7 +357,7 @@ Data are reported for some of the larger bean producing states/groups of states.
 We use Grower Monthly Average Price Per Cwt By Crop Year Fob, Michigan. I copy and paste the tables of interest into ClaudeAI and copies the code that coverts the table in a data frame.
 
 ```{r}
-
+#| eval: true
 # Copy and paste price data from PDFs via Claude
 price_2024 <- tribble(
   ~Region,            ~Year,        ~SEP,  ~OCT,  ~NOV,  ~DEC,  ~JAN,  ~FEB,  ~MAR,  ~APR,  ~MAY,  ~JUN,  ~JUL,  ~AUG,
@@ -428,7 +454,7 @@ drybean_price <- drybean_price %>%
 #| message: false
 
 # Soybeans
-ggplot2::ggplot(soy_price, aes(x = date, 
+p1 <- ggplot(soy_price, aes(x = date, 
                       y = real_soy_price_metricton2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
@@ -444,7 +470,7 @@ ggplot2::ggplot(soy_price, aes(x = date,
 
 
 # Drybeans
-ggplot2::ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
+p2 <- ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
@@ -456,6 +482,8 @@ ggplot2::ggplot(drybean_price, aes(x = date, y = real_price_cwt_2024dollars)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+p1
+p2
 ```
 
 ##### Organic
@@ -467,7 +495,7 @@ The projected price per pound for drybeans is double for organic compared to con
 For soybeans, we use [Price discoverty data from the RMA](https://public-rma.fpac.usda.gov/apps/PriceDiscovery/Reports/CurrentPeriods).
 
 ```{r}
-
+#| eval: true
 # import soy data 
 soy_organic <- read_xlsx("../data_raw/RMA_soybeans.xlsx", 
                          sheet = "Current Periods") %>% 
@@ -563,9 +591,8 @@ retail_beans <- retail_beans %>%
 ##### Figures
 
 ```{r}
-#| message: false
 
-ggplot2::ggplot(retail_beans, aes(x = observation_date, 
+ggplot(retail_beans, aes(x = observation_date, 
                          y = real_drybeans_cost_perlb_2024dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
@@ -579,6 +606,28 @@ ggplot2::ggplot(retail_beans, aes(x = observation_date,
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+```
+
+```{r}
+
+
+# Annual average retail prices
+retail_beans %>% 
+  group_by(year) %>% 
+  summarise(
+    `Nominal ($/lb)` = round(mean(nominal_drybeans_cost_perlb, na.rm = TRUE), 3),
+    `Real (2024 $/lb)` = round(mean(real_drybeans_cost_perlb_2024dollars, na.rm = TRUE), 3),
+    `Real (2024 $/kg)` = round(mean(real_drybeans_cost_perkg_2024dollars, na.rm = TRUE), 3)
+  ) %>% 
+  rename(Year = year) %>% 
+  kbl(caption = "Annual average retail dry bean prices (2024 dollars)") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "left",
+    font_size = 13
+  ) %>% 
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white")
 
 ```
 
@@ -643,6 +692,41 @@ writeData(wb, "info", info)
 # Save workbook 
 saveWorkbook(wb, "../data_final/drybean_soybean_price.xlsx", 
              overwrite = TRUE)
+```
+
+```{r}
+# Farmgate summary table
+sum %>% 
+  mutate(across(everything(), ~round(., 3))) %>% 
+  rename(
+    `Dry bean conv. (2024 $/kg)` = drybean_price_kg,
+    `Dry bean org. (2024 $/kg)`  = drybean_organic_price,
+    `Soybean conv. (2024 $/kg)`  = soy_price_kg,
+    `Soybean org. (2024 $/kg)`   = soy_organic_price_kg
+  ) %>% 
+  kbl(caption = "Average farmgate price per kg, 2022–2024 (2024 dollars)") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "left",
+    font_size = 13
+  ) %>% 
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white")
+
+# Retail summary table
+sum_retail %>% 
+  mutate(across(everything(), ~round(., 3))) %>% 
+  rename(
+    `Retail dry bean (2024 $/kg)` = dry_retail_price_kg
+  ) %>% 
+  kbl(caption = "Average retail dry bean price per kg, 2022–2024 (2024 dollars)") %>% 
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "left",
+    font_size = 13
+  ) %>% 
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white")
 
 ```
 
@@ -652,4 +736,4 @@ saveWorkbook(wb, "../data_final/drybean_soybean_price.xlsx",
 
 Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
 
-All data was gathered throuhg interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.
+All data was gathered through interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.

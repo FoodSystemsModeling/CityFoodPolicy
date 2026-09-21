@@ -1,6 +1,7 @@
 ---
 format: html
 editor: visual
+bibliography: ../references.bib
 ---
 
 ```{r}
@@ -14,6 +15,7 @@ library(janitor)
 # Model parameterization
 
 ## Supply Chain
+
 Complete model data and documentation can be found in the GitHub repository for the project.(Link to be added)
 
 ![](../images/beef-supply-chain_v6.png)
@@ -28,7 +30,7 @@ Retail margin = (Choice beef retail value - Choice beef wholesale value) / Choic
 
 Wholesale margin = (Choice beef wholesale value - Choice beef net farm value)/Choice beef wholesale value
 
-Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price. 
+Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.
 
 ```{r}
 
@@ -95,4 +97,3 @@ saveWorkbook(wb, file = "data_final/beef_margins.xlsx",
              overwrite = TRUE)
 
 ```
-

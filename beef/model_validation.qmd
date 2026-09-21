@@ -2,6 +2,7 @@
 format: html
 editor: visual
 echo: false
+bibliography: ../references.bib
 ---
 
 # Model validation

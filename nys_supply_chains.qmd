@@ -1,3 +1,7 @@
+---
+bibliography: references.bib
+---
+
 # New York State Supply Chains {.unnumbered}
 
 ## Beef

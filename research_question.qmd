@@ -1,3 +1,7 @@
+---
+bibliography: references.bib
+---
+
 # Research question {.unnumbered}
 
 What are the regional economic and environmental impacts and tradeoffs associated with New York City's public food procurement policies?

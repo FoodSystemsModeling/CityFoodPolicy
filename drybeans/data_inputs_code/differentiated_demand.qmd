@@ -8,6 +8,15 @@ editor: visual
 To determine to total market for NYS differentiated beans, four dry bean growers with food grade cleaning capacity who sell directly to buyers were contacted (interviews, emails, phone calls). Sales data was provided by the producer. (Numbers were confirmed to make sure they are not double counted in the totals).
 
 ```{r}
+#| include: false
+# When included in the book, working dir is drybeans/ not data_inputs_code/
+# Detect context: if data_inputs_code/ exists as a subdirectory, we're in the parent (book render)
+if (!dir.exists("../data_final") && dir.exists("data_inputs_code")) {
+  knitr::opts_knit$set(root.dir = normalizePath("data_inputs_code"))
+}
+```
+
+```{r}
 wb <- createWorkbook()
 
 # Create data frame with information

@@ -1,3 +1,7 @@
+---
+bibliography: references.bib
+---
+
 # Values-based public food procurement {.unnumbered}
 
 ## International public food procurement

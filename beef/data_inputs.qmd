@@ -1,6 +1,7 @@
 ---
 format: html
 editor: visual
+bibliography: ../references.bib
 ---
 
 # Data inputs
@@ -34,4 +35,3 @@ We assume global demand is unlimited.
 ## LCA
 
 Jasmine and Elsie add.
-

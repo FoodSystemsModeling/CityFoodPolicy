@@ -1,6 +1,7 @@
 ---
 format: html
 editor: visual
+bibliography: ../references.bib
 ---
 
 We use data from [NYC Food Policy, Good Food Purchasing data from 2019-2023](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page), we download the full purchasing data set.
@@ -195,7 +196,8 @@ table %>%
 ```
 
 #### Figure - Business as usual
-We group all agencies together and show average price per pound by type (bagged, canned). We change the name dried to bagged to be consistent with other figures. 
+
+We group all agencies together and show average price per pound by type (bagged, canned). We change the name dried to bagged to be consistent with other figures.
 
 ```{r}
 

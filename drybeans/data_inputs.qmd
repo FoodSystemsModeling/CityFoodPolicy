@@ -1,6 +1,7 @@
 ---
 format: html
 editor: visual
+bibliography: ../references.bib
 ---
 
 # Data inputs
@@ -16,6 +17,10 @@ editor: visual
 ## Processing and distribution
 
 {{< include ../drybeans/data_inputs_code/beans_processors_wholesalers.qmd eval=false >}}
+
+## Shrinkage and cooking
+
+{{< include ../drybeans/data_inputs_code/shrinkage.qmd >}}
 
 ## Markets
 

@@ -1,0 +1,58 @@
+---
+format: html
+editor: visual
+---
+
+```{r}
+#| eval: true
+
+library(kableExtra)
+library(knitr)
+library(tidyverse)
+
+supply_chain <- data.frame(
+  Role = c(
+    "Cleaner/Aggregator",
+    "Cleaner/Aggregator", "Cleaner/Aggregator", "Cleaner/Aggregator",
+    "Cleaner/Aggregator",
+    "Primary",
+    "Secondary",
+    "Secondary",
+    "Secondary",
+    "Secondary",
+    "Wholesaler",
+    "Wholesaler"
+  ),
+  Product = c(
+    "All",
+    "Small red, kidney", "Black/navy", "Cranberry",
+    "", "", "", "", "", "", "", ""
+  ),
+  Shrinkage = c(
+    "5%",
+    "6-7%", "5%", "18%",
+    "10-15%",
+    "1%",
+    "0%",
+    "Less than 2%",
+    "Less than 1%",
+    "Less than 1%",
+    "Less than 1%",
+    "2-3%"
+  )
+)
+
+supply_chain %>%
+  kbl(
+    align = "lll",
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    position = "left",
+    font_size = 13
+  ) %>%
+  row_spec(0, bold = TRUE, background = "#4a7c59", color = "white") %>%
+  column_spec(1, bold = TRUE)
+```
+

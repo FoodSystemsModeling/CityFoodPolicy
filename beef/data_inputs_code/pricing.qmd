@@ -8,11 +8,21 @@ execute:
 ---
 
 ```{r}
+#| include: false
+# When included in the book, working dir is beef/ not data_inputs_code/
+# Detect context: if data_inputs_code/ exists as a subdirectory, we're in the parent (book render)
+if (!dir.exists("../data_raw") && dir.exists("data_inputs_code")) {
+  knitr::opts_knit$set(root.dir = normalizePath("data_inputs_code"))
+}
+```
+
+```{r}
 
 library(tidyverse)
 library(openxlsx)
 library(readxl)
 library(janitor)
+library(lubridate)
 
 ```
 
@@ -42,7 +52,7 @@ We use [Meat Price Spreads data from the USDA Economic Research Service, Histori
 
 Here we focus on price data for the last 10 years, where available. All prices are reported in 2024 dollars.
 
-#### Monthly prices along suppy chain
+#### Monthly prices along supply chain
 
 ```{r}
 
@@ -220,6 +230,102 @@ df <- df %>%
 )
 ```
 
+## Culling decisions
+
+We need to characterize the relationship between cull rate and the relationship between milk and beef prices. [Monthly price data for farmgate milk and beef prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/milk_cow_monthly_prices.xlsx).
+
+[Milk prices received (dollars per cwt) are from USDA NASS](https://www.nass.usda.gov/Charts_and_Maps/Agricultural_Prices/pricemk.php). Prices are reported in 2024 dollars using the [Producer Price Index by Commodity: Farm Products: Raw Milk (WPS016)](https://fred.stlouisfed.org/series/WPS016).
+
+#### Milk
+
+```{r}
+# Create workbook
+cull <- createWorkbook()
+
+# import milk prices
+milk <- read_csv("../data_raw/milk_prices_received_by_month.csv") %>% 
+  clean_names()
+
+# Add date
+milk <- milk %>% 
+  mutate(
+    date = ymd(paste(year, month, "01", sep = "-"))
+  ) %>% 
+  select(date, year, month, everything())
+
+# import producer ppi
+milk_ppi <- read_csv("../data_raw/WPS016.csv") %>% 
+  clean_names()
+
+# Get conversion for 2024 dollars
+milk_ppi <- milk_ppi %>% 
+  mutate(year = year(observation_date)) %>% 
+  mutate(
+    milk_ppi_index_2024 = 
+      mean(wps016[year(observation_date) == 2024], na.rm = TRUE) / wps016
+  ) %>%
+  rename(date = observation_date) %>%
+  select(date, milk_ppi_index_2024)
+
+# Convert milk prices to 2024 dollars
+milk <- milk %>% 
+  left_join(milk_ppi) %>%
+  mutate(
+    real_price_2024dollars = price*milk_ppi_index_2024
+  ) %>% 
+  select(-milk_ppi_index_2024)
+
+rm(milk_ppi)
+
+# Add worksheet
+addWorksheet(cull, "milk_price")
+writeData(cull, "milk_price", milk)
+
+```
+
+#### Cull beef
+
+Change once I get a better source of data. For now, I'm using the data provided above.
+
+```{r}
+
+# Keep data of interest
+cull_beef <- df %>%
+  filter(data_item == "Choice beef gross farm value") %>%
+  select(date, data_item, value, real_beef_price_2024dollars,
+         units)
+
+
+# Add Worksheet
+addWorksheet(cull, "cull_beef_price")
+writeData(cull, "cull_beef_price", cull_beef)
+
+```
+
+#### Save
+
+```{r}
+
+# Add info
+cull_info <- tibble(
+  sheet_name = c("milk_price", "cull_beef_price"), 
+  description = c(
+    "monthly milk prices received by farmers in current and real (2024) dollars, in the U.S. 2014-2026", 
+    "monthly Choice beef gross farm value in Cents per pound of retail equivalent in the U.S., 2014-2024"), 
+  source = c(
+    "USDA NASS Prices received for milk by month (https://www.nass.usda.gov/Charts_and_Maps/Agricultural_Prices/pricemk.php), deflated using Producer Price Index by Commodity: Farm Products: Raw Milk (WPS016)(https://fred.stlouisfed.org/series/WPS016)", 
+    "Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers (https://www.ers.usda.gov/data-products/meat-price-spreads"))
+
+# Add Worksheet
+addWorksheet(cull, "info")
+writeData(cull, "info", cull_info)
+
+# Save
+saveWorkbook(cull, "../data_final/milk_cow_monthly_prices.xlsx", 
+             overwrite = TRUE)
+
+```
+
 ### Final table
 
 For the model, [we include one worksheet with differentiated prices, one with commodity beef prices at each level of the supply chain](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx). These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.
@@ -229,6 +335,8 @@ Convert all prices into \$/kg. 1 kg = 2.20462 lb
 cents/kg=cents/lb×2.20462
 
 \$/kg=100cents/lb×2.20462
+
+We also keep a table with all of the data to be used for validation.
 
 ```{r}
 

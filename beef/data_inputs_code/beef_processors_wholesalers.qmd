@@ -58,6 +58,11 @@ The Meat, Poultry and Egg Product Inspection (MPI) Directory is a listing of est
 - Small establishments are defined as establishments with 10 or more employees but fewer than 500 employees
 - Very Small establishments are defined as establishments with fewer than 10 employees or annual sales of less than \$2.5 million
 
+```{r}
+#| include: false
+knitr::opts_chunk$set(eval = FALSE)
+```
+
 #### Import and clean
 
 ```{r}

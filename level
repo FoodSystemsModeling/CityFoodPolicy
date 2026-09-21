@@ -1,0 +1,48 @@
+
+
+processing file: data_inputs.qmd
+
+ [unnamed-chunk-5] 
+output file: data_inputs.knit.md
+
+
+pandoc info
+
+  to: html
+  output-file: data_inputs.html
+  standalone: true
+  toc: true
+  number-sections: true
+  title-prefix: CityFoodPolicy
+  section-divs: true
+  html-math-method: mathjax
+  wrap: none
+  default-image-extension: png
+  number-offset:
+    - 1
+  
+
+metadata
+
+  crossref:
+    chapters: true
+  document-css: false
+  link-citations: true
+  date-format: long
+  lang: en
+  bibliography:
+    - ../references.bib
+  knitr:
+    opts_chunk:
+      message: false
+      warning: false
+      eval: false
+  editor: visual
+  hide-description: true
+  title: "[1]{.chapter-number}\_ [Data inputs]{.chapter-title}"
+  
+
+info: withBinaryFile: does not exist (No such file or directory)
+
+(WARN) Error encountered when rendering files
+

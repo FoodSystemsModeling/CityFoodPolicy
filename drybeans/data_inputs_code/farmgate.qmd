@@ -4,6 +4,14 @@ editor: visual
 ---
 
 ```{r}
+#| include: false
+# When included in the book, working dir is drybeans/ not data_inputs_code/
+if (!dir.exists("../data_processed") && dir.exists("data_inputs_code")) {
+  knitr::opts_knit$set(root.dir = normalizePath("data_inputs_code"))
+}
+```
+
+```{r}
 library(tidyverse)
 library(readxl)
 ```
@@ -52,7 +60,7 @@ ny_production_cost_acre <- 525
 ny_production_cost_acre_sd <- (598.70-400)/4
 
 # Import US data
-drybeans <- read_xlsx("../data_processed/03.beans_final_results_suppress.xlsx", 
+drybeans <- read_xlsx("../data_processed/US data/03.beans_final_results_suppress.xlsx", 
                       sheet = "summary_organic")
 
 # Keep cost of production per acre only and delete unneeded data
@@ -167,7 +175,7 @@ Crop budgets for comparison:
 
 # Import data
 soybeans <- read_xlsx(
-  "../data_processed/03.beans_final_results_suppress.xlsx", 
+  "../data_processed/US data/03.beans_final_results_suppress.xlsx", 
   sheet = "soybeans_production_cost")
 
 # Keep relevant columns
@@ -286,7 +294,7 @@ rm(list=ls())
 
 ### County production
 
-[Final data: Number of farms and acres of dry beans and soybeans in New York.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/acres_farms_county.xlsx) 
+[Final data: Number of farms and acres of dry beans and soybeans in New York.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/acres_farms_county.xlsx)
 
 We use the number of farms and harvested acres by county for dry bean and soybean producers in New York to ensure our model has the correct number of farms and acres.
 
@@ -515,12 +523,11 @@ soy_coa <- soy_coa %>%
 
 ##### Proportion by group
 
-Get the proportion of farms in each group so they can be allocated across counties, using data from the restricted access census. ALLIE, update when we get the new round of data.
+Get the proportion of farms in each group so they can be allocated across counties, using data from the restricted access census. 
 
 ```{r}
 
-# import data
-n <- read_xlsx("../data_processed/03.beans_final_results_suppress.xlsx", 
+n <- read_xlsx("../data_processed/2026.07.15/CFP.04.beans_final_results_suppress.xlsx", 
                sheet = "summary")
 
 
@@ -629,19 +636,21 @@ addWorksheet(wb, "info")
 writeData(wb, "info", info)
 
 # Save
-saveWorkbook(wb, "../data_final/differentiated_total_demand.xlsx")
+saveWorkbook(wb, "../data_final/differentiated_total_demand.xlsx", 
+             overwrite = TRUE)
 
 ```
 
 ### Farmer characteristics
+
 We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. [Exported data](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_processed/2026.07.15/CFP.04.beans_final_results_suppress.xlsx) and [code](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_processed/2026.07.15/CFP.03.beans_final_results_approved.qmd) used to generate results.
 
-Sample includes farms in the Northeast that are (1) dry bean producers and (2) soybean producers that don't produce dry beans and are not primary commodity livestock/dairy. 
+Sample includes farms in the Northeast that are (1) dry bean producers and (2) soybean producers that don't produce dry beans and are not primary commodity livestock/dairy.
 
-The sheet titled "summary" includes summary statistics (mean/standard error) for a variety of different farm-level characteristics separately for dry bean and soybean producers by scale, MWBE, and organic. 
+The sheet titled "summary" includes summary statistics (mean/standard error) for a variety of different farm-level characteristics separately for dry bean and soybean producers by scale, MWBE, and organic.
 
-The sheet titled "summary_landuse_organic" includes summary statistics specifically related to land use for dry bean and soybean producers for those with organic sales and those without. 
+The sheet titled "summary_landuse_organic" includes summary statistics specifically related to land use for dry bean and soybean producers for those with organic sales and those without.
 
-The sheet titled "metdata" contains definitions of all variables and the sheet titled "info" describes the data at a high level along with the sample. 
+The sheet titled "metdata" contains definitions of all variables and the sheet titled "info" describes the data at a high level along with the sample.
 
-Notes: Operations with less than 1,000 in sales are dropped, if N<5 it is not included, (D) indicated not included due to disclosure risk. 
+Notes: Operations with less than 1,000 in sales are dropped, if N\<5 it is not included, (D) indicated not included due to disclosure risk.

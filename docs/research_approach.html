@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -23,7 +26,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -42,10 +64,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-87aed0b8589e23e45aa8556edf37a91b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7d8ad657b878717df1156ab40fed854c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -266,8 +288,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendix/appendix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Appendix</span></a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
       </ul>
@@ -319,7 +341,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Big picture</p>
 <section id="stakeholder-engagement" class="level2">
 <h2 class="anchored" data-anchor-id="stakeholder-engagement">Stakeholder engagement</h2>
-<p>There is growing literature that talks about the importance of engaging stakeholders in all aspects of model design, building, and validation (e.g., <a href="https://www.sciencedirect.com/science/article/pii/S1462901123002940">Wentworth et al., 2024</a>). Accordingly, this project incorporated commodity specific advisory committees. These advisory groups helped us to select and recruit relevant stakeholders to participate in focus groups and interviews. The focus groups and interviews were used to validate data, understand decision making, and establish model boundaries and decisions.</p>
+<p>There is growing literature that talks about the importance of engaging stakeholders in all aspects of model design, building, and validation (e.g., <span class="citation" data-cites="wentworthNavigatingCommunityEngagement2024">Wentworth et al. (<a href="references.html#ref-wentworthNavigatingCommunityEngagement2024" role="doc-biblioref">2024</a>)</span>). Accordingly, this project incorporated commodity specific advisory committees. These advisory groups helped us to select and recruit relevant stakeholders to participate in focus groups and interviews. The focus groups and interviews were used to validate data, understand decision making, and establish model boundaries and decisions.</p>
 <section id="sec-stakeholder-interviewsfocusgroups" class="level3">
 <h3 class="anchored" data-anchor-id="sec-stakeholder-interviewsfocusgroups">Interviews and focus groups</h3>
 <p>Add here…</p>
@@ -335,6 +357,15 @@ ul.task-list li input[type="checkbox"] {
 <p>Drawing on publicly available data as well as input from food and agriculture stakeholders around New York State, this three-year research collaborative adapts an agent-based research model, building upon past agent-based modeling work in Denver, Colorado.</p>
 <p>The CFPP model allows for the simulation of complex systems and the emergent behavior that may result from the autonomous actions of system agents with each other and their environment.</p>
 <p>This model can simulate a variety of potential changes to a city’s food policy environment and to observe any resulting effects or feedback throughout various stages of the supply chain. To learn more, please visit our GitHub site.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="images/Model-graphic.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 <section id="model-validation" class="level3">
 <h3 class="anchored" data-anchor-id="model-validation">Model validation</h3>
 <p>Supply chain and New York City agency stakeholders supported model validation. More details available in the commodity sections.</p>
@@ -350,6 +381,11 @@ ul.task-list li input[type="checkbox"] {
 <p><img src="drybeans/images/NYC_drybean_purchasing.png" class="img-fluid"></p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-wentworthNavigatingCommunityEngagement2024" class="csl-entry" role="listitem">
+Wentworth, Chelsea, Mariana Torres Arroyo, Rafael Cavalcanti Lembi, et al. 2024. <span>“Navigating Community Engagement in Participatory Modeling of Food Systems.”</span> <em>Environmental Science &amp; Policy</em> 152 (February): 103645. <a href="https://doi.org/10.1016/j.envsci.2023.103645">https://doi.org/10.1016/j.envsci.2023.103645</a>.
+</div>
+</div>
 </section>
 </section>
 </section>

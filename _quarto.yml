@@ -40,7 +40,7 @@ book:
     - part: "Appendices"
       chapters:
         - appendix/glossary.qmd
-        - appendix/appendix.qmd
+        - references.qmd
 
 bibliography: references.bib
 
@@ -50,7 +50,8 @@ knitr:
   opts_chunk: 
     message: false
     warning: false
-    eval: false
+    eval: true
+    echo: false
 	
   
 

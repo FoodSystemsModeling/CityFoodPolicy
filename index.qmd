@@ -1,3 +1,7 @@
+---
+bibliography: references.bib
+---
+
 # Introduction {.unnumbered}
 
 ## A Global trend: Cities committed to values-based food policy
