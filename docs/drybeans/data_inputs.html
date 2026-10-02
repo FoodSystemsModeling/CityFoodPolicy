@@ -316,11 +316,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#global" id="toc-global" class="nav-link" data-scroll-target="#global"><span class="header-section-number">2.5.1</span> Global</a></li>
   <li><a href="#differentiated-1" id="toc-differentiated-1" class="nav-link" data-scroll-target="#differentiated-1"><span class="header-section-number">2.5.2</span> Differentiated</a></li>
   <li><a href="#institutional-purchasing-in-new-york-state" id="toc-institutional-purchasing-in-new-york-state" class="nav-link" data-scroll-target="#institutional-purchasing-in-new-york-state"><span class="header-section-number">2.5.3</span> Institutional purchasing in New York State</a></li>
-  <li><a href="#identifying-bean-products" id="toc-identifying-bean-products" class="nav-link" data-scroll-target="#identifying-bean-products"><span class="header-section-number">2.5.4</span> Identifying Bean Products</a></li>
-  <li><a href="#calculating-agency-demand" id="toc-calculating-agency-demand" class="nav-link" data-scroll-target="#calculating-agency-demand"><span class="header-section-number">2.5.5</span> Calculating Agency Demand</a></li>
-  <li><a href="#weight-used-for-agency-demand" id="toc-weight-used-for-agency-demand" class="nav-link" data-scroll-target="#weight-used-for-agency-demand"><span class="header-section-number">2.5.6</span> Weight Used for Agency Demand</a></li>
-  <li><a href="#converting-pounds-to-kilograms" id="toc-converting-pounds-to-kilograms" class="nav-link" data-scroll-target="#converting-pounds-to-kilograms"><span class="header-section-number">2.5.7</span> Converting Pounds to Kilograms</a></li>
-  <li><a href="#final-model-file" id="toc-final-model-file" class="nav-link" data-scroll-target="#final-model-file"><span class="header-section-number">2.5.8</span> Final Model File</a></li>
   </ul></li>
   <li><a href="#lca" id="toc-lca" class="nav-link" data-scroll-target="#lca"><span class="header-section-number">2.6</span> LCA</a></li>
   </ul>
@@ -1295,9 +1290,8 @@ ul.task-list li input[type="checkbox"] {
 <p>To determine the agency bean demand numbers, we downloaded procurement data from the <a href="https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page">NYC Good Food Purchasing Dashboard</a>.</p>
 <p>We used the Citywide Data for FY2024–2025, which was the most recent year of data available at the time of this analysis.</p>
 <p>The file containing the cleaned and categorized data is: <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx">Public-Dashboard-Data-for-Beans_V4</a>.</p>
-</section>
-<section id="identifying-bean-products" class="level3" data-number="2.5.4">
-<h3 data-number="2.5.4" class="anchored" data-anchor-id="identifying-bean-products"><span class="header-section-number">2.5.4</span> Identifying Bean Products</h3>
+<section id="identifying-bean-products" class="level4" data-number="2.5.3.1">
+<h4 data-number="2.5.3.1" class="anchored" data-anchor-id="identifying-bean-products"><span class="header-section-number">2.5.3.1</span> Identifying Bean Products</h4>
 <p>The first step was to filter the data to the WRI category “Beans and pulses (dried).”</p>
 <p>EM then manually reviewed the products and sorted them into the following categories:</p>
 <ul>
@@ -1315,22 +1309,22 @@ ul.task-list li input[type="checkbox"] {
 <p>was categorized as Canned because the product description indicates that it is a canned product.</p>
 <p>For items where the product form was not clear from the description, EM looked up the individual product using the available vendor, brand, and product information to determine the most appropriate category.</p>
 <p>All of these classifications are retained in <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx">Public-Dashboard-Data-for-Beans_V4</a> so they can be reviewed or updated if needed.</p>
-<section id="bean-products" class="level4" data-number="2.5.4.1">
-<h4 data-number="2.5.4.1" class="anchored" data-anchor-id="bean-products"><span class="header-section-number">2.5.4.1</span> Bean Products</h4>
+<section id="bean-products" class="level5" data-number="2.5.3.1.1">
+<h5 data-number="2.5.3.1.1" class="anchored" data-anchor-id="bean-products"><span class="header-section-number">2.5.3.1.1</span> Bean Products</h5>
 <p>Products that contained beans as part of a mixed or prepared product were categorized separately as <strong>Bean Product</strong>.</p>
 <p>For these products, EM also added a grouping variable to identify the general type of product. For example, quinoa and black bean veggie patties were grouped as <strong>Burger</strong>, while bean- and lentil-based pastas were grouped as <strong>Pasta/Noodle</strong>.</p>
 <p>We kept these products separate because their total weight includes ingredients other than beans. For example, the total weight of a black bean veggie burger includes both the beans and the other ingredients in the burger.</p>
 </section>
-<section id="excluded-products" class="level4" data-number="2.5.4.2">
-<h4 data-number="2.5.4.2" class="anchored" data-anchor-id="excluded-products"><span class="header-section-number">2.5.4.2</span> Excluded Products</h4>
+<section id="excluded-products" class="level5" data-number="2.5.3.1.2">
+<h5 data-number="2.5.3.1.2" class="anchored" data-anchor-id="excluded-products"><span class="header-section-number">2.5.3.1.2</span> Excluded Products</h5>
 <ul>
 <li>Green Beans were excluded from the final model data.</li>
 <li>The Exclude_Other category was used for products that appeared under the WRI bean/pulse category but were not relevant bean products for this analysis. This included items such as liquid egg substitutes and meatless chicken substitutes.</li>
 </ul>
 </section>
 </section>
-<section id="calculating-agency-demand" class="level3" data-number="2.5.5">
-<h3 data-number="2.5.5" class="anchored" data-anchor-id="calculating-agency-demand"><span class="header-section-number">2.5.5</span> Calculating Agency Demand</h3>
+<section id="calculating-agency-demand" class="level4" data-number="2.5.3.2">
+<h4 data-number="2.5.3.2" class="anchored" data-anchor-id="calculating-agency-demand"><span class="header-section-number">2.5.3.2</span> Calculating Agency Demand</h4>
 <p>For each product category, EM summed the total reported weight in pounds for each agency. For example, the canned bean totals were:</p>
 <div id="tbl-canned" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1395,16 +1389,16 @@ Table&nbsp;2.1: Canned bean totals by agency
 </ul>
 <p>Products originally categorized as frozen or pouch were included with the bagged category for the model.</p>
 </section>
-<section id="weight-used-for-agency-demand" class="level3" data-number="2.5.6">
-<h3 data-number="2.5.6" class="anchored" data-anchor-id="weight-used-for-agency-demand"><span class="header-section-number">2.5.6</span> Weight Used for Agency Demand</h3>
+<section id="weight-used-for-agency-demand" class="level4" data-number="2.5.3.3">
+<h4 data-number="2.5.3.3" class="anchored" data-anchor-id="weight-used-for-agency-demand"><span class="header-section-number">2.5.3.3</span> Weight Used for Agency Demand</h4>
 <p>For the AMB model, we decided to use the total reported product weight as the agency demand measure rather than converting all products to an estimated edible bean weight.</p>
 <p>Based on guidance from MOFP, for canned beans the total weight provided by the supplier likely includes the beans and brine and may also include the can/packaging. Similarly, for bagged dry beans, the total weight generally includes the dry beans and packaging. For frozen and pouch products, we also used the total reported product weight.</p>
 <p>For bean_product, the total weight includes the full product and therefore may include ingredients other than beans. These products are kept as their own model category for this reason.</p>
 <p>The original file includes conversions to estimated edible bean weight. However, we decided to use total product weight for the model so that the demand measure is consistent with the product weight used in the cost data.</p>
 <p>These values should therefore be interpreted as the total reported procurement weight of each product category, rather than the weight of edible beans alone.</p>
 </section>
-<section id="converting-pounds-to-kilograms" class="level3" data-number="2.5.7">
-<h3 data-number="2.5.7" class="anchored" data-anchor-id="converting-pounds-to-kilograms"><span class="header-section-number">2.5.7</span> Converting Pounds to Kilograms</h3>
+<section id="converting-pounds-to-kilograms" class="level4" data-number="2.5.3.4">
+<h4 data-number="2.5.3.4" class="anchored" data-anchor-id="converting-pounds-to-kilograms"><span class="header-section-number">2.5.3.4</span> Converting Pounds to Kilograms</h4>
 <p>EM converted the total weight from pounds to kilograms using:</p>
 <div id="tbl-conversion" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1430,8 +1424,8 @@ Table&nbsp;2.2: Pound-to-kilogram conversion
 </figure>
 </div>
 </section>
-<section id="final-model-file" class="level3" data-number="2.5.8">
-<h3 data-number="2.5.8" class="anchored" data-anchor-id="final-model-file"><span class="header-section-number">2.5.8</span> Final Model File</h3>
+<section id="final-model-file" class="level4" data-number="2.5.3.5">
+<h4 data-number="2.5.3.5" class="anchored" data-anchor-id="final-model-file"><span class="header-section-number">2.5.3.5</span> Final Model File</h4>
 <p>The final model data are in: <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/agency_beans_v5.csv">agency_beans_v5</a>.</p>
 <p>Each agency has a separate row for each of the three model product categories. For example, the Department of Education data are:</p>
 <div id="tbl-doe" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1547,6 +1541,7 @@ Table&nbsp;2.4: Crosswalk from manual categories to model categories
 </div>
 </figure>
 </div>
+</section>
 </section>
 </section>
 <section id="lca" class="level2" data-number="2.6">
