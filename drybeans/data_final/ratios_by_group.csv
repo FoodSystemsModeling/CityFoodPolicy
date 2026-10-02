@@ -1,71 +1,7 @@
-crop,sales_class_agg,mwbe_fct,weighted_n,total,ratio
-dry_beans,GCFI $1 million or more,Not MWBE,26,611,0.0425531914893617
-dry_beans,GCFI less than $1 million,MWBE,33,611,0.054009819967266774
-dry_beans,GCFI less than $1 million,Not MWBE,73,611,0.11947626841243862
-soybeans_only,GCFI $1 million or more,MWBE,121,37825,0.0031989424983476537
-soybeans_only,GCFI $1 million or more,Not MWBE,495,37825,0.013086582947785856
-soybeans_only,GCFI less than $1 million,MWBE,1817,37825,0.048037012557832125
-soybeans_only,GCFI less than $1 million,Not MWBE,6094,37825,0.16111037673496365
-dry_beans,GCFI $1 million or more,Not MWBE,14,611,0.022913256955810146
-dry_beans,GCFI $1 million or more,Not MWBE,6,611,0.009819967266775777
-dry_beans,GCFI $1 million or more,Not MWBE,13,611,0.02127659574468085
-dry_beans,GCFI $1 million or more,Not MWBE,24,611,0.03927986906710311
-dry_beans,GCFI $1 million or more,Not MWBE,11,611,0.01800327332242226
-dry_beans,GCFI $1 million or more,Not MWBE,12,611,0.019639934533551555
-dry_beans,GCFI $1 million or more,Not MWBE,7,611,0.011456628477905073
-dry_beans,GCFI less than $1 million,MWBE,9,611,0.014729950900163666
-dry_beans,GCFI less than $1 million,MWBE,16,611,0.02618657937806874
-dry_beans,GCFI less than $1 million,MWBE,6,611,0.009819967266775777
-dry_beans,GCFI less than $1 million,MWBE,15,611,0.024549918166939442
-dry_beans,GCFI less than $1 million,MWBE,12,611,0.019639934533551555
-dry_beans,GCFI less than $1 million,MWBE,27,611,0.044189852700491
-dry_beans,GCFI less than $1 million,MWBE,20,611,0.03273322422258593
-dry_beans,GCFI less than $1 million,MWBE,24,611,0.03927986906710311
-dry_beans,GCFI less than $1 million,Not MWBE,31,611,0.05073649754500818
-dry_beans,GCFI less than $1 million,Not MWBE,14,611,0.022913256955810146
-dry_beans,GCFI less than $1 million,Not MWBE,30,611,0.049099836333878884
-dry_beans,GCFI less than $1 million,Not MWBE,40,611,0.06546644844517185
-dry_beans,GCFI less than $1 million,Not MWBE,39,611,0.06382978723404255
-dry_beans,GCFI less than $1 million,Not MWBE,51,611,0.08346972176759411
-dry_beans,GCFI less than $1 million,Not MWBE,24,611,0.03927986906710311
-dry_beans,GCFI less than $1 million,Not MWBE,34,611,0.05564648117839607
-soybeans_only,GCFI $1 million or more,MWBE,22,37825,5.816259087904824e-4
-soybeans_only,GCFI $1 million or more,MWBE,21,37825,5.551883674818242e-4
-soybeans_only,GCFI $1 million or more,MWBE,8,37825,2.1150033046926636e-4
-soybeans_only,GCFI $1 million or more,MWBE,92,37825,0.002432253800396563
-soybeans_only,GCFI $1 million or more,MWBE,65,37825,0.0017184401850627892
-soybeans_only,GCFI $1 million or more,MWBE,48,37825,0.001269001982815598
-soybeans_only,GCFI $1 million or more,MWBE,15,37825,3.965631196298744e-4
-soybeans_only,GCFI $1 million or more,MWBE,63,37825,0.0016655651024454726
-soybeans_only,GCFI $1 million or more,MWBE,20,37825,5.287508261731659e-4
-soybeans_only,GCFI $1 million or more,MWBE,100,37825,0.0026437541308658294
-soybeans_only,GCFI $1 million or more,Not MWBE,88,37825,0.0023265036351619297
-soybeans_only,GCFI $1 million or more,Not MWBE,94,37825,0.0024851288830138795
-soybeans_only,GCFI $1 million or more,Not MWBE,28,37825,7.402511566424322e-4
-soybeans_only,GCFI $1 million or more,Not MWBE,386,37825,0.010204890945142101
-soybeans_only,GCFI $1 million or more,Not MWBE,308,37825,0.008142762723066755
-soybeans_only,GCFI $1 million or more,Not MWBE,197,37825,0.005208195637805684
-soybeans_only,GCFI $1 million or more,Not MWBE,59,37825,0.0015598149372108394
-soybeans_only,GCFI $1 million or more,Not MWBE,210,37825,0.005551883674818242
-soybeans_only,GCFI $1 million or more,Not MWBE,93,37825,0.0024586913417052212
-soybeans_only,GCFI $1 million or more,Not MWBE,421,37825,0.011130204890945142
-soybeans_only,GCFI less than $1 million,MWBE,367,37825,0.009702577660277593
-soybeans_only,GCFI less than $1 million,MWBE,636,37825,0.016814276272306677
-soybeans_only,GCFI less than $1 million,MWBE,105,37825,0.002775941837409121
-soybeans_only,GCFI less than $1 million,MWBE,1280,37825,0.03384005287508262
-soybeans_only,GCFI less than $1 million,MWBE,546,37825,0.01443489755452743
-soybeans_only,GCFI less than $1 million,MWBE,638,37825,0.016867151354923993
-soybeans_only,GCFI less than $1 million,MWBE,89,37825,0.002352941176470588
-soybeans_only,GCFI less than $1 million,MWBE,1342,37825,0.035479180436219435
-soybeans_only,GCFI less than $1 million,MWBE,363,37825,0.00959682749504296
-soybeans_only,GCFI less than $1 million,MWBE,1078,37825,0.028499669530733643
-soybeans_only,GCFI less than $1 million,Not MWBE,1168,37825,0.030879048248512887
-soybeans_only,GCFI less than $1 million,Not MWBE,1578,37825,0.04171844018506279
-soybeans_only,GCFI less than $1 million,Not MWBE,221,37825,0.005842696629213483
-soybeans_only,GCFI less than $1 million,Not MWBE,4279,37825,0.11312623925974884
-soybeans_only,GCFI less than $1 million,Not MWBE,2313,37825,0.061150033046926636
-soybeans_only,GCFI less than $1 million,Not MWBE,1994,37825,0.05271645736946464
-soybeans_only,GCFI less than $1 million,Not MWBE,325,37825,0.008592200925313946
-soybeans_only,GCFI less than $1 million,Not MWBE,4061,37825,0.10736285525446133
-soybeans_only,GCFI less than $1 million,Not MWBE,710,37825,0.018770654329147388
-soybeans_only,GCFI less than $1 million,Not MWBE,3867,37825,0.10223397224058163
+sheet_name = ratio_by_group"
+sheet_description =
+      "Number of acres and farms by county for soybean and drybean operations in New York"
+source =
+      "2022 Census of Agriculture, public data, Table 25. Field Crops: 2022 and 2017"
+notes =
+      "We allocate all missing acres acros counties with acres not disclosed based on the number of farms in the county. We allocate more acres to farms in the western part of the state based on the average size of farms in the west vs. rest of New York. Dry bean farms are around 3 times bigger in the west and soybean around 1.2 times larger."
