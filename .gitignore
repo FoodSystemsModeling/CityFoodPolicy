@@ -4,6 +4,9 @@
 .Ruserdata
 ignore/
 .quarto/
+.env
+_cache/
+_freeze/
 *.DS_Store
 drybeans/old/
 drybeans/data_final/old/

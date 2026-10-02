@@ -150,15 +150,16 @@ Pull historical USDA MyMarketNews (MARS) data Report: New York Weekly Cattle Auc
 
 Note that you will have to use your own API key.
 
-```{r, eval=FALSE}
+```{r}
+#| echo: false
 
 library(httr)
 library(jsonlite)
 library(purrr)
 library(lubridate)
 
-# ---- Config ------------------------------------------------------
-API_KEY   <- "" 
+# ---- Config ----------------------------------------------------
+API_KEY <- Sys.getenv("MY_API_KEY")
 SLUG_ID   <- 2011                         # New York Weekly Cattle Auction Summary
 START_DATE <- as.Date("2019-01-01")
 END_DATE   <- Sys.Date()
