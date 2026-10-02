@@ -1,0 +1,4 @@
+sheet_name = "summary"
+description = "Summary stats for dry bean and soybean producers by scale, MWBE, organic"
+source = "2022 Census of Agriculture, restricted access"
+notes = "Dry bean producers and soybean producers that do not  produce drybeans and are not primary commodity livestock/dairy in the Northeast"

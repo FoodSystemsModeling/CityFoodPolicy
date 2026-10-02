@@ -1,0 +1,4 @@
+sheet_name = "summary"
+description = "Summary stats for dairy producers by scale, MWBE, organic"
+sample = "Dairy producers in New York"
+source = "2022 Restricted access Census of Agriculture"

@@ -297,8 +297,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#sec-drybeans-costofproduction" id="toc-sec-drybeans-costofproduction" class="nav-link" data-scroll-target="#sec-drybeans-costofproduction"><span class="header-section-number">2.2.1</span> Cost of production</a></li>
   <li><a href="#county-production" id="toc-county-production" class="nav-link" data-scroll-target="#county-production"><span class="header-section-number">2.2.2</span> County production</a></li>
-  <li><a href="#differentiated-market" id="toc-differentiated-market" class="nav-link" data-scroll-target="#differentiated-market"><span class="header-section-number">2.2.3</span> Differentiated market</a></li>
-  <li><a href="#farmer-characteristics" id="toc-farmer-characteristics" class="nav-link" data-scroll-target="#farmer-characteristics"><span class="header-section-number">2.2.4</span> Farmer characteristics</a></li>
+  <li><a href="#farmer-characteristics" id="toc-farmer-characteristics" class="nav-link" data-scroll-target="#farmer-characteristics"><span class="header-section-number">2.2.3</span> Farmer characteristics</a></li>
   </ul></li>
   <li><a href="#processing-and-distribution" id="toc-processing-and-distribution" class="nav-link" data-scroll-target="#processing-and-distribution"><span class="header-section-number">2.3</span> Processing and distribution</a>
   <ul class="collapse">
@@ -317,9 +316,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#global" id="toc-global" class="nav-link" data-scroll-target="#global"><span class="header-section-number">2.5.1</span> Global</a></li>
   <li><a href="#differentiated-1" id="toc-differentiated-1" class="nav-link" data-scroll-target="#differentiated-1"><span class="header-section-number">2.5.2</span> Differentiated</a></li>
   <li><a href="#institutional-purchasing-in-new-york-state" id="toc-institutional-purchasing-in-new-york-state" class="nav-link" data-scroll-target="#institutional-purchasing-in-new-york-state"><span class="header-section-number">2.5.3</span> Institutional purchasing in New York State</a></li>
-  <li><a href="#import-data-1" id="toc-import-data-1" class="nav-link" data-scroll-target="#import-data-1"><span class="header-section-number">2.5.4</span> Import data</a></li>
-  <li><a href="#understand-missing-total-weight-data" id="toc-understand-missing-total-weight-data" class="nav-link" data-scroll-target="#understand-missing-total-weight-data"><span class="header-section-number">2.5.5</span> Understand missing total weight data</a></li>
-  <li><a href="#sec-drybeans-NYC-purchasing" id="toc-sec-drybeans-NYC-purchasing" class="nav-link" data-scroll-target="#sec-drybeans-NYC-purchasing"><span class="header-section-number">2.5.6</span> Summary</a></li>
+  <li><a href="#identifying-bean-products" id="toc-identifying-bean-products" class="nav-link" data-scroll-target="#identifying-bean-products"><span class="header-section-number">2.5.4</span> Identifying Bean Products</a></li>
+  <li><a href="#calculating-agency-demand" id="toc-calculating-agency-demand" class="nav-link" data-scroll-target="#calculating-agency-demand"><span class="header-section-number">2.5.5</span> Calculating Agency Demand</a></li>
+  <li><a href="#weight-used-for-agency-demand" id="toc-weight-used-for-agency-demand" class="nav-link" data-scroll-target="#weight-used-for-agency-demand"><span class="header-section-number">2.5.6</span> Weight Used for Agency Demand</a></li>
+  <li><a href="#converting-pounds-to-kilograms" id="toc-converting-pounds-to-kilograms" class="nav-link" data-scroll-target="#converting-pounds-to-kilograms"><span class="header-section-number">2.5.7</span> Converting Pounds to Kilograms</a></li>
+  <li><a href="#final-model-file" id="toc-final-model-file" class="nav-link" data-scroll-target="#final-model-file"><span class="header-section-number">2.5.8</span> Final Model File</a></li>
   </ul></li>
   <li><a href="#lca" id="toc-lca" class="nav-link" data-scroll-target="#lca"><span class="header-section-number">2.6</span> LCA</a></li>
   </ul>
@@ -870,7 +871,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="final-table" class="level4" data-number="2.1.2.3">
 <h4 data-number="2.1.2.3" class="anchored" data-anchor-id="final-table"><span class="header-section-number">2.1.2.3</span> Final table</h4>
-<p>For the model, <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/drybean_soybean_price.xlsx">we include one worksheet with differentiated prices, one with commodity dry bean and soybean farmgate prices, and one with retail bean prices</a>. These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.</p>
+<p>For the model, we include three files: <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/differentiated_price.csv">differentiated prices</a>, one with <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/farmgate_price.csv">commodity dry bean and soybean farmgate prices</a>, and one with <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/retail_bean_price.csv">retail bean prices</a>. These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed caption-top table-sm small">
@@ -913,7 +914,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="margins" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="margins"><span class="header-section-number">2.1.3</span> Margins</h3>
-<p><a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.xlsx">Final data: Estimated margins by location along the dry bean supply chain.</a></p>
+<p><a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.csv">Final data: Estimated margins by location along the dry bean supply chain.</a></p>
 <p>Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.</p>
 <p>All data was gathered through interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.</p>
 </section>
@@ -1009,13 +1010,8 @@ ul.task-list li input[type="checkbox"] {
 <h4 data-number="2.2.2.3" class="anchored" data-anchor-id="join-and-save"><span class="header-section-number">2.2.2.3</span> Join and save</h4>
 </section>
 </section>
-<section id="differentiated-market" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="differentiated-market"><span class="header-section-number">2.2.3</span> Differentiated market</h3>
-<p><a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/differentiated_total_demand.xls">Final data: Total demand for New York State differentiated dry beans.</a></p>
-<p>To determine to total market for NYS differentiated beans, four dry bean growers with food grade cleaning capacity who sell directly to buyers were contacted (interviews, emails, phone calls). Sales data was provided by the producer. (Numbers were confirmed to make sure they are not double counted in the totals).</p>
-</section>
-<section id="farmer-characteristics" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="farmer-characteristics"><span class="header-section-number">2.2.4</span> Farmer characteristics</h3>
+<section id="farmer-characteristics" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="farmer-characteristics"><span class="header-section-number">2.2.3</span> Farmer characteristics</h3>
 <p>We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_processed/2026.07.15/CFP.04.beans_final_results_suppress.xlsx">Exported data</a> and <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_processed/2026.07.15/CFP.03.beans_final_results_approved.qmd">code</a> used to generate results.</p>
 <p>Sample includes farms in the Northeast that are (1) dry bean producers and (2) soybean producers that don’t produce dry beans and are not primary commodity livestock/dairy.</p>
 <p>The sheet titled “summary” includes summary statistics (mean/standard error) for a variety of different farm-level characteristics separately for dry bean and soybean producers by scale, MWBE, and organic.</p>
@@ -1210,7 +1206,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed caption-top table-sm small">
-<caption>Shrinkage along dry bean supply chain</caption>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: left; font-weight: bold; color: white !important; background-color: rgba(74, 124, 89, 255) !important;">Role</th>
@@ -1297,28 +1292,261 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="institutional-purchasing-in-new-york-state" class="level3" data-number="2.5.3">
 <h3 data-number="2.5.3" class="anchored" data-anchor-id="institutional-purchasing-in-new-york-state"><span class="header-section-number">2.5.3</span> Institutional purchasing in New York State</h3>
-<p>We use data from <a href="https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page">NYC Food Policy, Good Food Purchasing data from 2019-2023</a>, we download the full purchasing data set.</p>
-<p>We provide average and standard deviation for price per lb. and kg. for dry beans by form (canned, dried, frozen), and by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.</p>
+<p>To determine the agency bean demand numbers, we downloaded procurement data from the <a href="https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page">NYC Good Food Purchasing Dashboard</a>.</p>
+<p>We used the Citywide Data for FY2024–2025, which was the most recent year of data available at the time of this analysis.</p>
+<p>The file containing the cleaned and categorized data is: <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx">Public-Dashboard-Data-for-Beans_V4</a>.</p>
 </section>
-<section id="import-data-1" class="level3" data-number="2.5.4">
-<h3 data-number="2.5.4" class="anchored" data-anchor-id="import-data-1"><span class="header-section-number">2.5.4</span> Import data</h3>
-<p>Here we import data and define variables.</p>
+<section id="identifying-bean-products" class="level3" data-number="2.5.4">
+<h3 data-number="2.5.4" class="anchored" data-anchor-id="identifying-bean-products"><span class="header-section-number">2.5.4</span> Identifying Bean Products</h3>
+<p>The first step was to filter the data to the WRI category “Beans and pulses (dried).”</p>
+<p>EM then manually reviewed the products and sorted them into the following categories:</p>
+<ul>
+<li>Canned</li>
+<li>Bagged</li>
+<li>Frozen</li>
+<li>Pouch</li>
+<li>Bean Product</li>
+<li>Green Beans</li>
+<li>Exclude_Other</li>
+</ul>
+<p>The Product Item description was used first to determine the appropriate category. When the product form was included in the description, the item was categorized based on that information.</p>
+<p>For example:</p>
+<p>BELLAVISTA; BEANS, BLACK; #10 CAN, 6 PER CASE</p>
+<p>was categorized as Canned because the product description indicates that it is a canned product.</p>
+<p>For items where the product form was not clear from the description, EM looked up the individual product using the available vendor, brand, and product information to determine the most appropriate category.</p>
+<p>All of these classifications are retained in <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx">Public-Dashboard-Data-for-Beans_V4</a> so they can be reviewed or updated if needed.</p>
+<section id="bean-products" class="level4" data-number="2.5.4.1">
+<h4 data-number="2.5.4.1" class="anchored" data-anchor-id="bean-products"><span class="header-section-number">2.5.4.1</span> Bean Products</h4>
+<p>Products that contained beans as part of a mixed or prepared product were categorized separately as <strong>Bean Product</strong>.</p>
+<p>For these products, EM also added a grouping variable to identify the general type of product. For example, quinoa and black bean veggie patties were grouped as <strong>Burger</strong>, while bean- and lentil-based pastas were grouped as <strong>Pasta/Noodle</strong>.</p>
+<p>We kept these products separate because their total weight includes ingredients other than beans. For example, the total weight of a black bean veggie burger includes both the beans and the other ingredients in the burger.</p>
 </section>
-<section id="understand-missing-total-weight-data" class="level3" data-number="2.5.5">
-<h3 data-number="2.5.5" class="anchored" data-anchor-id="understand-missing-total-weight-data"><span class="header-section-number">2.5.5</span> Understand missing total weight data</h3>
-<p>The missing data does have the number of units, but does not have weight in lbs. We can use the information provided about the product and estimate how much the product weighed and estimate a total weight.</p>
-<p>Department of Education has a large purchase that lists number of unit. Units are #10 cans, we assume they each weight 6 lbs 15 oz (111 oz).</p>
-<p>For now, we are not going to take this step, but can in the future if needed.</p>
+<section id="excluded-products" class="level4" data-number="2.5.4.2">
+<h4 data-number="2.5.4.2" class="anchored" data-anchor-id="excluded-products"><span class="header-section-number">2.5.4.2</span> Excluded Products</h4>
+<ul>
+<li>Green Beans were excluded from the final model data.</li>
+<li>The Exclude_Other category was used for products that appeared under the WRI bean/pulse category but were not relevant bean products for this analysis. This included items such as liquid egg substitutes and meatless chicken substitutes.</li>
+</ul>
 </section>
-<section id="sec-drybeans-NYC-purchasing" class="level3" data-number="2.5.6">
-<h3 data-number="2.5.6" class="anchored" data-anchor-id="sec-drybeans-NYC-purchasing"><span class="header-section-number">2.5.6</span> Summary</h3>
-<p>We removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).</p>
-<p>Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data.</p>
-<p><a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/NYC_bean_purchasing.xlsx">Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried).</a></p>
-<section id="figure---business-as-usual" class="level4" data-number="2.5.6.1">
-<h4 data-number="2.5.6.1" class="anchored" data-anchor-id="figure---business-as-usual"><span class="header-section-number">2.5.6.1</span> Figure - Business as usual</h4>
-<p>We group all agencies together and show average price per pound by type (bagged, canned). We change the name dried to bagged to be consistent with other figures.</p>
 </section>
+<section id="calculating-agency-demand" class="level3" data-number="2.5.5">
+<h3 data-number="2.5.5" class="anchored" data-anchor-id="calculating-agency-demand"><span class="header-section-number">2.5.5</span> Calculating Agency Demand</h3>
+<p>For each product category, EM summed the total reported weight in pounds for each agency. For example, the canned bean totals were:</p>
+<div id="tbl-canned" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-canned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Canned bean totals by agency
+</figcaption>
+<div aria-describedby="tbl-canned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Agency</th>
+<th style="text-align: right;">Total Weight (lbs)</th>
+<th style="text-align: right;">Total Weight (kg)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ACS</td>
+<td style="text-align: right;">50,118</td>
+<td style="text-align: right;">22,733.12</td>
+</tr>
+<tr class="even">
+<td>DOA</td>
+<td style="text-align: right;">3,605</td>
+<td style="text-align: right;">1,635.20</td>
+</tr>
+<tr class="odd">
+<td>DOC</td>
+<td style="text-align: right;">430,088</td>
+<td style="text-align: right;">195,084.48</td>
+</tr>
+<tr class="even">
+<td>DHS</td>
+<td style="text-align: right;">79,004</td>
+<td style="text-align: right;">35,835.58</td>
+</tr>
+<tr class="odd">
+<td>H+H</td>
+<td style="text-align: right;">134,749</td>
+<td style="text-align: right;">61,121.07</td>
+</tr>
+<tr class="even">
+<td>HRS</td>
+<td style="text-align: right;">2,216,559</td>
+<td style="text-align: right;">1,005,413.43</td>
+</tr>
+<tr class="odd">
+<td>DOE</td>
+<td style="text-align: right;">4,625,947</td>
+<td style="text-align: right;">2,098,292.55</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The final model categories are:</p>
+<ul>
+<li>canned</li>
+<li>bagged</li>
+<li>bean_product</li>
+</ul>
+<p>Products originally categorized as frozen or pouch were included with the bagged category for the model.</p>
+</section>
+<section id="weight-used-for-agency-demand" class="level3" data-number="2.5.6">
+<h3 data-number="2.5.6" class="anchored" data-anchor-id="weight-used-for-agency-demand"><span class="header-section-number">2.5.6</span> Weight Used for Agency Demand</h3>
+<p>For the AMB model, we decided to use the total reported product weight as the agency demand measure rather than converting all products to an estimated edible bean weight.</p>
+<p>Based on guidance from MOFP, for canned beans the total weight provided by the supplier likely includes the beans and brine and may also include the can/packaging. Similarly, for bagged dry beans, the total weight generally includes the dry beans and packaging. For frozen and pouch products, we also used the total reported product weight.</p>
+<p>For bean_product, the total weight includes the full product and therefore may include ingredients other than beans. These products are kept as their own model category for this reason.</p>
+<p>The original file includes conversions to estimated edible bean weight. However, we decided to use total product weight for the model so that the demand measure is consistent with the product weight used in the cost data.</p>
+<p>These values should therefore be interpreted as the total reported procurement weight of each product category, rather than the weight of edible beans alone.</p>
+</section>
+<section id="converting-pounds-to-kilograms" class="level3" data-number="2.5.7">
+<h3 data-number="2.5.7" class="anchored" data-anchor-id="converting-pounds-to-kilograms"><span class="header-section-number">2.5.7</span> Converting Pounds to Kilograms</h3>
+<p>EM converted the total weight from pounds to kilograms using:</p>
+<div id="tbl-conversion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-conversion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: Pound-to-kilogram conversion
+</figcaption>
+<div aria-describedby="tbl-conversion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Pounds</th>
+<th style="text-align: right;">Kilograms</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.453592</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="final-model-file" class="level3" data-number="2.5.8">
+<h3 data-number="2.5.8" class="anchored" data-anchor-id="final-model-file"><span class="header-section-number">2.5.8</span> Final Model File</h3>
+<p>The final model data are in: <a href="https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/agency_beans_v5.csv">agency_beans_v5</a>.</p>
+<p>Each agency has a separate row for each of the three model product categories. For example, the Department of Education data are:</p>
+<div id="tbl-doe" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-doe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: Example model data for the Department of Education
+</figcaption>
+<div aria-describedby="tbl-doe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Agency</th>
+<th>Abbreviation</th>
+<th style="text-align: right;">Latitude</th>
+<th style="text-align: right;">Longitude</th>
+<th style="text-align: right;">Value</th>
+<th>Conversion</th>
+<th>Product Type</th>
+<th style="text-align: right;">Demand (kg)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dept of Education</td>
+<td>DOE</td>
+<td style="text-align: right;">40.7255</td>
+<td style="text-align: right;">-73.7177</td>
+<td style="text-align: right;">1</td>
+<td>dry_conv</td>
+<td>canned</td>
+<td style="text-align: right;">2,098,292.552</td>
+</tr>
+<tr class="even">
+<td>Dept of Education</td>
+<td>DOE</td>
+<td style="text-align: right;">40.7255</td>
+<td style="text-align: right;">-73.7177</td>
+<td style="text-align: right;">1</td>
+<td>dry_conv</td>
+<td>bagged</td>
+<td style="text-align: right;">101,860.8875</td>
+</tr>
+<tr class="odd">
+<td>Dept of Education</td>
+<td>DOE</td>
+<td style="text-align: right;">40.7255</td>
+<td style="text-align: right;">-73.7177</td>
+<td style="text-align: right;">1</td>
+<td>dry_conv</td>
+<td>bean_product</td>
+<td style="text-align: right;">1,000,772.277</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The final crosswalk from the manual categories to the model categories is:</p>
+<div id="tbl-crosswalk" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-crosswalk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.4: Crosswalk from manual categories to model categories
+</figcaption>
+<div aria-describedby="tbl-crosswalk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Original Category</th>
+<th>Final Model Category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Canned</td>
+<td>canned</td>
+</tr>
+<tr class="even">
+<td>Bagged/Dried</td>
+<td>bagged</td>
+</tr>
+<tr class="odd">
+<td>Frozen</td>
+<td>bagged</td>
+</tr>
+<tr class="even">
+<td>Pouch</td>
+<td>bagged</td>
+</tr>
+<tr class="odd">
+<td>Bean Product</td>
+<td>bean_product</td>
+</tr>
+<tr class="even">
+<td>Green Beans</td>
+<td>Excluded</td>
+</tr>
+<tr class="odd">
+<td>Exclude_Other</td>
+<td>Excluded</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
 </section>
 </section>
 <section id="lca" class="level2" data-number="2.6">

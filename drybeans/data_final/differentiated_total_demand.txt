@@ -1,0 +1,4 @@
+sheet_name = "differentiated_market_size"
+description = "Total size of the differentiated market (i.e., NYS source identified) dry beans"
+source = "interviews"
+notes = "Data are reported in total killograms of dry beans"

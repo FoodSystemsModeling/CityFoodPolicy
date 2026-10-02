@@ -4,245 +4,123 @@ editor: visual
 bibliography: ../references.bib
 ---
 
-We use data from [NYC Food Policy, Good Food Purchasing data from 2019-2023](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page), we download the full purchasing data set.
+To determine the agency bean demand numbers, we downloaded procurement data from the [NYC Good Food Purchasing Dashboard](https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page).
 
-We provide average and standard deviation for price per lb. and kg. for dry beans by form (canned, dried, frozen), and by agency from 2019-2023. We drop data points where the price is more than two standard deviations outside of the average price.
+We used the Citywide Data for FY2024–2025, which was the most recent year of data available at the time of this analysis.
 
-### Import data
+The file containing the cleaned and categorized data is: [Public-Dashboard-Data-for-Beans_V4](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx). 
 
-Here we import data and define variables.
+### Identifying Bean Products
 
-```{r}
-library(tidyverse)
-library(readxl)
-library(openxlsx)
-library(knitr)
-library(kableExtra)
+The first step was to filter the data to the WRI category "Beans and pulses (dried)."
 
-# create workbook
-wb <- createWorkbook()
+EM then manually reviewed the products and sorted them into the following categories:
 
-# Import data
-df <- read_xlsx("data_raw/Public-Dashboard-Data-for-Download-FY19-23.xlsx", 
-                sheet = "Citywide")
+- Canned
+- Bagged
+- Frozen
+- Pouch
+- Bean Product
+- Green Beans
+- Exclude_Other
 
-# Keep bean data only
-df <- df %>% 
-  filter(`Food Product Category`=="Legumes" &
-           str_detect(`Product Name`, "bean")) 
+The Product Item description was used first to determine the appropriate category. When the product form was included in the description, the item was categorized based on that information.
 
-# Define form
-df <- df %>% 
-  mutate(Form = case_when(
-    str_detect(`Product Type`, "10 ") ~ "Canned",
-    str_detect(`Product Type`, "CANS|CND") ~ "Canned",
-    str_detect(`Product Type`, "CANNED") ~ "Canned",
-    str_detect(`Product Name`, "canned") ~ "Canned",
-      str_detect(`Product Type`, "FRZN") ~ "Frozen",
-    TRUE ~ "Dried"))
+For example: 
 
-# Convert lbs. to kgs.
-df <- df %>% 
-  mutate(
-    `Total Weight in kgs` = `Total Weight in lbs` * 0.45359237
-  )
+BELLAVISTA; BEANS, BLACK; #10 CAN, 6 PER CASE
 
-# Define price per kg
-df <- df %>% 
-  mutate(
-    `Price per kg` = `Total Cost`/`Total Weight in kgs`
-  )
+was categorized as Canned because the product description indicates that it is a canned product.
 
-# Define price per lb
-df <- df %>% 
-  mutate(
-    `Price per lb` = `Total Cost`/`Total Weight in lbs`
-  )
+For items where the product form was not clear from the description, EM looked up the individual product using the available vendor, brand, and product information to determine the most appropriate category.
 
-# Define a dummy for if the product was eligible for a price premium (MWBE and/or local)
-df <- df %>% 
-  mutate(
-    premium = case_when(
-      `MWBE y/n`=="Y" | 
-        `NY State spend y/n`=="Y" ~ 1, 
-      TRUE ~ 0)
-    )
+All of these classifications are retained in [Public-Dashboard-Data-for-Beans_V4](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx) so they can be reviewed or updated if needed.
 
-```
+#### Bean Products
 
-### Understand missing total weight data
+Products that contained beans as part of a mixed or prepared product were categorized separately as **Bean Product**.
 
-The missing data does have the number of units, but does not have weight in lbs. We can use the information provided about the product and estimate how much the product weighed and estimate a total weight.
+For these products, EM also added a grouping variable to identify the general type of product. For example, quinoa and black bean veggie patties were grouped as **Burger**, while bean- and lentil-based pastas were grouped as **Pasta/Noodle**.
 
-Department of Education has a large purchase that lists number of unit. Units are #10 cans, we assume they each weight 6 lbs 15 oz (111 oz).
+We kept these products separate because their total weight includes ingredients other than beans. For example, the total weight of a black bean veggie burger includes both the beans and the other ingredients in the burger.
 
-For now, we are not going to take this step, but can in the future if needed.
+#### Excluded Products
 
-```{r}
+- Green Beans were excluded from the final model data.
+- The Exclude_Other category was used for products that appeared under the WRI bean/pulse category but were not relevant bean products for this analysis. This included items such as liquid egg substitutes and meatless chicken substitutes.
 
-# Missing data
-missing <- df %>% 
-  filter(`Total Weight in lbs`==0)
+### Calculating Agency Demand
 
-# Zero lbs. but positive price
-testing <- df %>% 
-  mutate(
-    zero_lbs = case_when(
-      `Total Weight in lbs`==0 ~ 1, 
-      TRUE ~ 0)
-    ) %>% 
-  group_by(Agency, `Time Period`, zero_lbs) %>% 
-  count()
-  
-rm(missing, testing)
-```
+For each product category, EM summed the total reported weight in pounds for each agency. For example, the canned bean totals were:
 
-### Summary {#sec-drybeans-NYC-purchasing}
+| Agency | Total Weight (lbs) | Total Weight (kg) |
+|--------|-------------------:|------------------:|
+| ACS    | 50,118             | 22,733.12         |
+| DOA    | 3,605              | 1,635.20          |
+| DOC    | 430,088            | 195,084.48        |
+| DHS    | 79,004             | 35,835.58         |
+| H+H    | 134,749            | 61,121.07         |
+| HRS    | 2,216,559          | 1,005,413.43      |
+| DOE    | 4,625,947          | 2,098,292.55      |
 
-We removed outliers that were more than 2 standard deviations from the mean based on price per pound, within agency, year, and form. We dropped 17 observations (397 down to 380).
+: Canned bean totals by agency {#tbl-canned}
 
-Data are pulled for purchases with no attributes that would allow for a higher price (i.e., not MWBE, not purchased from New York). Because we will run the model with different scenarios related to local and MWBE, the data of interest are the bean purchases of non-local and non-MWBE products (i.e., no premium, defined as NY State spend y/n==N and MWBE y/n == N). Note there are no purchases of beans from MWBE businesses in the data.
+The final model categories are:
 
-[Full set of summary statistics includes mean and standard deviation of price per lb. and per kg. by year, agency, and form (canned, dried).](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/NYC_bean_purchasing.xlsx)
+- canned
+- bagged
+- bean_product
 
-```{r}
+Products originally categorized as frozen or pouch were included with the bagged category for the model.
 
-# Drop data without a weight
-df <- df %>% 
-  filter(
-    `Total Weight in lbs`!=0)
+### Weight Used for Agency Demand
 
-# Remove outliers that are more than 2 SD from the mean
-df <- df %>% 
-  group_by(Agency, `Time Period`, Form) %>% 
-  mutate(
-    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
-    sd_lb = sd(`Price per lb`, na.rm = TRUE)
-  ) %>%
-  mutate(
-    outlier = case_when(
-      `Price per lb` < mean_lb - 2*sd_lb |  
-        `Price per lb` > mean_lb + 2*sd_lb ~ 1, 
-      TRUE ~ 0)
-    ) %>% 
-  filter(outlier==0) %>%
-  ungroup() %>% 
-  select(-mean_lb, -sd_lb)
- 
-# Drop purchases that are local (note there are no MWBE businesses)
-df <- df %>% 
-  filter(`NY State spend y/n`=="N")
-  
-# Summary stats with outliers removed 
-sum <- df %>% 
-  group_by(Agency, `Time Period`, Form) %>% 
-  summarise(
-    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
-    sd_lb = sd(`Price per lb`, na.rm = TRUE), 
-    mean_kg = mean(`Price per kg`, na.rm = TRUE), 
-    sd_kg = sd(`Price per kg`, na.rm = TRUE),
-    n = n()
-  ) %>% 
-  ungroup()
+For the AMB model, we decided to use the total reported product weight as the agency demand measure rather than converting all products to an estimated edible bean weight.
 
-# Add worksheet
-addWorksheet(wb, "NYC_bean_purchasing")
-writeData(wb, "NYC_bean_purchasing", sum)
+Based on guidance from MOFP, for canned beans the total weight provided by the supplier likely includes the beans and brine and may also include the can/packaging. Similarly, for bagged dry beans, the total weight generally includes the dry beans and packaging. For frozen and pouch products, we also used the total reported product weight.
 
-# Info
-info <- tibble(
-  sheet_name = c(
-    "NYC_bean_purchasing"), 
-  description = c(
-    "Mean and standard deviation of price/lb. and price/kg. for beans by agency, year, and form (e.g, dried, canned, frozen)", 
-  source = "NYC dashboard", 
-  url = "https://www.nyc.gov/site/foodpolicy/good-food-purchasing/citywidedata.page",
-  notes = "Includes only purchases from outside of New York and not from MWBE businesses (i.e., no premiums associated with local/MWBE attributes included in the data).")
-)
+For bean_product, the total weight includes the full product and therefore may include ingredients other than beans. These products are kept as their own model category for this reason.
 
-# Add Worksheet
-addWorksheet(wb, "info")
-writeData(wb, "info", info)
+The original file includes conversions to estimated edible bean weight. However, we decided to use total product weight for the model so that the demand measure is consistent with the product weight used in the cost data.
 
-# Save 
-saveWorkbook(wb, "data_final/NYC_bean_purchasing.xlsx", 
-             overwrite = TRUE)
-```
+These values should therefore be interpreted as the total reported procurement weight of each product category, rather than the weight of edible beans alone.
 
-```{r}
-#| label: nyc_bean_summary
+### Converting Pounds to Kilograms
 
-# Keep data per lb. and for 2022 only
-table <- sum %>% 
-  filter(`Time Period`==2022) %>%
-  select(-c(`Time Period`, mean_kg:last_col())) %>% 
-  mutate(
-    sd_lb = case_when(
-      is.na(sd_lb) ~ 0, 
-      TRUE ~ sd_lb
-  )) %>% 
-  rename(
-    Mean = mean_lb, 
-    SD = sd_lb
-  ) 
+EM converted the total weight from pounds to kilograms using:
 
-table %>% 
-  kable(
-    digits = 2, 
-    caption = '<span style="color: black; font-size: 18px; font-weight: bold;">Price per pound for dried and canned beans purchased by New York City in 2022</span>') %>%
-  kable_styling()
-  
+| Pounds | Kilograms |
+|-------:|----------:|
+| 1      | 0.453592  |
 
-```
+: Pound-to-kilogram conversion {#tbl-conversion}
 
-#### Figure - Business as usual
+### Final Model File
 
-We group all agencies together and show average price per pound by type (bagged, canned). We change the name dried to bagged to be consistent with other figures.
+The final model data are in: [agency_beans_v5](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/agency_beans_v5.csv).
 
-```{r}
+Each agency has a separate row for each of the three model product categories. For example, the Department of Education data are:
 
-# Rename dried to bagged
-df <- df %>% 
-  mutate(
-    Form = case_when(
-      Form == "Dried" ~ "Bagged", 
-      TRUE ~ Form
-    )
-  )
+| Agency            | Abbreviation | Latitude | Longitude | Value | Conversion | Product Type | Demand (kg)    |
+|-------------------|--------------|---------:|----------:|------:|------------|--------------|---------------:|
+| Dept of Education | DOE          | 40.7255  | -73.7177  | 1     | dry_conv   | canned       | 2,098,292.552  |
+| Dept of Education | DOE          | 40.7255  | -73.7177  | 1     | dry_conv   | bagged       | 101,860.8875   |
+| Dept of Education | DOE          | 40.7255  | -73.7177  | 1     | dry_conv   | bean_product | 1,000,772.277  |
 
-# Group all agencies together and summarise
-# Summary stats with outliers removed 
-sum <- df %>% 
-  group_by(`Time Period`, Form) %>% 
-  summarise(
-    mean_lb = mean(`Price per lb`, na.rm = TRUE), 
-    sd_lb = sd(`Price per lb`, na.rm = TRUE), 
-    n = n()
-  ) %>% 
-  ungroup()
+: Example model data for the Department of Education {#tbl-doe}
 
-# Bar chart
-ggplot(sum, aes(x = `Time Period`, y = mean_lb, 
-                fill= Form)) + 
-  geom_col(position = "dodge") + 
-  geom_text(aes(
-    label = round(mean_lb, 1)), 
-    position = position_dodge(width = 0.9), 
-    vjust = -0.5) + 
-  scale_fill_manual(
-    values = c(
-  "Bagged" = "#008ECF",
-  "Canned" = "#FC9328"
-)) + 
-  labs(
-    y = "Average price per lb.", 
-    x = NULL, 
-    fill = NULL
-  )
+The final crosswalk from the manual categories to the model categories is:
 
-ggsave("images/NYC_drybean_purchasing.png", 
-       height = 5, 
-       width = 7, 
-       dpi = 300)
+| Original Category | Final Model Category |
+|-------------------|----------------------|
+| Canned            | canned               |
+| Bagged/Dried      | bagged               |
+| Frozen            | bagged               |
+| Pouch             | bagged               |
+| Bean Product      | bean_product         |
+| Green Beans       | Excluded             |
+| Exclude_Other     | Excluded             |
 
-```
+: Crosswalk from manual categories to model categories {#tbl-crosswalk}
+
+

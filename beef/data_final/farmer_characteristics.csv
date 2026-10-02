@@ -1,0 +1,487 @@
+sales_class_agg,mwbe_fct,variable_name,statistic,value,weighted_n
+GCFI $1 million or more,MWBE,organic_farm,mean,0.03106,161
+GCFI $1 million or more,MWBE,local_farm,mean,0.1056,161
+GCFI $1 million or more,MWBE,differentiated_farm,mean,0.1366,161
+GCFI $1 million or more,MWBE,operated_acres,mean,1736,161
+GCFI $1 million or more,MWBE,owns_morethan50pct,mean,0.6957,161
+GCFI $1 million or more,MWBE,totvarexp,mean,2795000,161
+GCFI $1 million or more,MWBE,exp,mean,3347000,161
+GCFI $1 million or more,MWBE,infi,mean,1900000,161
+GCFI $1 million or more,MWBE,exp_cow,mean,5049,161
+GCFI $1 million or more,MWBE,young,mean,0.1925,161
+GCFI $1 million or more,MWBE,beginning,mean,0.2298,161
+GCFI $1 million or more,MWBE,cropland_harvested_acres,mean,1342,161
+GCFI $1 million or more,MWBE,cropland_failed_acres,mean,32.69,161
+GCFI $1 million or more,MWBE,cropland_summer_fallow_acres,mean,3.528,161
+GCFI $1 million or more,MWBE,cropland_idle_acres,mean,21.78,161
+GCFI $1 million or more,MWBE,permanent_pasture_acres,mean,46.71,161
+GCFI $1 million or more,MWBE,woodland_pasture_acres,mean,11.34,161
+GCFI $1 million or more,MWBE,other_pasture_acres,mean,18.84,161
+GCFI $1 million or more,MWBE,drained_tile_acres_pct,mean,0.2063,161
+GCFI $1 million or more,MWBE,drained_ditches_acres_pct,mean,0.05827,161
+GCFI $1 million or more,MWBE,conservation_easement_acres_pct,mean,0.01294,161
+GCFI $1 million or more,MWBE,no_till_acres_pct,mean,0.08868,161
+GCFI $1 million or more,MWBE,reduced_till_acres_pct,mean,0.138,161
+GCFI $1 million or more,MWBE,intensive_till_acres_pct,mean,0.1908,161
+GCFI $1 million or more,MWBE,cattle_herd,mean,3.391,161
+GCFI $1 million or more,MWBE,dairy_herd,mean,699.1,161
+GCFI $1 million or more,MWBE,other_cattle_herd,mean,464.5,161
+GCFI $1 million or more,MWBE,cattle_herd_less500,mean,279.8,161
+GCFI $1 million or more,MWBE,cattle_herd_500plus,mean,196.3,161
+GCFI $1 million or more,MWBE,rotational_grazing,mean,0.04969,161
+GCFI $1 million or more,MWBE,veal,mean,0.03106,161
+GCFI $1 million or more,MWBE,fertilizer_cropland_acres_pct,mean,0.494,161
+GCFI $1 million or more,MWBE,fertilizer_pastureland_acres_pct,mean,0.00616,161
+GCFI $1 million or more,MWBE,manure_acres_pct,mean,0.2791,161
+GCFI $1 million or more,MWBE,organic_acres_pct,mean,0.004605,161
+GCFI $1 million or more,MWBE,insects_acres_pct,mean,0.07336,161
+GCFI $1 million or more,MWBE,weeds_acres_pct,mean,0.3956,161
+GCFI $1 million or more,MWBE,nematodes_acres_pct,mean,0.02664,161
+GCFI $1 million or more,MWBE,diseases_acres_pct,mean,0.03613,161
+GCFI $1 million or more,MWBE,defoliation_acres_pct,mean,0.002342,161
+GCFI $1 million or more,MWBE,methane_digester,mean,0.01242,161
+GCFI $1 million or more,MWBE,organic_farm,se,0.01388,161
+GCFI $1 million or more,MWBE,local_farm,se,0.04109,161
+GCFI $1 million or more,MWBE,differentiated_farm,se,0.0424,161
+GCFI $1 million or more,MWBE,operated_acres,se,166.7,161
+GCFI $1 million or more,MWBE,owns_morethan50pct,se,0.05031,161
+GCFI $1 million or more,MWBE,totvarexp,se,375000,161
+GCFI $1 million or more,MWBE,exp,se,437600,161
+GCFI $1 million or more,MWBE,infi,se,263900,161
+GCFI $1 million or more,MWBE,exp_cow,se,169.4,161
+GCFI $1 million or more,MWBE,young,se,0.04411,161
+GCFI $1 million or more,MWBE,beginning,se,0.04608,161
+GCFI $1 million or more,MWBE,cropland_harvested_acres,se,144,161
+GCFI $1 million or more,MWBE,cropland_failed_acres,se,20.61,161
+GCFI $1 million or more,MWBE,cropland_summer_fallow_acres,se,2.197,161
+GCFI $1 million or more,MWBE,cropland_idle_acres,se,8.313,161
+GCFI $1 million or more,MWBE,permanent_pasture_acres,se,10.89,161
+GCFI $1 million or more,MWBE,woodland_pasture_acres,se,7.011,161
+GCFI $1 million or more,MWBE,other_pasture_acres,se,6.276,161
+GCFI $1 million or more,MWBE,drained_tile_acres_pct,se,0.03625,161
+GCFI $1 million or more,MWBE,drained_ditches_acres_pct,se,0.01442,161
+GCFI $1 million or more,MWBE,conservation_easement_acres_pct,se,0.007296,161
+GCFI $1 million or more,MWBE,no_till_acres_pct,se,0.01328,161
+GCFI $1 million or more,MWBE,reduced_till_acres_pct,se,0.01915,161
+GCFI $1 million or more,MWBE,intensive_till_acres_pct,se,0.02698,161
+GCFI $1 million or more,MWBE,cattle_herd,se,1.45,161
+GCFI $1 million or more,MWBE,dairy_herd,se,88.89,161
+GCFI $1 million or more,MWBE,other_cattle_herd,se,61.97,161
+GCFI $1 million or more,MWBE,cattle_herd_less500,se,37.6,161
+GCFI $1 million or more,MWBE,cattle_herd_500plus,se,24.49,161
+GCFI $1 million or more,MWBE,rotational_grazing,se,0.01755,161
+GCFI $1 million or more,MWBE,veal,se,0.01837,161
+GCFI $1 million or more,MWBE,fertilizer_cropland_acres_pct,se,0.02611,161
+GCFI $1 million or more,MWBE,fertilizer_pastureland_acres_pct,se,0.005809,161
+GCFI $1 million or more,MWBE,manure_acres_pct,se,0.0297,161
+GCFI $1 million or more,MWBE,organic_acres_pct,se,0.003782,161
+GCFI $1 million or more,MWBE,insects_acres_pct,se,0.02011,161
+GCFI $1 million or more,MWBE,weeds_acres_pct,se,0.0187,161
+GCFI $1 million or more,MWBE,nematodes_acres_pct,se,0.01695,161
+GCFI $1 million or more,MWBE,diseases_acres_pct,se,0.01993,161
+GCFI $1 million or more,MWBE,defoliation_acres_pct,se,0.001726,161
+GCFI $1 million or more,MWBE,methane_digester,se,0.008784,161
+GCFI $1 million or more,Not MWBE,organic_farm,mean,0.04362,596
+GCFI $1 million or more,Not MWBE,local_farm,mean,0.05872,596
+GCFI $1 million or more,Not MWBE,differentiated_farm,mean,0.1023,596
+GCFI $1 million or more,Not MWBE,operated_acres,mean,1917,596
+GCFI $1 million or more,Not MWBE,owns_morethan50pct,mean,0.7567,596
+GCFI $1 million or more,Not MWBE,totvarexp,mean,2822000,596
+GCFI $1 million or more,Not MWBE,exp,mean,3445000,596
+GCFI $1 million or more,Not MWBE,infi,mean,1996000,596
+GCFI $1 million or more,Not MWBE,exp_cow,mean,5448,596
+GCFI $1 million or more,Not MWBE,young,mean,0.2416,596
+GCFI $1 million or more,Not MWBE,beginning,mean,0.2315,596
+GCFI $1 million or more,Not MWBE,cropland_harvested_acres,mean,1495,596
+GCFI $1 million or more,Not MWBE,cropland_failed_acres,mean,7.878,596
+GCFI $1 million or more,Not MWBE,cropland_summer_fallow_acres,mean,16.84,596
+GCFI $1 million or more,Not MWBE,cropland_idle_acres,mean,33.84,596
+GCFI $1 million or more,Not MWBE,permanent_pasture_acres,mean,46.77,596
+GCFI $1 million or more,Not MWBE,woodland_pasture_acres,mean,13.16,596
+GCFI $1 million or more,Not MWBE,other_pasture_acres,mean,27.38,596
+GCFI $1 million or more,Not MWBE,drained_tile_acres_pct,mean,0.2082,596
+GCFI $1 million or more,Not MWBE,drained_ditches_acres_pct,mean,0.06446,596
+GCFI $1 million or more,Not MWBE,conservation_easement_acres_pct,mean,0.009886,596
+GCFI $1 million or more,Not MWBE,no_till_acres_pct,mean,0.08632,596
+GCFI $1 million or more,Not MWBE,reduced_till_acres_pct,mean,0.1906,596
+GCFI $1 million or more,Not MWBE,intensive_till_acres_pct,mean,0.1633,596
+GCFI $1 million or more,Not MWBE,cattle_herd,mean,7.955,596
+GCFI $1 million or more,Not MWBE,dairy_herd,mean,732.1,596
+GCFI $1 million or more,Not MWBE,other_cattle_herd,mean,522.2,596
+GCFI $1 million or more,Not MWBE,cattle_herd_less500,mean,299.8,596
+GCFI $1 million or more,Not MWBE,cattle_herd_500plus,mean,200,596
+GCFI $1 million or more,Not MWBE,rotational_grazing,mean,0.05872,596
+GCFI $1 million or more,Not MWBE,veal,mean,0.02685,596
+GCFI $1 million or more,Not MWBE,fertilizer_cropland_acres_pct,mean,0.4824,596
+GCFI $1 million or more,Not MWBE,fertilizer_pastureland_acres_pct,mean,0.004297,596
+GCFI $1 million or more,Not MWBE,manure_acres_pct,mean,0.2797,596
+GCFI $1 million or more,Not MWBE,organic_acres_pct,mean,0.005567,596
+GCFI $1 million or more,Not MWBE,insects_acres_pct,mean,0.09025,596
+GCFI $1 million or more,Not MWBE,weeds_acres_pct,mean,0.4159,596
+GCFI $1 million or more,Not MWBE,nematodes_acres_pct,mean,0.01944,596
+GCFI $1 million or more,Not MWBE,diseases_acres_pct,mean,0.01924,596
+GCFI $1 million or more,Not MWBE,defoliation_acres_pct,mean,0.001919,596
+GCFI $1 million or more,Not MWBE,methane_digester,mean,0.02685,596
+GCFI $1 million or more,Not MWBE,organic_farm,se,0.009669,596
+GCFI $1 million or more,Not MWBE,local_farm,se,0.01572,596
+GCFI $1 million or more,Not MWBE,differentiated_farm,se,0.01796,596
+GCFI $1 million or more,Not MWBE,operated_acres,se,73.62,596
+GCFI $1 million or more,Not MWBE,owns_morethan50pct,se,0.02235,596
+GCFI $1 million or more,Not MWBE,totvarexp,se,143100,596
+GCFI $1 million or more,Not MWBE,exp,se,174000,596
+GCFI $1 million or more,Not MWBE,infi,se,102500,596
+GCFI $1 million or more,Not MWBE,exp_cow,se,297.6,596
+GCFI $1 million or more,Not MWBE,young,se,0.02536,596
+GCFI $1 million or more,Not MWBE,beginning,se,0.02541,596
+GCFI $1 million or more,Not MWBE,cropland_harvested_acres,se,64.2,596
+GCFI $1 million or more,Not MWBE,cropland_failed_acres,se,3.359,596
+GCFI $1 million or more,Not MWBE,cropland_summer_fallow_acres,se,4.438,596
+GCFI $1 million or more,Not MWBE,cropland_idle_acres,se,6.13,596
+GCFI $1 million or more,Not MWBE,permanent_pasture_acres,se,7.713,596
+GCFI $1 million or more,Not MWBE,woodland_pasture_acres,se,3.086,596
+GCFI $1 million or more,Not MWBE,other_pasture_acres,se,5.232,596
+GCFI $1 million or more,Not MWBE,drained_tile_acres_pct,se,0.01676,596
+GCFI $1 million or more,Not MWBE,drained_ditches_acres_pct,se,0.01192,596
+GCFI $1 million or more,Not MWBE,conservation_easement_acres_pct,se,0.002975,596
+GCFI $1 million or more,Not MWBE,no_till_acres_pct,se,0.007667,596
+GCFI $1 million or more,Not MWBE,reduced_till_acres_pct,se,0.0108,596
+GCFI $1 million or more,Not MWBE,intensive_till_acres_pct,se,0.01061,596
+GCFI $1 million or more,Not MWBE,cattle_herd,se,2.436,596
+GCFI $1 million or more,Not MWBE,dairy_herd,se,34.45,596
+GCFI $1 million or more,Not MWBE,other_cattle_herd,se,25.9,596
+GCFI $1 million or more,Not MWBE,cattle_herd_less500,se,16.67,596
+GCFI $1 million or more,Not MWBE,cattle_herd_500plus,se,10.39,596
+GCFI $1 million or more,Not MWBE,rotational_grazing,se,0.01664,596
+GCFI $1 million or more,Not MWBE,veal,se,0.01187,596
+GCFI $1 million or more,Not MWBE,fertilizer_cropland_acres_pct,se,0.01506,596
+GCFI $1 million or more,Not MWBE,fertilizer_pastureland_acres_pct,se,0.002594,596
+GCFI $1 million or more,Not MWBE,manure_acres_pct,se,0.01833,596
+GCFI $1 million or more,Not MWBE,organic_acres_pct,se,0.002496,596
+GCFI $1 million or more,Not MWBE,insects_acres_pct,se,0.01003,596
+GCFI $1 million or more,Not MWBE,weeds_acres_pct,se,0.01078,596
+GCFI $1 million or more,Not MWBE,nematodes_acres_pct,se,0.005845,596
+GCFI $1 million or more,Not MWBE,diseases_acres_pct,se,0.003662,596
+GCFI $1 million or more,Not MWBE,defoliation_acres_pct,se,6.225e-4,596
+GCFI $1 million or more,Not MWBE,methane_digester,se,0.007806,596
+GCFI less than $1 million,MWBE,organic_farm,mean,0.237,595
+GCFI less than $1 million,MWBE,local_farm,mean,0.1849,595
+GCFI less than $1 million,MWBE,differentiated_farm,mean,0.3782,595
+GCFI less than $1 million,MWBE,operated_acres,mean,263.6,595
+GCFI less than $1 million,MWBE,owns_morethan50pct,mean,0.8235,595
+GCFI less than $1 million,MWBE,totvarexp,mean,155800,595
+GCFI less than $1 million,MWBE,exp,mean,199500,595
+GCFI less than $1 million,MWBE,infi,mean,122300,595
+GCFI less than $1 million,MWBE,exp_cow,mean,4069,595
+GCFI less than $1 million,MWBE,young,mean,0.358,595
+GCFI less than $1 million,MWBE,beginning,mean,0.3395,595
+GCFI less than $1 million,MWBE,cropland_harvested_acres,mean,143.7,595
+GCFI less than $1 million,MWBE,cropland_failed_acres,mean,1.714,595
+GCFI less than $1 million,MWBE,cropland_summer_fallow_acres,mean,4.35,595
+GCFI less than $1 million,MWBE,cropland_idle_acres,mean,5.654,595
+GCFI less than $1 million,MWBE,permanent_pasture_acres,mean,33.41,595
+GCFI less than $1 million,MWBE,woodland_pasture_acres,mean,5.588,595
+GCFI less than $1 million,MWBE,other_pasture_acres,mean,11.01,595
+GCFI less than $1 million,MWBE,drained_tile_acres_pct,mean,0.1981,595
+GCFI less than $1 million,MWBE,drained_ditches_acres_pct,mean,0.03361,595
+GCFI less than $1 million,MWBE,conservation_easement_acres_pct,mean,0.008547,595
+GCFI less than $1 million,MWBE,no_till_acres_pct,mean,0.03998,595
+GCFI less than $1 million,MWBE,reduced_till_acres_pct,mean,0.06014,595
+GCFI less than $1 million,MWBE,intensive_till_acres_pct,mean,0.1852,595
+GCFI less than $1 million,MWBE,cattle_herd,mean,2.141,595
+GCFI less than $1 million,MWBE,dairy_herd,mean,51.48,595
+GCFI less than $1 million,MWBE,other_cattle_herd,mean,42.04,595
+GCFI less than $1 million,MWBE,cattle_herd_less500,mean,19.85,595
+GCFI less than $1 million,MWBE,cattle_herd_500plus,mean,15.34,595
+GCFI less than $1 million,MWBE,rotational_grazing,mean,0.3445,595
+GCFI less than $1 million,MWBE,veal,mean,0.03193,595
+GCFI less than $1 million,MWBE,fertilizer_cropland_acres_pct,mean,0.2494,595
+GCFI less than $1 million,MWBE,fertilizer_pastureland_acres_pct,mean,0.01848,595
+GCFI less than $1 million,MWBE,manure_acres_pct,mean,0.3453,595
+GCFI less than $1 million,MWBE,organic_acres_pct,mean,0.03527,595
+GCFI less than $1 million,MWBE,insects_acres_pct,mean,0.02946,595
+GCFI less than $1 million,MWBE,weeds_acres_pct,mean,0.2005,595
+GCFI less than $1 million,MWBE,nematodes_acres_pct,mean,0.009615,595
+GCFI less than $1 million,MWBE,diseases_acres_pct,mean,0.007785,595
+GCFI less than $1 million,MWBE,defoliation_acres_pct,mean,0.001089,595
+GCFI less than $1 million,MWBE,methane_digester,mean,0,595
+GCFI less than $1 million,MWBE,organic_farm,se,0.02169,595
+GCFI less than $1 million,MWBE,local_farm,se,0.01817,595
+GCFI less than $1 million,MWBE,differentiated_farm,se,0.02385,595
+GCFI less than $1 million,MWBE,operated_acres,se,9.83,595
+GCFI less than $1 million,MWBE,owns_morethan50pct,se,0.01909,595
+GCFI less than $1 million,MWBE,totvarexp,se,5190,595
+GCFI less than $1 million,MWBE,exp,se,6317,595
+GCFI less than $1 million,MWBE,infi,se,6240,595
+GCFI less than $1 million,MWBE,exp_cow,se,118.1,595
+GCFI less than $1 million,MWBE,young,se,0.02432,595
+GCFI less than $1 million,MWBE,beginning,se,0.02418,595
+GCFI less than $1 million,MWBE,cropland_harvested_acres,se,5.416,595
+GCFI less than $1 million,MWBE,cropland_failed_acres,se,0.5126,595
+GCFI less than $1 million,MWBE,cropland_summer_fallow_acres,se,0.8237,595
+GCFI less than $1 million,MWBE,cropland_idle_acres,se,1.097,595
+GCFI less than $1 million,MWBE,permanent_pasture_acres,se,2.32,595
+GCFI less than $1 million,MWBE,woodland_pasture_acres,se,1.096,595
+GCFI less than $1 million,MWBE,other_pasture_acres,se,1.309,595
+GCFI less than $1 million,MWBE,drained_tile_acres_pct,se,0.01397,595
+GCFI less than $1 million,MWBE,drained_ditches_acres_pct,se,0.005479,595
+GCFI less than $1 million,MWBE,conservation_easement_acres_pct,se,0.003084,595
+GCFI less than $1 million,MWBE,no_till_acres_pct,se,0.004891,595
+GCFI less than $1 million,MWBE,reduced_till_acres_pct,se,0.007019,595
+GCFI less than $1 million,MWBE,intensive_till_acres_pct,se,0.01084,595
+GCFI less than $1 million,MWBE,cattle_herd,se,0.3915,595
+GCFI less than $1 million,MWBE,dairy_herd,se,1.289,595
+GCFI less than $1 million,MWBE,other_cattle_herd,se,3.632,595
+GCFI less than $1 million,MWBE,cattle_herd_less500,se,0.7347,595
+GCFI less than $1 million,MWBE,cattle_herd_500plus,se,0.7408,595
+GCFI less than $1 million,MWBE,rotational_grazing,se,0.02361,595
+GCFI less than $1 million,MWBE,veal,se,0.007954,595
+GCFI less than $1 million,MWBE,fertilizer_cropland_acres_pct,se,0.01342,595
+GCFI less than $1 million,MWBE,fertilizer_pastureland_acres_pct,se,0.003524,595
+GCFI less than $1 million,MWBE,manure_acres_pct,se,0.01373,595
+GCFI less than $1 million,MWBE,organic_acres_pct,se,0.007237,595
+GCFI less than $1 million,MWBE,insects_acres_pct,se,0.005039,595
+GCFI less than $1 million,MWBE,weeds_acres_pct,se,0.01119,595
+GCFI less than $1 million,MWBE,nematodes_acres_pct,se,0.003342,595
+GCFI less than $1 million,MWBE,diseases_acres_pct,se,0.002412,595
+GCFI less than $1 million,MWBE,defoliation_acres_pct,se,5.973e-4,595
+GCFI less than $1 million,MWBE,methane_digester,se,0,595
+GCFI less than $1 million,Not MWBE,organic_farm,mean,0.148,811
+GCFI less than $1 million,Not MWBE,local_farm,mean,0.1332,811
+GCFI less than $1 million,Not MWBE,differentiated_farm,mean,0.2651,811
+GCFI less than $1 million,Not MWBE,operated_acres,mean,374.1,811
+GCFI less than $1 million,Not MWBE,owns_morethan50pct,mean,0.8089,811
+GCFI less than $1 million,Not MWBE,totvarexp,mean,184000,811
+GCFI less than $1 million,Not MWBE,exp,mean,233400,811
+GCFI less than $1 million,Not MWBE,infi,mean,146100,811
+GCFI less than $1 million,Not MWBE,exp_cow,mean,4128,811
+GCFI less than $1 million,Not MWBE,young,mean,0.2589,811
+GCFI less than $1 million,Not MWBE,beginning,mean,0.2651,811
+GCFI less than $1 million,Not MWBE,cropland_harvested_acres,mean,205.7,811
+GCFI less than $1 million,Not MWBE,cropland_failed_acres,mean,4.293,811
+GCFI less than $1 million,Not MWBE,cropland_summer_fallow_acres,mean,4.34,811
+GCFI less than $1 million,Not MWBE,cropland_idle_acres,mean,6.327,811
+GCFI less than $1 million,Not MWBE,permanent_pasture_acres,mean,45.32,811
+GCFI less than $1 million,Not MWBE,woodland_pasture_acres,mean,8.806,811
+GCFI less than $1 million,Not MWBE,other_pasture_acres,mean,13.09,811
+GCFI less than $1 million,Not MWBE,drained_tile_acres_pct,mean,0.1349,811
+GCFI less than $1 million,Not MWBE,drained_ditches_acres_pct,mean,0.03938,811
+GCFI less than $1 million,Not MWBE,conservation_easement_acres_pct,mean,0.01763,811
+GCFI less than $1 million,Not MWBE,no_till_acres_pct,mean,0.03703,811
+GCFI less than $1 million,Not MWBE,reduced_till_acres_pct,mean,0.05599,811
+GCFI less than $1 million,Not MWBE,intensive_till_acres_pct,mean,0.1589,811
+GCFI less than $1 million,Not MWBE,cattle_herd,mean,2.543,811
+GCFI less than $1 million,Not MWBE,dairy_herd,mean,61.75,811
+GCFI less than $1 million,Not MWBE,other_cattle_herd,mean,46.67,811
+GCFI less than $1 million,Not MWBE,cattle_herd_less500,mean,23.14,811
+GCFI less than $1 million,Not MWBE,cattle_herd_500plus,mean,17.41,811
+GCFI less than $1 million,Not MWBE,rotational_grazing,mean,0.2528,811
+GCFI less than $1 million,Not MWBE,veal,mean,0.03822,811
+GCFI less than $1 million,Not MWBE,fertilizer_cropland_acres_pct,mean,0.2532,811
+GCFI less than $1 million,Not MWBE,fertilizer_pastureland_acres_pct,mean,0.009697,811
+GCFI less than $1 million,Not MWBE,manure_acres_pct,mean,0.3075,811
+GCFI less than $1 million,Not MWBE,organic_acres_pct,mean,0.01886,811
+GCFI less than $1 million,Not MWBE,insects_acres_pct,mean,0.02502,811
+GCFI less than $1 million,Not MWBE,weeds_acres_pct,mean,0.1876,811
+GCFI less than $1 million,Not MWBE,nematodes_acres_pct,mean,0.006242,811
+GCFI less than $1 million,Not MWBE,diseases_acres_pct,mean,0.006352,811
+GCFI less than $1 million,Not MWBE,defoliation_acres_pct,mean,0.003007,811
+GCFI less than $1 million,Not MWBE,methane_digester,mean,0.002466,811
+GCFI less than $1 million,Not MWBE,organic_farm,se,0.01432,811
+GCFI less than $1 million,Not MWBE,local_farm,se,0.01384,811
+GCFI less than $1 million,Not MWBE,differentiated_farm,se,0.01793,811
+GCFI less than $1 million,Not MWBE,operated_acres,se,10.67,811
+GCFI less than $1 million,Not MWBE,owns_morethan50pct,se,0.01583,811
+GCFI less than $1 million,Not MWBE,totvarexp,se,5442,811
+GCFI less than $1 million,Not MWBE,exp,se,6743,811
+GCFI less than $1 million,Not MWBE,infi,se,5805,811
+GCFI less than $1 million,Not MWBE,exp_cow,se,150.9,811
+GCFI less than $1 million,Not MWBE,young,se,0.01882,811
+GCFI less than $1 million,Not MWBE,beginning,se,0.01875,811
+GCFI less than $1 million,Not MWBE,cropland_harvested_acres,se,6.414,811
+GCFI less than $1 million,Not MWBE,cropland_failed_acres,se,1.12,811
+GCFI less than $1 million,Not MWBE,cropland_summer_fallow_acres,se,0.8032,811
+GCFI less than $1 million,Not MWBE,cropland_idle_acres,se,1.148,811
+GCFI less than $1 million,Not MWBE,permanent_pasture_acres,se,2.896,811
+GCFI less than $1 million,Not MWBE,woodland_pasture_acres,se,1.181,811
+GCFI less than $1 million,Not MWBE,other_pasture_acres,se,1.576,811
+GCFI less than $1 million,Not MWBE,drained_tile_acres_pct,se,0.008969,811
+GCFI less than $1 million,Not MWBE,drained_ditches_acres_pct,se,0.005207,811
+GCFI less than $1 million,Not MWBE,conservation_easement_acres_pct,se,0.005296,811
+GCFI less than $1 million,Not MWBE,no_till_acres_pct,se,0.00375,811
+GCFI less than $1 million,Not MWBE,reduced_till_acres_pct,se,0.005241,811
+GCFI less than $1 million,Not MWBE,intensive_till_acres_pct,se,0.008324,811
+GCFI less than $1 million,Not MWBE,cattle_herd,se,0.3749,811
+GCFI less than $1 million,Not MWBE,dairy_herd,se,1.369,811
+GCFI less than $1 million,Not MWBE,other_cattle_herd,se,1.379,811
+GCFI less than $1 million,Not MWBE,cattle_herd_less500,se,0.7919,811
+GCFI less than $1 million,Not MWBE,cattle_herd_500plus,se,0.5732,811
+GCFI less than $1 million,Not MWBE,rotational_grazing,se,0.01766,811
+GCFI less than $1 million,Not MWBE,veal,se,0.009688,811
+GCFI less than $1 million,Not MWBE,fertilizer_cropland_acres_pct,se,0.01062,811
+GCFI less than $1 million,Not MWBE,fertilizer_pastureland_acres_pct,se,0.001968,811
+GCFI less than $1 million,Not MWBE,manure_acres_pct,se,0.01079,811
+GCFI less than $1 million,Not MWBE,organic_acres_pct,se,0.003512,811
+GCFI less than $1 million,Not MWBE,insects_acres_pct,se,0.003321,811
+GCFI less than $1 million,Not MWBE,weeds_acres_pct,se,0.007693,811
+GCFI less than $1 million,Not MWBE,nematodes_acres_pct,se,0.001849,811
+GCFI less than $1 million,Not MWBE,diseases_acres_pct,se,0.001606,811
+GCFI less than $1 million,Not MWBE,defoliation_acres_pct,se,0.001269,811
+GCFI less than $1 million,Not MWBE,methane_digester,se,0.002463,811
+GCFI $1 million or more,MWBE,organic_farm,total,5,5
+GCFI $1 million or more,MWBE,local_farm,total,17,17
+GCFI $1 million or more,MWBE,differentiated_farm,total,22,22
+GCFI $1 million or more,MWBE,operated_acres,total,279600,161
+GCFI $1 million or more,MWBE,owns_morethan50pct,total,112,112
+GCFI $1 million or more,MWBE,totvarexp,total,449900000,161
+GCFI $1 million or more,MWBE,exp,total,538800000,161
+GCFI $1 million or more,MWBE,infi,total,305900000,159
+GCFI $1 million or more,MWBE,exp_cow,total,812900,161
+GCFI $1 million or more,MWBE,young,total,31,31
+GCFI $1 million or more,MWBE,beginning,total,37,37
+GCFI $1 million or more,MWBE,cropland_harvested_acres,total,216000,158
+GCFI $1 million or more,MWBE,cropland_failed_acres,total,5263,13
+GCFI $1 million or more,MWBE,cropland_summer_fallow_acres,total,568,6
+GCFI $1 million or more,MWBE,cropland_idle_acres,total,3506,19
+GCFI $1 million or more,MWBE,permanent_pasture_acres,total,7520,57
+GCFI $1 million or more,MWBE,woodland_pasture_acres,total,1826,20
+GCFI $1 million or more,MWBE,other_pasture_acres,total,3033,20
+GCFI $1 million or more,MWBE,drained_tile_acres_pct,total,33.21,85
+GCFI $1 million or more,MWBE,drained_ditches_acres_pct,total,9.381,35
+GCFI $1 million or more,MWBE,conservation_easement_acres_pct,total,2.084,12
+GCFI $1 million or more,MWBE,no_till_acres_pct,total,14.28,77
+GCFI $1 million or more,MWBE,reduced_till_acres_pct,total,22.22,72
+GCFI $1 million or more,MWBE,intensive_till_acres_pct,total,30.73,102
+GCFI $1 million or more,MWBE,cattle_herd,total,546,22
+GCFI $1 million or more,MWBE,dairy_herd,total,112500,161
+GCFI $1 million or more,MWBE,other_cattle_herd,total,74780,149
+GCFI $1 million or more,MWBE,cattle_herd_less500,total,45040,152
+GCFI $1 million or more,MWBE,cattle_herd_500plus,total,31600,161
+GCFI $1 million or more,MWBE,rotational_grazing,total,8,8
+GCFI $1 million or more,MWBE,fertilizer_cropland_acres_pct,total,79.53,149
+GCFI $1 million or more,MWBE,manure_acres_pct,total,44.94,86
+GCFI $1 million or more,MWBE,insects_acres_pct,total,11.81,30
+GCFI $1 million or more,MWBE,weeds_acres_pct,total,63.69,151
+GCFI $1 million or more,MWBE,nematodes_acres_pct,total,4.288,13
+GCFI $1 million or more,MWBE,diseases_acres_pct,total,5.818,13
+GCFI $1 million or more,MWBE,defoliation_acres_pct,total,0.377,5
+GCFI $1 million or more,Not MWBE,organic_farm,total,26,26
+GCFI $1 million or more,Not MWBE,local_farm,total,35,35
+GCFI $1 million or more,Not MWBE,differentiated_farm,total,61,61
+GCFI $1 million or more,Not MWBE,operated_acres,total,1142000,596
+GCFI $1 million or more,Not MWBE,owns_morethan50pct,total,451,451
+GCFI $1 million or more,Not MWBE,totvarexp,total,1682000000,596
+GCFI $1 million or more,Not MWBE,exp,total,2053000000,596
+GCFI $1 million or more,Not MWBE,infi,total,1190000000,587
+GCFI $1 million or more,Not MWBE,exp_cow,total,3247000,596
+GCFI $1 million or more,Not MWBE,young,total,144,144
+GCFI $1 million or more,Not MWBE,beginning,total,138,138
+GCFI $1 million or more,Not MWBE,cropland_harvested_acres,total,890900,583
+GCFI $1 million or more,Not MWBE,cropland_failed_acres,total,4695,28
+GCFI $1 million or more,Not MWBE,cropland_summer_fallow_acres,total,10040,70
+GCFI $1 million or more,Not MWBE,cropland_idle_acres,total,20170,112
+GCFI $1 million or more,Not MWBE,permanent_pasture_acres,total,27880,243
+GCFI $1 million or more,Not MWBE,woodland_pasture_acres,total,7844,73
+GCFI $1 million or more,Not MWBE,other_pasture_acres,total,16320,76
+GCFI $1 million or more,Not MWBE,drained_tile_acres_pct,total,124.1,331
+GCFI $1 million or more,Not MWBE,drained_ditches_acres_pct,total,38.42,166
+GCFI $1 million or more,Not MWBE,conservation_easement_acres_pct,total,5.892,44
+GCFI $1 million or more,Not MWBE,no_till_acres_pct,total,51.45,291
+GCFI $1 million or more,Not MWBE,reduced_till_acres_pct,total,113.6,372
+GCFI $1 million or more,Not MWBE,intensive_till_acres_pct,total,97.3,375
+GCFI $1 million or more,Not MWBE,cattle_herd,total,4741,90
+GCFI $1 million or more,Not MWBE,dairy_herd,total,436300,596
+GCFI $1 million or more,Not MWBE,other_cattle_herd,total,311200,558
+GCFI $1 million or more,Not MWBE,cattle_herd_less500,total,178700,559
+GCFI $1 million or more,Not MWBE,cattle_herd_500plus,total,119200,592
+GCFI $1 million or more,Not MWBE,rotational_grazing,total,35,35
+GCFI $1 million or more,Not MWBE,veal,total,16,16
+GCFI $1 million or more,Not MWBE,fertilizer_cropland_acres_pct,total,287.5,561
+GCFI $1 million or more,Not MWBE,fertilizer_pastureland_acres_pct,total,2.561,20
+GCFI $1 million or more,Not MWBE,manure_acres_pct,total,166.7,307
+GCFI $1 million or more,Not MWBE,organic_acres_pct,total,3.318,7
+GCFI $1 million or more,Not MWBE,insects_acres_pct,total,53.79,179
+GCFI $1 million or more,Not MWBE,weeds_acres_pct,total,247.9,565
+GCFI $1 million or more,Not MWBE,nematodes_acres_pct,total,11.59,53
+GCFI $1 million or more,Not MWBE,diseases_acres_pct,total,11.46,60
+GCFI $1 million or more,Not MWBE,defoliation_acres_pct,total,1.144,17
+GCFI $1 million or more,Not MWBE,methane_digester,total,16,16
+GCFI less than $1 million,MWBE,organic_farm,total,141,141
+GCFI less than $1 million,MWBE,local_farm,total,110,110
+GCFI less than $1 million,MWBE,differentiated_farm,total,225,225
+GCFI less than $1 million,MWBE,operated_acres,total,156800,595
+GCFI less than $1 million,MWBE,owns_morethan50pct,total,490,490
+GCFI less than $1 million,MWBE,totvarexp,total,92700000,595
+GCFI less than $1 million,MWBE,exp,total,118700000,595
+GCFI less than $1 million,MWBE,infi,total,72750000,527
+GCFI less than $1 million,MWBE,exp_cow,total,2421000,595
+GCFI less than $1 million,MWBE,young,total,213,213
+GCFI less than $1 million,MWBE,beginning,total,202,202
+GCFI less than $1 million,MWBE,cropland_harvested_acres,total,85500,564
+GCFI less than $1 million,MWBE,cropland_failed_acres,total,1020,42
+GCFI less than $1 million,MWBE,cropland_summer_fallow_acres,total,2588,75
+GCFI less than $1 million,MWBE,cropland_idle_acres,total,3364,93
+GCFI less than $1 million,MWBE,permanent_pasture_acres,total,19880,437
+GCFI less than $1 million,MWBE,woodland_pasture_acres,total,3325,116
+GCFI less than $1 million,MWBE,other_pasture_acres,total,6551,161
+GCFI less than $1 million,MWBE,drained_tile_acres_pct,total,117.9,290
+GCFI less than $1 million,MWBE,drained_ditches_acres_pct,total,20,89
+GCFI less than $1 million,MWBE,conservation_easement_acres_pct,total,5.085,18
+GCFI less than $1 million,MWBE,no_till_acres_pct,total,23.79,122
+GCFI less than $1 million,MWBE,reduced_till_acres_pct,total,35.78,145
+GCFI less than $1 million,MWBE,intensive_till_acres_pct,total,110.2,355
+GCFI less than $1 million,MWBE,cattle_herd,total,1274,91
+GCFI less than $1 million,MWBE,dairy_herd,total,30630,595
+GCFI less than $1 million,MWBE,other_cattle_herd,total,25020,563
+GCFI less than $1 million,MWBE,cattle_herd_less500,total,11810,523
+GCFI less than $1 million,MWBE,cattle_herd_500plus,total,9126,570
+GCFI less than $1 million,MWBE,rotational_grazing,total,205,205
+GCFI less than $1 million,MWBE,veal,total,19,19
+GCFI less than $1 million,MWBE,fertilizer_cropland_acres_pct,total,148.4,368
+GCFI less than $1 million,MWBE,fertilizer_pastureland_acres_pct,total,11,69
+GCFI less than $1 million,MWBE,manure_acres_pct,total,205.5,451
+GCFI less than $1 million,MWBE,organic_acres_pct,total,20.99,59
+GCFI less than $1 million,MWBE,insects_acres_pct,total,17.53,64
+GCFI less than $1 million,MWBE,weeds_acres_pct,total,119.3,343
+GCFI less than $1 million,MWBE,nematodes_acres_pct,total,5.721,17
+GCFI less than $1 million,MWBE,diseases_acres_pct,total,4.632,32
+GCFI less than $1 million,MWBE,defoliation_acres_pct,total,0.6481,11
+GCFI less than $1 million,Not MWBE,organic_farm,total,120,120
+GCFI less than $1 million,Not MWBE,local_farm,total,108,108
+GCFI less than $1 million,Not MWBE,differentiated_farm,total,215,215
+GCFI less than $1 million,Not MWBE,operated_acres,total,303400,811
+GCFI less than $1 million,Not MWBE,owns_morethan50pct,total,656,656
+GCFI less than $1 million,Not MWBE,totvarexp,total,149200000,811
+GCFI less than $1 million,Not MWBE,exp,total,189300000,811
+GCFI less than $1 million,Not MWBE,infi,total,118500000,726
+GCFI less than $1 million,Not MWBE,exp_cow,total,3347000,811
+GCFI less than $1 million,Not MWBE,young,total,210,210
+GCFI less than $1 million,Not MWBE,beginning,total,215,215
+GCFI less than $1 million,Not MWBE,cropland_harvested_acres,total,166800,778
+GCFI less than $1 million,Not MWBE,cropland_failed_acres,total,3482,63
+GCFI less than $1 million,Not MWBE,cropland_summer_fallow_acres,total,3520,99
+GCFI less than $1 million,Not MWBE,cropland_idle_acres,total,5131,112
+GCFI less than $1 million,Not MWBE,permanent_pasture_acres,total,36750,617
+GCFI less than $1 million,Not MWBE,woodland_pasture_acres,total,7142,183
+GCFI less than $1 million,Not MWBE,other_pasture_acres,total,10620,208
+GCFI less than $1 million,Not MWBE,drained_tile_acres_pct,total,109.4,361
+GCFI less than $1 million,Not MWBE,drained_ditches_acres_pct,total,31.93,171
+GCFI less than $1 million,Not MWBE,conservation_easement_acres_pct,total,14.3,35
+GCFI less than $1 million,Not MWBE,no_till_acres_pct,total,30.03,189
+GCFI less than $1 million,Not MWBE,reduced_till_acres_pct,total,45.4,203
+GCFI less than $1 million,Not MWBE,intensive_till_acres_pct,total,128.9,483
+GCFI less than $1 million,Not MWBE,cattle_herd,total,2062,132
+GCFI less than $1 million,Not MWBE,dairy_herd,total,50080,811
+GCFI less than $1 million,Not MWBE,other_cattle_herd,total,37850,744
+GCFI less than $1 million,Not MWBE,cattle_herd_less500,total,18770,700
+GCFI less than $1 million,Not MWBE,cattle_herd_500plus,total,14120,784
+GCFI less than $1 million,Not MWBE,rotational_grazing,total,205,205
+GCFI less than $1 million,Not MWBE,veal,total,31,31
+GCFI less than $1 million,Not MWBE,fertilizer_cropland_acres_pct,total,205.3,559
+GCFI less than $1 million,Not MWBE,fertilizer_pastureland_acres_pct,total,7.864,75
+GCFI less than $1 million,Not MWBE,manure_acres_pct,total,249.4,625
+GCFI less than $1 million,Not MWBE,organic_acres_pct,total,15.29,53
+GCFI less than $1 million,Not MWBE,insects_acres_pct,total,20.29,98
+GCFI less than $1 million,Not MWBE,weeds_acres_pct,total,152.1,552
+GCFI less than $1 million,Not MWBE,nematodes_acres_pct,total,5.062,27
+GCFI less than $1 million,Not MWBE,diseases_acres_pct,total,5.151,35
+GCFI less than $1 million,Not MWBE,defoliation_acres_pct,total,2.439,24

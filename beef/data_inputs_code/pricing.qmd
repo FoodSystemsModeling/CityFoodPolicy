@@ -142,6 +142,113 @@ df <- df %>%
 
 ```
 
+#### Slaughter cattle
+
+We pull data from [USDA AMS My Market News](https://mymarketnews.ams.usda.gov/public_data): Commodities: Slaughter Cattle, Report: New York Weekly Auction Summary, Report Section: Report Details.
+
+Pull historical USDA MyMarketNews (MARS) data Report: New York Weekly Cattle Auction Summary (Slug ID 2011 / AMS_2011) Commodity: Slaughter Cattle Range: 2019-05-03 to present
+
+Note that you will have to use your own API key.
+
+```{r}
+
+library(httr)
+library(jsonlite)
+library(purrr)
+library(lubridate)
+
+# ---- Config ------------------------------------------------------
+API_KEY   <- "N/KUHW09nFAPZSgSDDdRIhKr5yKHJ0xT2sPO4SXJrLs=" 
+SLUG_ID   <- 2011                         # New York Weekly Cattle Auction Summary
+START_DATE <- as.Date("2019-01-01")
+END_DATE   <- Sys.Date()
+
+BASE_URL <- paste0("https://marsapi.ams.usda.gov/services/v1.2/reports/", SLUG_ID)
+
+# ---- Helper: pull one date-range chunk
+# The API wants dates as mm/dd/yyyy, and the parameter is "report_begin_date"
+fetch_chunk <- function(from_date, to_date, api_key) {
+
+  from_str <- format(from_date, "%m/%d/%Y")
+  to_str   <- format(to_date,   "%m/%d/%Y")
+
+  q_param <- paste0("report_begin_date=", from_str, ":", to_str)
+
+  resp <- GET(
+    url = BASE_URL,
+    query = list(q = q_param, allSections = "true"),
+    authenticate(api_key, "")   # API key goes in as username, blank password
+  )
+
+  if (status_code(resp) != 200) {
+    warning(sprintf(
+      "Request for %s to %s failed with status %s",
+      from_str, to_str, status_code(resp)
+    ))
+    return(NULL)
+  }
+  tryCatch({
+    parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"),
+                        flatten = TRUE)
+
+    if (is.null(parsed$results) || length(parsed$results) == 0) {
+      message(sprintf("No results returned for %s to %s", from_str, to_str))
+      return(NULL)
+    }
+    result_list <- parsed$results
+
+    if (is.data.frame(result_list)) {
+      as_tibble(result_list, .name_repair = "unique")
+    } else {
+      bind_rows(result_list)
+    }
+
+  }, error = function(e) {
+    warning(sprintf(
+      "Parsing failed for %s to %s: %s",
+      from_str, to_str, conditionMessage(e)
+    ))
+    NULL
+  })
+}
+
+# ---- Build list of ~170-day date ranges from 2019 to current
+# The API caps requests at 180 days; we use 170 to leave a safety margin.
+CHUNK_DAYS <- 170
+
+chunk_starts <- seq(START_DATE, END_DATE, by = CHUNK_DAYS)
+
+chunks <- map(chunk_starts, function(cs) {
+  chunk_end <- min(cs + (CHUNK_DAYS - 1), END_DATE)
+  list(from = cs, to = chunk_end)
+})
+
+# ---- Pull all chunks and combine
+all_chunks_list <- map(chunks, function(ch) {
+  message(sprintf("Fetching %s to %s ...", ch$from, ch$to))
+  df <- fetch_chunk(ch$from, ch$to, API_KEY)
+  Sys.sleep(1)  # be polite to the API
+  df
+})
+
+# bind_rows 
+all_data <- bind_rows(all_chunks_list)
+
+
+
+#Keep data of interest
+df <- all_data %>% 
+  filter(class=="Dairy Cows" &
+           quality_grade_name=="Boner 80-85%" & 
+           dressing=="Average")
+
+# Save to CSV 
+write.csv(all_data, "../data_processed/ny_weekly_slaughter_cattle_2019_present.csv", row.names = FALSE)
+
+write.csv(df, "../data_processed/ny_weekly_slaughter_dairycows_2019_present.csv", row.names = FALSE)
+
+```
+
 #### Figures
 
 ```{r}

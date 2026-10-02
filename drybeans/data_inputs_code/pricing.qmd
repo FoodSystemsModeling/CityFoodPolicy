@@ -633,7 +633,7 @@ retail_beans %>%
 
 #### Final table
 
-For the model, [we include one worksheet with differentiated prices, one with commodity dry bean and soybean farmgate prices, and one with retail bean prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/drybean_soybean_price.xlsx). These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.
+For the model, we include three files: [differentiated prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/differentiated_price.csv), one with [commodity dry bean and soybean farmgate prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/farmgate_price.csv), and one with [retail bean prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/retail_bean_price.csv). These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.
 
 ```{r}
 
@@ -654,44 +654,39 @@ sum_retail <- retail_beans %>%
     dry_retail_price_kg =mean(real_drybeans_cost_perkg_2024dollars)
   )
 
+## Add info
+info_diff <- c(
+  'sheet_name = "differentiated_price"', 
+  'sheet_description = "prices along the supply chain for differentiated dry beans"', 
+  'source = "interviews"')
 
-# Create workbook
-wb <- createWorkbook()
-
-# Add differentiated
-addWorksheet(wb, "differentiated_price")
-writeData(wb, "differentiated_price", diff_price)
-
-## Add farmgate 
-addWorksheet(wb, "farmgate_price")
-writeData(wb, "farmgate_price", sum)
-
-## Add retail bean
-addWorksheet(wb, "retail_bean_price")
-writeData(wb, "retail_bean_price", sum_retail)
-
-# Add info
-info <- tibble(
-  sheet_name = c(
-    "differentiated_price", "farmgate_price", 
-    "retail_bean_price"), 
-  sheet_description = c(
-    "prices along the supply chain for differentiated dry beans", 
-    "average farmgate price per kg from 2022-2024 (in 2024 dollars)",
-    "average retail price per kg from 2022-2024 (in 2024 dollars), U.S. city average"), 
-  source = c(
-    "interviews", 
-    "For soybeans, we use the global price of soybeans from the Federal Reserve Bank of St. Louis (https://fred.stlouisfed.org/series/PSOYBUSDM) for monthly price data. Units are reported as U.S. dollars per metric ton and are not seasonally adjusted. Value represents the benchmark prices which are representative of the global market. They are determined by the largest exporter of a given commodity. Prices are period averages in nominal U.S. dollars.We use the producer price index by commodity: Farm products: Soybeans (https://fred.stlouisfed.org/series/WPU01830131) to put all soybean price data in 2024 dollars. For dry beans, we utilize the [USDA AMS Bean Market News Summary (Annual)](https://esmis.nal.usda.gov/publication/dry-edible-bean-market-news-summary-annual) from [2024](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), [2019](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), and [2018](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/3f462c42c/mg74qt23r/LSABA.PDF). All data are reported as pdfs, not in spreadsheet format. We convert to 2024 prices using the [producer price index by commodity: Farm products: drybeans](https://fred.stlouisfed.org/series/WPU0113011).", 
-    "Average Price: Beans, Dried, Any Type, All Sizes (Cost per Pound/453.6 Grams) in U.S. City Average (https://fred.stlouisfed.org/series/APU0000714233). Includes all dried organic and non-organic beans, regardless of package size.")
+info_farmgate <- c(
+  'sheet_name = "farmgate_price"', 
+  sheet_description =
+    '"average farmgate price per kg from 2022-2024 (in 2024 dollars)"', 
+  'source =
+    "For soybeans, we use the global price of soybeans from the Federal Reserve Bank of St. Louis (https://fred.stlouisfed.org/series/PSOYBUSDM) for monthly price data. Units are reported as U.S. dollars per metric ton and are not seasonally adjusted. Value represents the benchmark prices which are representative of the global market. They are determined by the largest exporter of a given commodity. Prices are period averages in nominal U.S. dollars.We use the producer price index by commodity: Farm products: Soybeans (https://fred.stlouisfed.org/series/WPU01830131) to put all soybean price data in 2024 dollars. For dry beans, we utilize the [USDA AMS Bean Market News Summary (Annual)](https://esmis.nal.usda.gov/publication/dry-edible-bean-market-news-summary-annual) from [2024](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), [2019](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/q811ng52f/zg64wg94r/LSABA.PDF), and [2018](https://esmis.nal.usda.gov/sites/default/release-files/bz60cw28v/3f462c42c/mg74qt23r/LSABA.PDF). All data are reported as pdfs, not in spreadsheet format. We convert to 2024 prices using the [producer price index by commodity: Farm products: drybeans](https://fred.stlouisfed.org/series/WPU0113011)."'
   )
 
-# Add worksheet
-addWorksheet(wb, "info")
-writeData(wb, "info", info)
+info_retail <- c(
+  'sheet_name ="retail_bean_price"', 
+  'sheet_description = "average retail price per kg from 2022-2024 (in 2024 dollars), U.S. city average"', 
+  'source = "Average Price: Beans, Dried, Any Type, All Sizes (Cost per Pound/453.6 Grams) in U.S. City Average (https://fred.stlouisfed.org/series/APU0000714233). Includes all dried organic and non-organic beans, regardless of package size."'
+  )
 
-# Save workbook 
-saveWorkbook(wb, "../data_final/drybean_soybean_price.xlsx", 
-             overwrite = TRUE)
+
+# Differentiated
+write_csv(diff_price, "../data_final/differentiated_price.csv")
+writeLines(info_diff, "../data_final/differentiated_price.txt")
+
+## Farmgate
+write_csv(sum, "../data_final/farmgate_price.csv")
+writeLines(info_farmgate, "../data_final/farmgate_price.txt")
+
+## Add retail bean
+write_csv(sum_retail, "../data_final/retail_bean_price.csv")
+writeLines(info_retail, "../data_final/retail_bean_price.txt")
+
 ```
 
 ```{r}
@@ -732,8 +727,9 @@ sum_retail %>%
 
 ### Margins
 
-[Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.xlsx)
+[Final data: Estimated margins by location along the dry bean supply chain.](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/drybeans/data_final/margins.csv)
 
 Data includes margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories.
 
 All data was gathered through interviews with supply chain actors. Note: A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price.
+

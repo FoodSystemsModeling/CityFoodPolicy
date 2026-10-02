@@ -1,0 +1,3 @@
+sheet_name ="retail_bean_price"
+sheet_description = "average retail price per kg from 2022-2024 (in 2024 dollars), U.S. city average"
+source = "Average Price: Beans, Dried, Any Type, All Sizes (Cost per Pound/453.6 Grams) in U.S. City Average (https://fred.stlouisfed.org/series/APU0000714233). Includes all dried organic and non-organic beans, regardless of package size."

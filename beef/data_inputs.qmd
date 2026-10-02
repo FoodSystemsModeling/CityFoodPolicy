@@ -8,7 +8,7 @@ bibliography: ../references.bib
 
 ## Pricing
 
-{{< include ../beef/data_inputs_code/pricing.qmd >}}
+{{< include ../beef/data_inputs_code/pricing.qmd eval=false>}}
 
 ## Agricultural production
 

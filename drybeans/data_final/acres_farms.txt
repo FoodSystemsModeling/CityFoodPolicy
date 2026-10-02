@@ -1,0 +1,4 @@
+sheet_name = "acres_farms"
+sheet_description = "Number of acres and farms by county for soybean and drybean operations in New York"
+source = "2022 Census of Agriculture, public data, Table 25. Field Crops: 2022 and 2017, Restricted access 2022 Census of Agriculture"
+notes = "We allocate all missing acres acros counties with acres not disclosed based on the number of farms in the county. We allocate more acres to farms in the western part of the state based on the average size of farms in the west vs. rest of New York. Dry bean farms are around 3 times bigger in the west and soybean around 1.2 times larger."

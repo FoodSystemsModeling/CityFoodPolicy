@@ -1,0 +1,48 @@
+variable_name = c(
+    "company_name", "street_address", "city", "state", 
+    "zip_code", "ny", "harvester_processor" , 
+    "secondary_processor", "auction",
+    "harvester_processor_scale", 
+    "secondary_processor_scale",
+    "auction_scale",
+    "max_inv", 
+    "lrfs_business", 
+    "mwbe", 
+    "sold_to_NYC",
+    "nys_product_purchased")
+variable_description = c(
+    "Company name", 
+    "Street address (e.g., 1038 COURT ST)", 
+    "City",
+    "State abbreviation (e.g., NY)", 
+    "Zip code as 5 digits", 
+    "0/1 variable indicating if the business is located in NY or not",
+    "0/1 variable indicating if the business is a harvester processor or not",
+    "0/1 variable indicating if the business is a secondary processor or not",
+    "0/1 variable indicating if the business is an auction or not",
+    "Scale of harvester processor business. If not a primary processor then leave blank, otherwise fill in with small, medium, large",
+    "Scale of secondary processor business. If not a secondary processor then leave blank, otherwise fill in with small, medium, large",
+     "Scale of auction business. If not an auction then leave blank, otherwise fill in with small, medium, large",
+    "Maxiumum inventory capacity for this scale of processor", 
+    "0/1 variable indicating if the business is sells NYS source identified product or not",
+    "0/1 variable indicating if the business is an MWBE processor or not",
+    "0/1 variable indicating if the business is sold to NYC or not",
+    "0/1 variable indicating if the business was part of a supply chain that sold NYS source identified product previously to NYC agencies")
+notes = c(
+    "",                                                                   
+    "Can be lower case or upper case, fine to just copy and paste from whatever source. Do NOT include state or zip code.",  # street_address
+    "",                                                                   
+    "Ideally it will be the state abbreviation (NY) but you can also include the full name New York.",  # state
+    "",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "1 indicates yes and 0 indicates no",
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)",
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)", 
+    "Enter the text `small`, `medium`, or `large`. If you have different scale categories then enter these (such as small/large)", 
+    "Choose one representative business from each category (e.g., small primary processor) and report the max inventory for all businesses in that category", 
+    "1 indicates yes and 0 indicates no. Please correct if you know the business sells source identified NYS product",
+    "1 indicates yes and 0 indicates no. Do not change data in this column.", 
+    "1 indicates yes and 0 indicates no. Do not change data in this column.", 
+    "1 indicates yes and 0 indicates no. Do not change data in this column.")

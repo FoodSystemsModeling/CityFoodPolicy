@@ -1,0 +1,3 @@
+sheet_name = "production_cost"
+description = "Mean and standard deviation for cost of production per acre and hectare for dry bean and soybean growers. Costs are by crop, scale (under/over $M), organic, and MWBE)."
+source = "Restricted access Census of Agriculture and crop budgets. See Quarto file for more information."

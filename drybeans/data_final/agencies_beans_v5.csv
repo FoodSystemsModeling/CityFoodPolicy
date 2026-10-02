@@ -1,0 +1,22 @@
+agency_name,agency_abbr,lat,lon,years,commodity_base,processing_stage,volume_total (kg)
+Dept of Education,DOE,40.7255,-73.7177,1,dry_conv,canned,2098292.552
+Dept of Education,DOE,40.7255,-73.7177,1,dry_conv,bagged,101860.8875
+Dept of Education,DOE,40.7255,-73.7177,1,dry_conv,bean_product,1000772.277
+Dept Homeless Services,DHS,40.7255,-73.7177,1,dry_conv,canned,35835.58237
+Dept Homeless Services,DHS,40.7255,-73.7177,1,dry_conv,bagged,1959.063848
+Dept Homeless Services,DHS,40.7255,-73.7177,1,dry_conv,bean_product,290163.7096
+Dept of Aging,DOA,40.7255,-73.7177,1,dry_conv,canned,1635.19916
+Dept of Aging,DOA,40.7255,-73.7177,1,dry_conv,bagged,92.532768
+Dept of Aging,DOA,40.7255,-73.7177,1,dry_conv,bean_product,138.799152
+Human Resources Admin,HRA,40.7255,-73.7177,1,dry_conv,canned,1005413.43
+Human Resources Admin,HRA,40.7255,-73.7177,1,dry_conv,bagged,1194171.658
+Human Resources Admin,HRA,40.7255,-73.7177,1,dry_conv,bean_product,0
+Health and Hospitals,H+H,40.7255,-73.7177,1,dry_conv,canned,61121.06841
+Health and Hospitals,H+H,40.7255,-73.7177,1,dry_conv,bagged,68620.75854
+Health and Hospitals,H+H,40.7255,-73.7177,1,dry_conv,bean_product,5785.56596
+Dept of Corrections,DOC,40.7255,-73.7177,1,dry_conv,canned,195084.4761
+Dept of Corrections,DOC,40.7255,-73.7177,1,dry_conv,bagged,47355.0048
+Dept of Corrections,DOC,40.7255,-73.7177,1,dry_conv,bean_product,170161.8637
+Admin Childrens Services,ACS,40.7255,-73.7177,1,dry_conv,canned,22733.12386
+Admin Childrens Services,ACS,40.7255,-73.7177,1,dry_conv,bagged,79.3786
+Admin Childrens Services,ACS,40.7255,-73.7177,1,dry_conv,bean_product,0

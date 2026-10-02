@@ -1,0 +1,3 @@
+sheet_name = "differentiated_price"
+sheet_description = "prices along the supply chain for differentiated dry beans"
+source = "interviews"

@@ -17,7 +17,7 @@ if (!dir.exists("../data_final") && dir.exists("data_inputs_code")) {
 ```
 
 ```{r}
-wb <- createWorkbook()
+#wb <- createWorkbook()
 
 # Create data frame with information
 diff <- tibble(
@@ -27,22 +27,16 @@ diff <- tibble(
   value = 1248762/2.205
 )
 
-## Add worksheet
-addWorksheet(wb, "differentiated_market_size")
-writeData(wb, "differentiated_market_size", diff)
-
-## Info
-info <- tibble(
-  sheet_name = "differentiated_market_size", 
-  description = "Total size of the differentiated market (i.e., NYS source identified) dry beans", 
-  source = "interviews", 
-  notes = "Data are reported in total killograms of dry beans"
+# Write info txt
+info <- c(
+  'sheet_name = "differentiated_market_size"', 
+  'description = "Total size of the differentiated market (i.e., NYS source identified) dry beans"', 
+  'source = "interviews"', 
+  'notes = "Data are reported in total killograms of dry beans"'
 )
 
-addWorksheet(wb, "info")
-writeData(wb, "info", info)
-
 # Save
-saveWorkbook(wb, "../data_final/differentiated_total_demand.xlsx")
+write_csv(diff, "../data_final/differentiated_total_demand.csv")
+writeLines(info, "../data_final/differentiated_total_demand.txt")
 
 ```

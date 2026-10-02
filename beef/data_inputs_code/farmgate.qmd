@@ -4,6 +4,15 @@ editor: visual
 ---
 
 ```{r}
+#| include: false
+# When included in the book, working dir is beef/ not data_inputs_code/
+# Detect context: if data_inputs_code/ exists as a subdirectory, we're in the parent (book render)
+if (!dir.exists("../data_processed") && dir.exists("data_inputs_code")) {
+  knitr::opts_knit$set(root.dir = normalizePath("data_inputs_code"))
+}
+```
+
+```{r}
 library(tidyverse)
 library(readxl)
 ```
@@ -12,10 +21,77 @@ library(readxl)
 
 We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. [Exported data](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx) and [code](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.01.Beef_approved.qmd) used to generate results.
 
-The sample of farms include farms in New York with primary commodity dairy and at least $1,000 in sales. 
+The sample of farms include farms in New York with primary commodity dairy and at least \$1,000 in sales.
 
 The sheet titled "summary" includes summary statistics (mean/standard error) for a variety of different farm-level characteristics by scale and MWBE.
 
 The sheet titled "metadata" contains definitions of all variables and the sheet titled "info" describes the data at a high level along with the sample.
 
 Notes: Operations with less than 1,000 in sales are dropped, if N\<5 it is not included, (D) indicated not included due to disclosure risk.
+
+```{r}
+
+# Import summary data
+df <- read_xlsx("../data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx", 
+                sheet="summary")
+
+write_csv(df, "../data_final/farmer_characteristics.csv")
+
+# Add meta data info
+meta <- c(
+  organic_farm = "An operation with organic sales",
+  local_farm = "An operation with local sales",
+  differentiated_farm = "An operation with local, organic, or value-added sales or agritourism income",
+  operated_acres = "Acres operated",
+  owns_morethan50pct = "1 if owns more than 50% of land that is operated, 0 otherwise",
+  totvarexp = "Total variable expense",
+  exp = "Total expense (fixed and variable)",
+  infi = "Net farm income",
+  exp_cow = "Total expense per dairy cow",
+  young = "An operation with a young operator (less than 35 years old)",
+  beginning = "An operation with a beginning operator (10 years or less farming experience)",
+  cropland_harvested_acres = "Harvested cropland acres",
+  cropland_failed_acres = "Failed cropland acres",
+  cropland_summer_fallow_acres = "Summer fallow acres",
+  cropland_idle_acres = "Idle cropland acres",
+  permanent_pasture_acres = "Permenant pasture acres",
+  woodland_pasture_acres = "Woodland pasture acres",
+  other_pasture_acres = "Other pasture acres",
+  drained_tile_acres_pct = "Acres drained by tile as a percent of operated acres",
+  drained_ditches_acres_pct = "Acres artifically drained by ditches as a percent of operated acres",
+  conservation_easement_acres_pct = "Acres under conservation easement as a percent of operated acres",
+  no_till_acres_pct = "Cropland acres where no-till practices used as a percent of operated acres",
+  reduced_till_acres_pct = "Cropland acres where reduced-till practices used as a percent of operated acres",
+  intensive_till_acres_pct = "Cropland acres where intensive-till practices used as a percent of operated acres",
+  cattle_herd = "Number of beef cows on hand (Include beef heifers that had calved. Exclude heifers that had not calved, steers, calves, and bulls)",
+  dairy_herd = "Number of milk cows kep for production of milk (includes dry milk cows and milk heifers that have calved)",
+  other_cattle_herd = "Number of other cattle and calves (includes heifers that have not calved, steers, calves, and bulls)",
+  cattle_herd_less500 = "Cattle and calves sold or moved from this operation in 2022 weighing less than 500 pounds",
+  cattle_herd_500plus = "Cattle and calves sold or moved from this operation in 2022 weighing 500 pounds or more",
+  rotational_grazing = "1 if the operation practiced rotational or management intensive grazing, 0 otherwise",
+  veal = "1 if the operation raised or sold veal calves, 0 otherwise",
+  fertilizer_cropland_acres_pct = "Cropland acres to which commercial fertilizer and soil conditioners were applied as a precent of operated acres",
+  fertilizer_pastureland_acres_pct = "Pastureland and rangeland acres to which commercial fertilizer and soil conditioners were applied as a precent of operated acres",
+  manure_acres_pct = "Acres of cropland and pastureland on which animal manure was applied as a precent of operated acres",
+  organic_acres_pct = "Acres of cropland and pastureland treated with organic fertilizer according to USDA's NOP standards as a precent of operated acres",
+  insects_acres_pct = "Acres on which chemicals were applied to control insects as a percent of operated acres",
+  weeds_acres_pct = "Acres on which chemicals were applied to control weeds as a percent of operated acres",
+  nematodes_acres_pct = "Acres on which chemicals were applied to control nematodes as a percent of operated acres",
+  diseases_acres_pct = "Acres on which chemicals were applied to control disease in crops and orchards (e.g., blight, smut, rust) as a percent of operated acres",
+  defoliation_acres_pct = "Acres of crops treated to control growth, thin fruit, ripen or defoliate as a percent of operated acres",
+  methane_digester = "1 if the farm had a methane digester on their operation (regardless of ownership), 0 otherwise"
+)
+
+writeLines(meta, "../data_final/farmer_characteristics_meta.txt")
+
+# Add info 
+info <- c(
+  'sheet_name = "summary"', 
+  'description = "Summary stats for dairy producers by scale, MWBE, organic"',
+  'sample = "Dairy producers in New York"', 
+  'source = "2022 Restricted access Census of Agriculture"'
+)
+
+writeLines(info, "../data_final/farmer_characteristics_info.txt")
+
+```

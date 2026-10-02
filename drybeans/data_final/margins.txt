@@ -1,0 +1,4 @@
+sheet_name = "margins"
+sheet_description ="Margins along the dry bean supply chain, presented as a range from high to low. Data are separated by organic/conventional and by different types processes (e.g., canned/bagged, wholesale margin for dried/canned beans), and by scale. In many cases the margins are the across different categories"
+source = "interviews"
+notes = "A margin is the percentage of the selling price that is profit. Margin = (selling price - cost)/selling price"

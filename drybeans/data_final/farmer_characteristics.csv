@@ -1,0 +1,579 @@
+crop,sales_class_agg,mwbe_fct,variable_name,statistic,value,weighted_n
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_drybeans,mean,4528,26
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,mean,12970,26
+dry_beans,GCFI $1 million or more,Not MWBE,exp_acre,mean,848.3,26
+dry_beans,GCFI $1 million or more,Not MWBE,operated_acres,mean,2741,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_harvested_acres,mean,201.1,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_cwt,mean,4528,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_yield,mean,21.65,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,mean,274,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_bushels,mean,12960,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_yield,mean,25.58,26
+dry_beans,GCFI $1 million or more,Not MWBE,young,mean,0.2308,26
+dry_beans,GCFI $1 million or more,Not MWBE,beginning,mean,0.2308,26
+dry_beans,GCFI $1 million or more,Not MWBE,livestock_dairy,mean,0.03846,26
+dry_beans,GCFI $1 million or more,Not MWBE,organic_farm,mean,0.07692,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till,mean,0.5,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till,mean,0.9231,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till,mean,0.4231,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres,mean,325.4,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres,mean,1152,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres,mean,551.6,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,mean,0.1212,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,mean,0.5755,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,mean,0.1721,26
+dry_beans,GCFI $1 million or more,Not MWBE,crp_fct,mean,0.07692,26
+dry_beans,GCFI $1 million or more,Not MWBE,owns_morethan50pct,mean,0.4615,26
+dry_beans,GCFI $1 million or more,Not MWBE,differentiated_farm,mean,0.2692,26
+dry_beans,GCFI $1 million or more,Not MWBE,infi,mean,507400,26
+dry_beans,GCFI $1 million or more,Not MWBE,exp,mean,2449000,26
+dry_beans,GCFI $1 million or more,Not MWBE,tvp,mean,2615000,26
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_drybeans,se,1180,26
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,se,3821,26
+dry_beans,GCFI $1 million or more,Not MWBE,exp_acre,se,150.9,26
+dry_beans,GCFI $1 million or more,Not MWBE,operated_acres,se,568.7,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_harvested_acres,se,32.81,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_cwt,se,1180,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_yield,se,2.273,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,se,78.18,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_bushels,se,3820,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_yield,se,5.945,26
+dry_beans,GCFI $1 million or more,Not MWBE,young,se,0.0976,26
+dry_beans,GCFI $1 million or more,Not MWBE,beginning,se,0.0976,26
+dry_beans,GCFI $1 million or more,Not MWBE,livestock_dairy,se,0.03812,26
+dry_beans,GCFI $1 million or more,Not MWBE,organic_farm,se,0.05342,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till,se,0.1216,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till,se,0.05342,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till,se,0.1144,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres,se,150.3,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres,se,201.9,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres,se,234,26
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,se,0.04163,26
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,se,0.07013,26
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,se,0.06254,26
+dry_beans,GCFI $1 million or more,Not MWBE,crp_fct,se,0.05342,26
+dry_beans,GCFI $1 million or more,Not MWBE,owns_morethan50pct,se,0.1238,26
+dry_beans,GCFI $1 million or more,Not MWBE,differentiated_farm,se,0.1147,26
+dry_beans,GCFI $1 million or more,Not MWBE,infi,se,335600,26
+dry_beans,GCFI $1 million or more,Not MWBE,exp,se,783600,26
+dry_beans,GCFI $1 million or more,Not MWBE,tvp,se,574000,26
+dry_beans,GCFI less than $1 million,MWBE,current_inventory_drybeans,mean,329.6,33
+dry_beans,GCFI less than $1 million,MWBE,current_inventory_soybeans,mean,510,33
+dry_beans,GCFI less than $1 million,MWBE,exp_acre,mean,1802,33
+dry_beans,GCFI less than $1 million,MWBE,operated_acres,mean,128.6,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_harvested_acres,mean,14.09,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_cwt,mean,329.6,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_yield,mean,31.07,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_harvested_acres,mean,8.545,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_bushels,mean,510.2,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_yield,mean,7.97,33
+dry_beans,GCFI less than $1 million,MWBE,young,mean,0.2727,33
+dry_beans,GCFI less than $1 million,MWBE,beginning,mean,0.4848,33
+dry_beans,GCFI less than $1 million,MWBE,livestock_dairy,mean,0.09091,33
+dry_beans,GCFI less than $1 million,MWBE,organic_farm,mean,0.1818,33
+dry_beans,GCFI less than $1 million,MWBE,no_till,mean,0.4545,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till,mean,0.4545,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till,mean,0.3636,33
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres,mean,10,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres,mean,38.91,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres,mean,10.09,33
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,mean,0.3171,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,mean,0.2935,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,mean,0.7202,33
+dry_beans,GCFI less than $1 million,MWBE,crp_fct,mean,0,33
+dry_beans,GCFI less than $1 million,MWBE,owns_morethan50pct,mean,0.8182,33
+dry_beans,GCFI less than $1 million,MWBE,differentiated_farm,mean,0.6061,33
+dry_beans,GCFI less than $1 million,MWBE,infi,mean,58710,33
+dry_beans,GCFI less than $1 million,MWBE,exp,mean,71190,33
+dry_beans,GCFI less than $1 million,MWBE,tvp,mean,117400,33
+dry_beans,GCFI less than $1 million,MWBE,current_inventory_drybeans,se,171,33
+dry_beans,GCFI less than $1 million,MWBE,current_inventory_soybeans,se,339.9,33
+dry_beans,GCFI less than $1 million,MWBE,exp_acre,se,692.1,33
+dry_beans,GCFI less than $1 million,MWBE,operated_acres,se,36.54,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_harvested_acres,se,7.581,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_cwt,se,171,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_yield,se,4.651,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_harvested_acres,se,6.006,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_bushels,se,340.2,33
+dry_beans,GCFI less than $1 million,MWBE,soybeans_yield,se,5.063,33
+dry_beans,GCFI less than $1 million,MWBE,young,se,0.1094,33
+dry_beans,GCFI less than $1 million,MWBE,beginning,se,0.1167,33
+dry_beans,GCFI less than $1 million,MWBE,livestock_dairy,se,0.06485,33
+dry_beans,GCFI less than $1 million,MWBE,organic_farm,se,0.08042,33
+dry_beans,GCFI less than $1 million,MWBE,no_till,se,0.1167,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till,se,0.1138,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till,se,0.1126,33
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres,se,3.844,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres,se,21.35,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres,se,5.019,33
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,se,0.1001,33
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,se,0.09151,33
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,se,0.4989,33
+dry_beans,GCFI less than $1 million,MWBE,crp_fct,se,0,33
+dry_beans,GCFI less than $1 million,MWBE,owns_morethan50pct,se,0.07279,33
+dry_beans,GCFI less than $1 million,MWBE,differentiated_farm,se,0.1169,33
+dry_beans,GCFI less than $1 million,MWBE,infi,se,35520,33
+dry_beans,GCFI less than $1 million,MWBE,exp,se,17650,33
+dry_beans,GCFI less than $1 million,MWBE,tvp,se,44130,33
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_drybeans,mean,917.5,73
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,mean,2116,73
+dry_beans,GCFI less than $1 million,Not MWBE,exp_acre,mean,829.4,73
+dry_beans,GCFI less than $1 million,Not MWBE,operated_acres,mean,385.3,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_harvested_acres,mean,51.75,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_cwt,mean,917.5,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_yield,mean,18.46,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,mean,46.18,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_bushels,mean,2118,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_yield,mean,18.96,73
+dry_beans,GCFI less than $1 million,Not MWBE,young,mean,0.4247,73
+dry_beans,GCFI less than $1 million,Not MWBE,beginning,mean,0.4247,73
+dry_beans,GCFI less than $1 million,Not MWBE,livestock_dairy,mean,0.0137,73
+dry_beans,GCFI less than $1 million,Not MWBE,organic_farm,mean,0.1918,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till,mean,0.411,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till,mean,0.5479,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till,mean,0.5342,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres,mean,52.66,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres,mean,144,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres,mean,68.32,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,mean,0.1563,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,mean,0.3969,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,mean,0.3873,73
+dry_beans,GCFI less than $1 million,Not MWBE,crp_fct,mean,0.0274,73
+dry_beans,GCFI less than $1 million,Not MWBE,owns_morethan50pct,mean,0.6986,73
+dry_beans,GCFI less than $1 million,Not MWBE,differentiated_farm,mean,0.3288,73
+dry_beans,GCFI less than $1 million,Not MWBE,infi,mean,-17320,73
+dry_beans,GCFI less than $1 million,Not MWBE,exp,mean,245900,73
+dry_beans,GCFI less than $1 million,Not MWBE,tvp,mean,240000,73
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_drybeans,se,196.9,73
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,se,728,73
+dry_beans,GCFI less than $1 million,Not MWBE,exp_acre,se,150.8,73
+dry_beans,GCFI less than $1 million,Not MWBE,operated_acres,se,75.68,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_harvested_acres,se,9.069,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_cwt,se,196.9,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_yield,se,2.463,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,se,15.53,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_bushels,se,728.8,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_yield,se,4.897,73
+dry_beans,GCFI less than $1 million,Not MWBE,young,se,0.1133,73
+dry_beans,GCFI less than $1 million,Not MWBE,beginning,se,0.11,73
+dry_beans,GCFI less than $1 million,Not MWBE,livestock_dairy,se,0.01384,73
+dry_beans,GCFI less than $1 million,Not MWBE,organic_farm,se,0.07984,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till,se,0.106,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till,se,0.10780000000000001,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till,se,0.1085,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres,se,18.13,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres,se,50.46,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres,se,24.18,73
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,se,0.0466,73
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,se,0.09874,73
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,se,0.09955,73
+dry_beans,GCFI less than $1 million,Not MWBE,crp_fct,se,0.01976,73
+dry_beans,GCFI less than $1 million,Not MWBE,owns_morethan50pct,se,0.09453,73
+dry_beans,GCFI less than $1 million,Not MWBE,differentiated_farm,se,0.1026,73
+dry_beans,GCFI less than $1 million,Not MWBE,infi,se,34620,73
+dry_beans,GCFI less than $1 million,Not MWBE,exp,se,49850,73
+dry_beans,GCFI less than $1 million,Not MWBE,tvp,se,50710,73
+soybeans_only,GCFI $1 million or more,MWBE,current_inventory_drybeans,mean,0,121
+soybeans_only,GCFI $1 million or more,MWBE,current_inventory_soybeans,mean,17980,121
+soybeans_only,GCFI $1 million or more,MWBE,exp_acre,mean,2951,121
+soybeans_only,GCFI $1 million or more,MWBE,operated_acres,mean,1546,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_harvested_acres,mean,0,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_cwt,mean,0,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_yield,mean,0,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_harvested_acres,mean,371.1,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_bushels,mean,17980,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_yield,mean,45.85,121
+soybeans_only,GCFI $1 million or more,MWBE,young,mean,0.1818,121
+soybeans_only,GCFI $1 million or more,MWBE,beginning,mean,0.1736,121
+soybeans_only,GCFI $1 million or more,MWBE,livestock_dairy,mean,0,121
+soybeans_only,GCFI $1 million or more,MWBE,organic_farm,mean,0.06612,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till,mean,0.7603,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till,mean,0.5372,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till,mean,0.3967,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres,mean,597.8,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres,mean,394.7,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres,mean,208.7,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres_pct_cropland,mean,0.4854,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres_pct_cropland,mean,0.2778,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres_pct_cropland,mean,0.1318,121
+soybeans_only,GCFI $1 million or more,MWBE,crp_fct,mean,0.124,121
+soybeans_only,GCFI $1 million or more,MWBE,owns_morethan50pct,mean,0.5207,121
+soybeans_only,GCFI $1 million or more,MWBE,differentiated_farm,mean,0.1653,121
+soybeans_only,GCFI $1 million or more,MWBE,infi,mean,786800,121
+soybeans_only,GCFI $1 million or more,MWBE,exp,mean,1927000,121
+soybeans_only,GCFI $1 million or more,MWBE,tvp,mean,3008000,121
+soybeans_only,GCFI $1 million or more,MWBE,current_inventory_drybeans,se,0,121
+soybeans_only,GCFI $1 million or more,MWBE,current_inventory_soybeans,se,2075,121
+soybeans_only,GCFI $1 million or more,MWBE,exp_acre,se,452.5,121
+soybeans_only,GCFI $1 million or more,MWBE,operated_acres,se,147.8,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_harvested_acres,se,0,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_cwt,se,0,121
+soybeans_only,GCFI $1 million or more,MWBE,dry_beans_yield,se,0,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_harvested_acres,se,38.45,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_bushels,se,2075,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_yield,se,1.329,121
+soybeans_only,GCFI $1 million or more,MWBE,young,se,0.05127,121
+soybeans_only,GCFI $1 million or more,MWBE,beginning,se,0.03567,121
+soybeans_only,GCFI $1 million or more,MWBE,livestock_dairy,se,0,121
+soybeans_only,GCFI $1 million or more,MWBE,organic_farm,se,0.02964,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till,se,0.0458,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till,se,0.05341,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till,se,0.0542,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres,se,75.46,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres,se,68.41,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres,se,58.4,121
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres_pct_cropland,se,0.03816,121
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres_pct_cropland,se,0.03965,121
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres_pct_cropland,se,0.03096,121
+soybeans_only,GCFI $1 million or more,MWBE,crp_fct,se,0.03069,121
+soybeans_only,GCFI $1 million or more,MWBE,owns_morethan50pct,se,0.05234,121
+soybeans_only,GCFI $1 million or more,MWBE,differentiated_farm,se,0.03864,121
+soybeans_only,GCFI $1 million or more,MWBE,infi,se,209600,121
+soybeans_only,GCFI $1 million or more,MWBE,exp,se,397400,121
+soybeans_only,GCFI $1 million or more,MWBE,tvp,se,566800,121
+soybeans_only,GCFI $1 million or more,Not MWBE,current_inventory_drybeans,mean,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,mean,26330,495
+soybeans_only,GCFI $1 million or more,Not MWBE,exp_acre,mean,2032,495
+soybeans_only,GCFI $1 million or more,Not MWBE,operated_acres,mean,1942,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_harvested_acres,mean,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_cwt,mean,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_yield,mean,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,mean,545.9,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_bushels,mean,26330,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_yield,mean,48.41,495
+soybeans_only,GCFI $1 million or more,Not MWBE,young,mean,0.1778,495
+soybeans_only,GCFI $1 million or more,Not MWBE,beginning,mean,0.1899,495
+soybeans_only,GCFI $1 million or more,Not MWBE,livestock_dairy,mean,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,organic_farm,mean,0.05657,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till,mean,0.7798,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till,mean,0.6222,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till,mean,0.398,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres,mean,710.9,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres,mean,559.8,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres,mean,263.8,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,mean,0.4527,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,mean,0.3054,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,mean,0.1435,495
+soybeans_only,GCFI $1 million or more,Not MWBE,crp_fct,mean,0.1192,495
+soybeans_only,GCFI $1 million or more,Not MWBE,owns_morethan50pct,mean,0.4242,495
+soybeans_only,GCFI $1 million or more,Not MWBE,differentiated_farm,mean,0.1879,495
+soybeans_only,GCFI $1 million or more,Not MWBE,infi,mean,696300,495
+soybeans_only,GCFI $1 million or more,Not MWBE,exp,mean,2206000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,tvp,mean,2991000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,current_inventory_drybeans,se,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,se,1234,495
+soybeans_only,GCFI $1 million or more,Not MWBE,exp_acre,se,198.3,495
+soybeans_only,GCFI $1 million or more,Not MWBE,operated_acres,se,75.68,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_harvested_acres,se,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_cwt,se,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,dry_beans_yield,se,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,se,25.4,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_bushels,se,1235,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_yield,se,0.6744,495
+soybeans_only,GCFI $1 million or more,Not MWBE,young,se,0.01837,495
+soybeans_only,GCFI $1 million or more,Not MWBE,beginning,se,0.0192,495
+soybeans_only,GCFI $1 million or more,Not MWBE,livestock_dairy,se,0,495
+soybeans_only,GCFI $1 million or more,Not MWBE,organic_farm,se,0.01143,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till,se,0.02045,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till,se,0.02342,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till,se,0.02388,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres,se,43.55,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres,se,39.04,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres,se,28.35,495
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,se,0.0182,495
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,se,0.01631,495
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,se,0.01248,495
+soybeans_only,GCFI $1 million or more,Not MWBE,crp_fct,se,0.01535,495
+soybeans_only,GCFI $1 million or more,Not MWBE,owns_morethan50pct,se,0.02416,495
+soybeans_only,GCFI $1 million or more,Not MWBE,differentiated_farm,se,0.01859,495
+soybeans_only,GCFI $1 million or more,Not MWBE,infi,se,63330,495
+soybeans_only,GCFI $1 million or more,Not MWBE,exp,se,218700,495
+soybeans_only,GCFI $1 million or more,Not MWBE,tvp,se,197000,495
+soybeans_only,GCFI less than $1 million,MWBE,current_inventory_drybeans,mean,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,current_inventory_soybeans,mean,2627,1817
+soybeans_only,GCFI less than $1 million,MWBE,exp_acre,mean,1463,1817
+soybeans_only,GCFI less than $1 million,MWBE,operated_acres,mean,234.6,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_harvested_acres,mean,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_cwt,mean,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_yield,mean,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_harvested_acres,mean,64.39,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_bushels,mean,2626,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_yield,mean,41.48,1817
+soybeans_only,GCFI less than $1 million,MWBE,young,mean,0.202,1817
+soybeans_only,GCFI less than $1 million,MWBE,beginning,mean,0.35,1817
+soybeans_only,GCFI less than $1 million,MWBE,livestock_dairy,mean,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,organic_farm,mean,0.05779,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till,mean,0.7045,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till,mean,0.3005,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till,mean,0.3511,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres,mean,91.06,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres,mean,31.29,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres,mean,25.55,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,mean,0.4923,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,mean,0.1578,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,mean,0.2125,1817
+soybeans_only,GCFI less than $1 million,MWBE,crp_fct,mean,0.04898,1817
+soybeans_only,GCFI less than $1 million,MWBE,owns_morethan50pct,mean,0.7386,1817
+soybeans_only,GCFI less than $1 million,MWBE,differentiated_farm,mean,0.1998,1817
+soybeans_only,GCFI less than $1 million,MWBE,infi,mean,-16420,1817
+soybeans_only,GCFI less than $1 million,MWBE,exp,mean,186000,1817
+soybeans_only,GCFI less than $1 million,MWBE,tvp,mean,275500,1817
+soybeans_only,GCFI less than $1 million,MWBE,current_inventory_drybeans,se,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,current_inventory_soybeans,se,113.6,1817
+soybeans_only,GCFI less than $1 million,MWBE,exp_acre,se,97.8,1817
+soybeans_only,GCFI less than $1 million,MWBE,operated_acres,se,8.664,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_harvested_acres,se,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_cwt,se,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,dry_beans_yield,se,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_harvested_acres,se,2.66,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_bushels,se,113.6,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_yield,se,0.5554,1817
+soybeans_only,GCFI less than $1 million,MWBE,young,se,0.01561,1817
+soybeans_only,GCFI less than $1 million,MWBE,beginning,se,0.01727,1817
+soybeans_only,GCFI less than $1 million,MWBE,livestock_dairy,se,0,1817
+soybeans_only,GCFI less than $1 million,MWBE,organic_farm,se,0.007459,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till,se,0.0156,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till,se,0.0153,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till,se,0.01659,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres,se,4.976,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres,se,2.714,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres,se,2.902,1817
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,se,0.0136,1817
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,se,0.009639,1817
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,se,0.01334,1817
+soybeans_only,GCFI less than $1 million,MWBE,crp_fct,se,0.006762,1817
+soybeans_only,GCFI less than $1 million,MWBE,owns_morethan50pct,se,0.01548,1817
+soybeans_only,GCFI less than $1 million,MWBE,differentiated_farm,se,0.01278,1817
+soybeans_only,GCFI less than $1 million,MWBE,infi,se,5967,1817
+soybeans_only,GCFI less than $1 million,MWBE,exp,se,7760,1817
+soybeans_only,GCFI less than $1 million,MWBE,tvp,se,15200,1817
+soybeans_only,GCFI less than $1 million,Not MWBE,current_inventory_drybeans,mean,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,mean,3418,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,exp_acre,mean,918.8,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,operated_acres,mean,315.8,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_harvested_acres,mean,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_cwt,mean,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_yield,mean,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,mean,84.73,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_bushels,mean,3417,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_yield,mean,41.64,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,young,mean,0.1917,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,beginning,mean,0.2589,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,livestock_dairy,mean,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,organic_farm,mean,0.03627,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till,mean,0.7022,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till,mean,0.3796,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till,mean,0.3272,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres,mean,109.6,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres,mean,54.5,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres,mean,36.05,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,mean,0.4804,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,mean,0.2037,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,mean,0.1779,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,crp_fct,mean,0.05333,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,owns_morethan50pct,mean,0.6664,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,differentiated_farm,mean,0.1165,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,infi,mean,9548,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,exp,mean,179300,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,tvp,mean,240800,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,current_inventory_drybeans,se,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,se,74.2,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,exp_acre,se,44.36,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,operated_acres,se,6.523,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_harvested_acres,se,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_cwt,se,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,dry_beans_yield,se,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,se,1.835,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_bushels,se,74.21,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_yield,se,0.3389,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,young,se,0.009282,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,beginning,se,0.009528,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,livestock_dairy,se,0,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,organic_farm,se,0.00376,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till,se,0.009046,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till,se,0.009786,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till,se,0.009468,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres,se,3.065,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres,se,2.422,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres,se,1.942,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,se,0.008036,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,se,0.006515,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,se,0.006438,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,crp_fct,se,0.00426,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,owns_morethan50pct,se,0.009625,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,differentiated_farm,se,0.006339,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,infi,se,3280,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,exp,se,4296,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,tvp,se,7695,6094
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_drybeans,total,117700,26
+dry_beans,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,total,337200,14
+dry_beans,GCFI $1 million or more,Not MWBE,exp_acre,total,22050,26
+dry_beans,GCFI $1 million or more,Not MWBE,operated_acres,total,71260,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_harvested_acres,total,5228,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_cwt,total,117700,26
+dry_beans,GCFI $1 million or more,Not MWBE,dry_beans_yield,total,563,26
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,total,7123,14
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_bushels,total,337000,14
+dry_beans,GCFI $1 million or more,Not MWBE,soybeans_yield,total,665,14
+dry_beans,GCFI $1 million or more,Not MWBE,young,total,6,6
+dry_beans,GCFI $1 million or more,Not MWBE,beginning,total,6,6
+dry_beans,GCFI $1 million or more,Not MWBE,no_till,total,13,13
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till,total,24,24
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till,total,11,11
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres,total,8460,13
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres,total,29950,24
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres,total,14340,11
+dry_beans,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,total,3.15,13
+dry_beans,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,total,14.96,24
+dry_beans,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,total,4.474,11
+dry_beans,GCFI $1 million or more,Not MWBE,owns_morethan50pct,total,12,12
+dry_beans,GCFI $1 million or more,Not MWBE,differentiated_farm,total,7,7
+dry_beans,GCFI $1 million or more,Not MWBE,infi,total,13190000,24
+dry_beans,GCFI $1 million or more,Not MWBE,exp,total,63670000,26
+dry_beans,GCFI $1 million or more,Not MWBE,tvp,total,68000000,26
+dry_beans,GCFI less than $1 million,MWBE,current_inventory_drybeans,total,10880,33
+dry_beans,GCFI less than $1 million,MWBE,exp_acre,total,59470,33
+dry_beans,GCFI less than $1 million,MWBE,operated_acres,total,4244,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_harvested_acres,total,465,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_cwt,total,10880,33
+dry_beans,GCFI less than $1 million,MWBE,dry_beans_yield,total,1025,33
+dry_beans,GCFI less than $1 million,MWBE,young,total,9,9
+dry_beans,GCFI less than $1 million,MWBE,beginning,total,16,16
+dry_beans,GCFI less than $1 million,MWBE,organic_farm,total,6,6
+dry_beans,GCFI less than $1 million,MWBE,no_till,total,15,15
+dry_beans,GCFI less than $1 million,MWBE,reduced_till,total,15,15
+dry_beans,GCFI less than $1 million,MWBE,intensive_till,total,12,12
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres,total,330,15
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres,total,1284,15
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres,total,333,12
+dry_beans,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,total,10.46,15
+dry_beans,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,total,9.687,15
+dry_beans,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,total,23.77,12
+dry_beans,GCFI less than $1 million,MWBE,owns_morethan50pct,total,27,27
+dry_beans,GCFI less than $1 million,MWBE,differentiated_farm,total,20,20
+dry_beans,GCFI less than $1 million,MWBE,infi,total,1937000,24
+dry_beans,GCFI less than $1 million,MWBE,exp,total,2349000,33
+dry_beans,GCFI less than $1 million,MWBE,tvp,total,3875000,33
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_drybeans,total,66980,73
+dry_beans,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,total,154500,31
+dry_beans,GCFI less than $1 million,Not MWBE,exp_acre,total,60550,73
+dry_beans,GCFI less than $1 million,Not MWBE,operated_acres,total,28130,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_harvested_acres,total,3778,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_cwt,total,66980,73
+dry_beans,GCFI less than $1 million,Not MWBE,dry_beans_yield,total,1347,73
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,total,3371,31
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_bushels,total,154600,31
+dry_beans,GCFI less than $1 million,Not MWBE,soybeans_yield,total,1384,31
+dry_beans,GCFI less than $1 million,Not MWBE,young,total,31,31
+dry_beans,GCFI less than $1 million,Not MWBE,beginning,total,31,31
+dry_beans,GCFI less than $1 million,Not MWBE,organic_farm,total,14,14
+dry_beans,GCFI less than $1 million,Not MWBE,no_till,total,30,30
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till,total,40,40
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till,total,39,39
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres,total,3844,30
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres,total,10510,40
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres,total,4987,39
+dry_beans,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,total,11.41,30
+dry_beans,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,total,28.97,40
+dry_beans,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,total,28.27,39
+dry_beans,GCFI less than $1 million,Not MWBE,owns_morethan50pct,total,51,51
+dry_beans,GCFI less than $1 million,Not MWBE,differentiated_farm,total,24,24
+dry_beans,GCFI less than $1 million,Not MWBE,infi,total,-1264000,34
+dry_beans,GCFI less than $1 million,Not MWBE,exp,total,17950000,73
+dry_beans,GCFI less than $1 million,Not MWBE,tvp,total,17520000,73
+soybeans_only,GCFI $1 million or more,MWBE,current_inventory_soybeans,total,2176000,121
+soybeans_only,GCFI $1 million or more,MWBE,exp_acre,total,357000,121
+soybeans_only,GCFI $1 million or more,MWBE,operated_acres,total,187100,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_harvested_acres,total,44900,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_bushels,total,2176000,121
+soybeans_only,GCFI $1 million or more,MWBE,soybeans_yield,total,5548,121
+soybeans_only,GCFI $1 million or more,MWBE,young,total,22,22
+soybeans_only,GCFI $1 million or more,MWBE,beginning,total,21,21
+soybeans_only,GCFI $1 million or more,MWBE,organic_farm,total,8,8
+soybeans_only,GCFI $1 million or more,MWBE,no_till,total,92,92
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till,total,65,65
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till,total,48,48
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres,total,72340,92
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres,total,47760,65
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres,total,25250,48
+soybeans_only,GCFI $1 million or more,MWBE,no_till_acres_pct_cropland,total,58.74,92
+soybeans_only,GCFI $1 million or more,MWBE,reduced_till_acres_pct_cropland,total,33.61,65
+soybeans_only,GCFI $1 million or more,MWBE,intensive_till_acres_pct_cropland,total,15.95,48
+soybeans_only,GCFI $1 million or more,MWBE,crp_fct,total,15,15
+soybeans_only,GCFI $1 million or more,MWBE,owns_morethan50pct,total,63,63
+soybeans_only,GCFI $1 million or more,MWBE,differentiated_farm,total,20,20
+soybeans_only,GCFI $1 million or more,MWBE,infi,total,95200000,100
+soybeans_only,GCFI $1 million or more,MWBE,exp,total,233100000,121
+soybeans_only,GCFI $1 million or more,MWBE,tvp,total,363900000,121
+soybeans_only,GCFI $1 million or more,Not MWBE,current_inventory_soybeans,total,13030000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,exp_acre,total,1006000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,operated_acres,total,961000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_harvested_acres,total,270200,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_bushels,total,13030000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,soybeans_yield,total,23960,495
+soybeans_only,GCFI $1 million or more,Not MWBE,young,total,88,88
+soybeans_only,GCFI $1 million or more,Not MWBE,beginning,total,94,94
+soybeans_only,GCFI $1 million or more,Not MWBE,organic_farm,total,28,28
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till,total,386,386
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till,total,308,308
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till,total,197,197
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres,total,351900,386
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres,total,277100,308
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres,total,130600,197
+soybeans_only,GCFI $1 million or more,Not MWBE,no_till_acres_pct_cropland,total,224.1,386
+soybeans_only,GCFI $1 million or more,Not MWBE,reduced_till_acres_pct_cropland,total,151.2,308
+soybeans_only,GCFI $1 million or more,Not MWBE,intensive_till_acres_pct_cropland,total,71.05,197
+soybeans_only,GCFI $1 million or more,Not MWBE,crp_fct,total,59,59
+soybeans_only,GCFI $1 million or more,Not MWBE,owns_morethan50pct,total,210,210
+soybeans_only,GCFI $1 million or more,Not MWBE,differentiated_farm,total,93,93
+soybeans_only,GCFI $1 million or more,Not MWBE,infi,total,344700000,421
+soybeans_only,GCFI $1 million or more,Not MWBE,exp,total,1092000000,495
+soybeans_only,GCFI $1 million or more,Not MWBE,tvp,total,1481000000,495
+soybeans_only,GCFI less than $1 million,MWBE,current_inventory_soybeans,total,4773000,1817
+soybeans_only,GCFI less than $1 million,MWBE,exp_acre,total,2659000,1817
+soybeans_only,GCFI less than $1 million,MWBE,operated_acres,total,426400,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_harvested_acres,total,117000,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_bushels,total,4772000,1817
+soybeans_only,GCFI less than $1 million,MWBE,soybeans_yield,total,75360,1817
+soybeans_only,GCFI less than $1 million,MWBE,young,total,367,367
+soybeans_only,GCFI less than $1 million,MWBE,beginning,total,636,636
+soybeans_only,GCFI less than $1 million,MWBE,organic_farm,total,105,105
+soybeans_only,GCFI less than $1 million,MWBE,no_till,total,1280,1280
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till,total,546,546
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till,total,638,638
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres,total,165500,1280
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres,total,56850,546
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres,total,46420,638
+soybeans_only,GCFI less than $1 million,MWBE,no_till_acres_pct_cropland,total,894.6,1280
+soybeans_only,GCFI less than $1 million,MWBE,reduced_till_acres_pct_cropland,total,286.7,546
+soybeans_only,GCFI less than $1 million,MWBE,intensive_till_acres_pct_cropland,total,386.2,638
+soybeans_only,GCFI less than $1 million,MWBE,crp_fct,total,89,89
+soybeans_only,GCFI less than $1 million,MWBE,owns_morethan50pct,total,1342,1342
+soybeans_only,GCFI less than $1 million,MWBE,differentiated_farm,total,363,363
+soybeans_only,GCFI less than $1 million,MWBE,infi,total,-29830000,1078
+soybeans_only,GCFI less than $1 million,MWBE,exp,total,338000000,1817
+soybeans_only,GCFI less than $1 million,MWBE,tvp,total,500600000,1817
+soybeans_only,GCFI less than $1 million,Not MWBE,current_inventory_soybeans,total,20830000,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,exp_acre,total,5599000,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,operated_acres,total,1925000,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_harvested_acres,total,516300,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_bushels,total,20820000,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,soybeans_yield,total,253800,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,young,total,1168,1168
+soybeans_only,GCFI less than $1 million,Not MWBE,beginning,total,1578,1578
+soybeans_only,GCFI less than $1 million,Not MWBE,organic_farm,total,221,221
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till,total,4279,4279
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till,total,2313,2313
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till,total,1994,1994
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres,total,668000,4279
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres,total,332100,2313
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres,total,219700,1994
+soybeans_only,GCFI less than $1 million,Not MWBE,no_till_acres_pct_cropland,total,2928,4279
+soybeans_only,GCFI less than $1 million,Not MWBE,reduced_till_acres_pct_cropland,total,1242,2313
+soybeans_only,GCFI less than $1 million,Not MWBE,intensive_till_acres_pct_cropland,total,1084,1994
+soybeans_only,GCFI less than $1 million,Not MWBE,crp_fct,total,325,325
+soybeans_only,GCFI less than $1 million,Not MWBE,owns_morethan50pct,total,4061,4061
+soybeans_only,GCFI less than $1 million,Not MWBE,differentiated_farm,total,710,710
+soybeans_only,GCFI less than $1 million,Not MWBE,infi,total,58190000,3867
+soybeans_only,GCFI less than $1 million,Not MWBE,exp,total,1093000000,6094
+soybeans_only,GCFI less than $1 million,Not MWBE,tvp,total,1467000000,6094

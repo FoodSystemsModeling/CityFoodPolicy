@@ -1,0 +1,41 @@
+An operation with organic sales
+An operation with local sales
+An operation with local, organic, or value-added sales or agritourism income
+Acres operated
+1 if owns more than 50% of land that is operated, 0 otherwise
+Total variable expense
+Total expense (fixed and variable)
+Net farm income
+Total expense per dairy cow
+An operation with a young operator (less than 35 years old)
+An operation with a beginning operator (10 years or less farming experience)
+Harvested cropland acres
+Failed cropland acres
+Summer fallow acres
+Idle cropland acres
+Permenant pasture acres
+Woodland pasture acres
+Other pasture acres
+Acres drained by tile as a percent of operated acres
+Acres artifically drained by ditches as a percent of operated acres
+Acres under conservation easement as a percent of operated acres
+Cropland acres where no-till practices used as a percent of operated acres
+Cropland acres where reduced-till practices used as a percent of operated acres
+Cropland acres where intensive-till practices used as a percent of operated acres
+Number of beef cows on hand (Include beef heifers that had calved. Exclude heifers that had not calved, steers, calves, and bulls)
+Number of milk cows kep for production of milk (includes dry milk cows and milk heifers that have calved)
+Number of other cattle and calves (includes heifers that have not calved, steers, calves, and bulls)
+Cattle and calves sold or moved from this operation in 2022 weighing less than 500 pounds
+Cattle and calves sold or moved from this operation in 2022 weighing 500 pounds or more
+1 if the operation practiced rotational or management intensive grazing, 0 otherwise
+1 if the operation raised or sold veal calves, 0 otherwise
+Cropland acres to which commercial fertilizer and soil conditioners were applied as a precent of operated acres
+Pastureland and rangeland acres to which commercial fertilizer and soil conditioners were applied as a precent of operated acres
+Acres of cropland and pastureland on which animal manure was applied as a precent of operated acres
+Acres of cropland and pastureland treated with organic fertilizer according to USDA's NOP standards as a precent of operated acres
+Acres on which chemicals were applied to control insects as a percent of operated acres
+Acres on which chemicals were applied to control weeds as a percent of operated acres
+Acres on which chemicals were applied to control nematodes as a percent of operated acres
+Acres on which chemicals were applied to control disease in crops and orchards (e.g., blight, smut, rust) as a percent of operated acres
+Acres of crops treated to control growth, thin fruit, ripen or defoliate as a percent of operated acres
+1 if the farm had a methane digester on their operation (regardless of ownership), 0 otherwise
