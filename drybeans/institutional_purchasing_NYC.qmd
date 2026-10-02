@@ -10,7 +10,7 @@ We used the Citywide Data for FY2024–2025, which was the most recent year of d
 
 The file containing the cleaned and categorized data is: [Public-Dashboard-Data-for-Beans_V4](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx). 
 
-#### Identifying Bean Products
+##### Identifying Bean Products
 
 The first step was to filter the data to the WRI category "Beans and pulses (dried)."
 
@@ -36,7 +36,7 @@ For items where the product form was not clear from the description, EM looked u
 
 All of these classifications are retained in [Public-Dashboard-Data-for-Beans_V4](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/Public-Dashboard-Data-for-Beans_v4.xlsx) so they can be reviewed or updated if needed.
 
-##### Bean Products
+###### Bean Products
 
 Products that contained beans as part of a mixed or prepared product were categorized separately as **Bean Product**.
 
@@ -44,12 +44,12 @@ For these products, EM also added a grouping variable to identify the general ty
 
 We kept these products separate because their total weight includes ingredients other than beans. For example, the total weight of a black bean veggie burger includes both the beans and the other ingredients in the burger.
 
-##### Excluded Products
+###### Excluded Products
 
 - Green Beans were excluded from the final model data.
 - The Exclude_Other category was used for products that appeared under the WRI bean/pulse category but were not relevant bean products for this analysis. This included items such as liquid egg substitutes and meatless chicken substitutes.
 
-#### Calculating Agency Demand
+##### Calculating Agency Demand
 
 For each product category, EM summed the total reported weight in pounds for each agency. For example, the canned bean totals were:
 
@@ -73,7 +73,7 @@ The final model categories are:
 
 Products originally categorized as frozen or pouch were included with the bagged category for the model.
 
-#### Weight Used for Agency Demand
+##### Weight Used for Agency Demand
 
 For the AMB model, we decided to use the total reported product weight as the agency demand measure rather than converting all products to an estimated edible bean weight.
 
@@ -85,7 +85,7 @@ The original file includes conversions to estimated edible bean weight. However,
 
 These values should therefore be interpreted as the total reported procurement weight of each product category, rather than the weight of edible beans alone.
 
-#### Converting Pounds to Kilograms
+##### Converting Pounds to Kilograms
 
 EM converted the total weight from pounds to kilograms using:
 
@@ -95,7 +95,7 @@ EM converted the total weight from pounds to kilograms using:
 
 : Pound-to-kilogram conversion {#tbl-conversion}
 
-#### Final Model File
+##### Final Model File
 
 The final model data are in: [agency_beans_v5](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/drybeans/data_final/agency_beans_v5.csv).
 
