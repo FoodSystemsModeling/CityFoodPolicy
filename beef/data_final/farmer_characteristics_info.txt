@@ -1,4 +1,4 @@
 sheet_name = "summary"
 description = "Summary stats for dairy producers by scale, MWBE, organic"
-sample = "Dairy producers in New York"
+sample = "Dairy producers in New York, defined as operations with primary commodity dairy (at least 50% of sales from milk) and at least $1,000 in sales"
 source = "2022 Restricted access Census of Agriculture"

@@ -54,7 +54,7 @@ Here we focus on price data for the last 10 years, where available. All prices a
 
 #### Monthly prices along supply chain
 
-```{r}
+```{r, eval=FALSE}
 
 # Import USDA ERS price spread data
 df <- read_csv("../data_raw/history.csv") %>% 
@@ -94,7 +94,7 @@ Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Pr
 
 We compute an average yearly PPI and then use that to convert all dollars into 2024 dollars. We keep data starting in 2014.
 
-```{r}
+```{r, eval=FALSE}
 
 # Import producer ppi
 producer_ppi <- read_csv("../data_raw/WPU0131.csv") %>% 
@@ -142,6 +142,65 @@ df <- df %>%
 
 ```
 
+##### Figures
+
+```{r, eval=FALSE}
+
+# Choice beef gross farm value
+ggplot(df %>% 
+         filter(data_item=="Choice beef gross farm value"), 
+       aes(x = date, 
+           y = real_beef_price_2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  labs(
+    x = NULL,
+    y = "Price (2024 Cents per pound of retail equivalent)",
+    title = "Real monthly Choice beef gross farm value"
+  ) +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
+               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# Choice beef wholesale value
+ggplot(df %>% 
+         filter(data_item=="Choice beef wholesale value"), 
+       aes(x = date, 
+           y = real_beef_price_2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  labs(
+    x = NULL,
+    y = "Price (2024 Cents per pound of retail equivalent)",
+    title = "Real monthly Choice beef wholesale value"
+  ) +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
+               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# Choice beef retail value
+ggplot(df %>% 
+         filter(data_item=="Choice beef retail value"), 
+       aes(x = date, 
+           y = real_beef_price_2024dollars)) +
+  geom_line() +
+  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
+  labs(
+    x = NULL,
+    y = "Price (2024 Cents per pound of retail equivalent)",
+    title = "Real monthly Choice beef retail value"
+  ) +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
+               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
 #### Slaughter cattle
 
 We pull data from [USDA AMS My Market News](https://mymarketnews.ams.usda.gov/public_data): Commodities: Slaughter Cattle, Report: New York Weekly Auction Summary, Report Section: Report Details.
@@ -150,7 +209,7 @@ Pull historical USDA MyMarketNews (MARS) data Report: New York Weekly Cattle Auc
 
 Note that you will have to use your own API key.
 
-```{r}
+```{r, eval=FALSE}
 #| echo: false
 
 library(httr)
@@ -235,8 +294,6 @@ all_chunks_list <- map(chunks, function(ch) {
 # bind_rows 
 all_data <- bind_rows(all_chunks_list)
 
-
-
 #Keep data of interest
 df <- all_data %>% 
   filter(class=="Dairy Cows" &
@@ -244,68 +301,33 @@ df <- all_data %>%
            dressing=="Average")
 
 # Save to CSV 
-write.csv(all_data, "../data_processed/ny_weekly_slaughter_cattle_2019_present.csv", row.names = FALSE)
+write.csv(all_data, "../data_processed/ny_weekly_slaughter_cattle.csv", row.names = FALSE)
 
-write.csv(df, "../data_processed/ny_weekly_slaughter_dairycows_2019_present.csv", row.names = FALSE)
+write.csv(df, "../data_processed/ny_weekly_slaughter_dairycows.csv", row.names = FALSE)
 
 ```
 
-#### Figures
+##### Figures
 
-```{r}
+```{r, eval=FALSE}
 
-# Choice beef gross farm value
-ggplot(df %>% 
-         filter(data_item=="Choice beef gross farm value"), 
-       aes(x = date, 
-           y = real_beef_price_2024dollars)) +
+# Make data
+df <- df %>% 
+  mutate(
+    report_date = mdy(report_date)
+  )
+
+ggplot(df, aes(x = report_date, 
+           y = avg_price)) +
   geom_line() +
-  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
   labs(
     x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
-    title = "Real monthly Choice beef gross farm value"
-  ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
+    y = "Average price",
+  ) + 
+  scale_x_date(date_breaks = "2 months", date_labels = "%b %Y") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-
-# Choice beef wholesale value
-ggplot(df %>% 
-         filter(data_item=="Choice beef wholesale value"), 
-       aes(x = date, 
-           y = real_beef_price_2024dollars)) +
-  geom_line() +
-  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
-  labs(
-    x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
-    title = "Real monthly Choice beef wholesale value"
-  ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-# Choice beef retail value
-ggplot(df %>% 
-         filter(data_item=="Choice beef retail value"), 
-       aes(x = date, 
-           y = real_beef_price_2024dollars)) +
-  geom_line() +
-  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
-  labs(
-    x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
-    title = "Real monthly Choice beef retail value"
-  ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
@@ -321,7 +343,7 @@ Conventional: 6.26 USDA Organic, fresh: 6.99
 
 We apply a 11.7% premium on all retail and wholesale organic prices.
 
-```{r}
+```{r, eval=FALSE}
 
 # Define how much to inflate prices for organic
 organic_farmgate <- (118.78-116.98)/116.98
@@ -346,7 +368,7 @@ We need to characterize the relationship between cull rate and the relationship 
 
 #### Milk
 
-```{r}
+```{r, eval=FALSE}
 # Create workbook
 cull <- createWorkbook()
 
@@ -395,7 +417,7 @@ writeData(cull, "milk_price", milk)
 
 Change once I get a better source of data. For now, I'm using the data provided above.
 
-```{r}
+```{r, eval=FALSE}
 
 # Keep data of interest
 cull_beef <- df %>%
@@ -412,7 +434,7 @@ writeData(cull, "cull_beef_price", cull_beef)
 
 #### Save
 
-```{r}
+```{r, eval=FALSE}
 
 # Add info
 cull_info <- tibble(
@@ -446,7 +468,7 @@ cents/kg=cents/lb×2.20462
 
 We also keep a table with all of the data to be used for validation.
 
-```{r}
+```{r, eval=FALSE}
 
 # Commodity
 sum <- df %>% 

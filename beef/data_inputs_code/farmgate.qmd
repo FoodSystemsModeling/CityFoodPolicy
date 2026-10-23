@@ -15,13 +15,21 @@ if (!dir.exists("../data_processed") && dir.exists("data_inputs_code")) {
 ```{r}
 library(tidyverse)
 library(readxl)
+library(janitor)
 ```
 
 ### Farmer characteristics
 
 We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. [Exported data](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx) and [code](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.01.Beef_approved.qmd) used to generate results.
 
-The sample of farms include farms in New York with primary commodity dairy and at least \$1,000 in sales.
+The sample of farms include farms in New York with primary commodity dairy and at least \$1,000 in sales. Another way to disaggreate data by scale is to use herd size, where operations with less than 300 dairy cows are small and 300 or more are large. 
+
+-   For our sample of farms with gross cash farm income (GCFI) \<\$1M, the average dairy herd size is around 60.
+-   The correlation between the continuous variables GCFI and dairy herd size is 0.96. 
+-   Almost all dairies with 300+ cows are on operations with GCFI \$1M plus. 
+--  Of those farms with 10-300 cows, 15% are on farms with GCFI \$M plus and 75% are on farms with GCFI\<\$1M. 
+
+Due to the high correlation between GCFI under/over \$1M and herd size under/over 300, we use GCFI to indicate scale.
 
 The sheet titled "summary" includes summary statistics (mean/standard error) for a variety of different farm-level characteristics by scale and MWBE.
 
@@ -88,10 +96,169 @@ writeLines(meta, "../data_final/farmer_characteristics_meta.txt")
 info <- c(
   'sheet_name = "summary"', 
   'description = "Summary stats for dairy producers by scale, MWBE, organic"',
-  'sample = "Dairy producers in New York"', 
+  'sample = "Dairy producers in New York, defined as operations with primary commodity dairy (at least 50% of sales from milk) and at least $1,000 in sales"', 
   'source = "2022 Restricted access Census of Agriculture"'
 )
 
 writeLines(info, "../data_final/farmer_characteristics_info.txt")
 
+```
+
+## County data
+
+We download 2022 data from [U.S. Department of Agriculture, National Agricultural Statistics Service (USDA NASS), Data, Large Datasets](https://www.nass.usda.gov/datasets/).
+
+We include data on the number of farms with at least 10 milk cows and milk cow inventory by county and total for the state. The restricted access data includes New York farms with primary commodity dairy and at least 1,000 in sales, N=2,163. This is very similar to the definition of a commercial dairy farm of 10 or more dairy cows (which we use in this section) where N=2,165.
+
+However, milk cow inventory on farms with less than 10 dairy cows is not disclosed in some counties. All farms with inventory are counted, non-disclosed data is only for inventory of milk cows. Note this this is a slightly different definition that used in the restricted access data, but the two sample sizes are very closely alighned (no )
+
+There are a total of 2,931 dairy cows not allocated across 7 counties due to disclosure. For commercial dairy farms (at least 10 dairy cows), this is 2,317. The number of commercial dairy farms in these 7 counties are mostly 0 or 1 (1 county has 2 and another has 5). This is less than 1% of milk cow inventory in the state.
+
+We take the 2,317 milk cow inventory that was not disclosed and allocate it evenly across the counties with missing data based evenly split based on the number of commercial dairy farms.
+
+```{r}
+
+# Import county-level data for NY
+coa <- read_tsv("../data_raw/qs.census2022.txt") %>% 
+  clean_names()
+
+# Keep NY only, state and county data 
+df <- coa %>% 
+  filter(state_alpha=="NY")
+
+# Add fips
+df <- df %>% 
+  mutate(fips = case_when(
+    agg_level_desc=="STATE" ~ state_fips_code, 
+    agg_level_desc=="COUNTY" ~ str_c(state_fips_code, 
+                                     county_code, sep = ""))
+  )
+
+# Make county name lowercase
+df <- df %>% 
+  mutate(
+    county_name = str_to_title(county_name)
+  )
+
+# Convert value to numeric
+df <- df %>% 
+  mutate(value = as.numeric(str_remove_all(value, ",")))
+
+
+# Keep data of interest
+varlist <- c(
+  "CATTLE, COWS, MILK - INVENTORY", 
+  "CATTLE, COWS, MILK - OPERATIONS WITH INVENTORY"
+)
+
+df <- df %>% 
+  filter(short_desc %in% varlist & 
+           (domaincat_desc=="INVENTORY OF MILK COWS: (1 TO 9 HEAD)" | 
+              domain_desc=="TOTAL")
+  )
+
+# Select columns of interest
+df <- df %>% 
+  select(fips, county_name, short_desc, domaincat_desc, value)
+
+# Define farms/inventory
+df <- df %>% 
+  mutate(
+    item = case_when(
+      str_detect(short_desc, "WITH INVENTORY$") ~ "farms",
+      TRUE ~ "inventory"), 
+    type = case_when(
+      domaincat_desc=="INVENTORY OF MILK COWS: (1 TO 9 HEAD)" ~ "less10", 
+      TRUE ~ "all") 
+  ) %>% 
+  select(-short_desc, -domaincat_desc)
+
+# Pivot wider to calculate inventory and farms for commercial dairy farms (at least 10 dairy cows)
+df <- df %>% 
+  pivot_wider(
+    names_from = c(type, item), 
+    values_from = value
+  )
+
+df <- df %>% 
+  mutate(
+    commercial_dairy_farms = all_farms - 
+      coalesce(less10_farms, 0),
+    commercial_dairy_inventory = all_inventory - 
+      coalesce(less10_inventory, 0)
+  )
+  
+# Keep data of interest
+df <- df %>% 
+  rename(
+    all_dairy_farms = all_farms, 
+    all_dairy_inventory = all_inventory,
+  ) %>%
+  select(
+    fips, county_name, all_dairy_farms, all_dairy_inventory, 
+    commercial_dairy_farms, commercial_dairy_inventory
+  )
+```
+
+#### Allocate missing
+
+```{r}
+
+# Missing
+county_total <- df %>% 
+  filter(fips != "36") %>%
+  summarise(sum(commercial_dairy_inventory, na.rm = TRUE)) %>% 
+  pull()
+
+state_total <- df %>% 
+  filter(fips=="36") %>% 
+  pull(commercial_dairy_inventory)
+
+# Inventory to allocate across missing farms
+diff <- state_total-county_total
+
+# Number of farms to allocate across
+missing_farms <- df %>%
+  filter(is.na(commercial_dairy_inventory)) %>% 
+  summarise(sum(commercial_dairy_farms)) %>% 
+  pull()
+  
+# Per farm allocation
+allocation <- diff/missing_farms
+
+## Allocate based on number of missing
+missing <- df %>% 
+  filter(is.na(commercial_dairy_inventory)) %>% 
+  mutate(
+    commercial_dairy_inventory = round(commercial_dairy_farms*allocation)
+  )
+
+# Join with original data
+df <- df %>% 
+  filter(!is.na(commercial_dairy_inventory)) %>% 
+  bind_rows(missing)
+
+rm(missing)
+
+# Keep only commercial dairy farm data
+df <- df %>% 
+  select(fips, county_name, commercial_dairy_farms,
+         commercial_dairy_inventory)
+```
+
+#### Save
+
+```{r}
+
+# Save CSV
+write_csv(df, "../data_final/county_dairy_farms_inventory.csv")
+
+# Add info 
+info <- c(
+  'description = "Number of commercial dairy farms and milk cow inventory by county and state totals"',
+  'sample = "Dairy farms in New York with at least 10 dairy cows"', 
+  'source = "2022 Public Census of Agriculture, NY County Level Data, Table 11"'
+)
+
+writeLines(info, "../data_final/county_dairy_farms_inventory_info.txt")
 ```
