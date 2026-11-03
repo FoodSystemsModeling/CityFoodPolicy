@@ -28,12 +28,77 @@ library(lubridate)
 
 [Final data: Pricing for beef along the supply chain .](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx)
 
-### Differentiated
+### PPI
 
-ADD
+We use the [Producer Price Index by Commodity: Farm Products: Slaughter Cattle (WPU0131)](hhttps://fred.stlouisfed.org/series/WPU0131) to put all data in 2025 dollars. Data are not seasonally adjusted (seasonally adjusted data not available for our years of interest). Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Slaughter Cattle \[WPU0131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0131, August 17, 2026.
+
+
+For retail and wholesale prices, we use the [Producer Price Index by Commodity: Processed Foods and Feeds: Meats (WPU0221)](https://fred.stlouisfed.org/series/WPU0221)("WPU0221.csv").
+
+Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Processed Foods and Feeds: Meats \[WPU0221\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0221, August 17, 2026.
+
+We compute an average yearly PPI and then use that to convert all dollars into 2025 dollars.
+
 
 ```{r}
 
+# import ppi
+ppi <- read_csv("../data_raw/WPU0131.csv") %>%
+  clean_names()
+
+# Create 2025 ppi index: yearly average, then index relative to 2025
+ppi <- ppi %>%
+  mutate(year = year(observation_date)) %>%
+  filter(year>=2018 & year<2026) %>%
+  group_by(year) %>%
+  summarise(ppi = mean(wpu0131, na.rm = TRUE)) %>%
+  mutate(ppi_index_2025 = ppi[year == 2025] / ppi) %>%
+  select(year, ppi_index_2025)
+
+producer_ppi <- ppi
+
+# Import retail/wholesale ppi
+ppi <- read_csv("../data_raw/WPU0221.csv") %>% 
+  filter(observation_date>= as.Date("2018-01-01"))
+
+# PPI get average per year
+ppi <- ppi %>% 
+  mutate(year = year(observation_date)) %>% 
+  group_by(year) %>% 
+  summarise(ppi = mean(WPU0221, na.rm = TRUE)) %>% 
+  mutate(retail_wholesale_ppi_index_2025 = ppi[year == 2025] / ppi) %>% 
+  select(-ppi)
+
+retail_wholesale_ppi <- ppi
+
+rm(ppi)
+```
+
+### Differentiated
+
+Data are collected from a few different places. 
+
+1.  First we use data from [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 on average price per lb.  
+
+Prices are reported in 2025 dollars using the producer PPI described above. 
+
+
+```{r}
+
+## Import farmers market data
+df <- read_xlsx("../data_raw/farmers_market_prices.xlsx")
+
+# Join producer ppi
+df <- df %>% 
+  left_join(producer_ppi)
+  
+# Put in 2025 prices
+df <- df %>% 
+  mutate(
+    diff_retail_beef_price_2025dollars = ground_beef_price*ppi_index_2025
+  )
+
+# Still working on this section
 diff_price <- tibble(
   supply_chain_location = c(
     "Choice beef gross farm value", 
@@ -48,28 +113,113 @@ diff_price <- tibble(
 
 ### Commodity
 
+#### Farmgate
+
+Data is from the USDA Agricultural Marketing Service (AMS), Livestock Marketing LM_CT168, National Weekly Direct Cow and Bull Report - Negotiated Price. Data were provided by USDA Field Chief at AMS Livestock Poultry and Grain Market News. Prices are reported as weighted average price per CWT.  
+
+Data is for the Eastern Area, which includes the following 26 states: Alabama, Connecticut, Delaware, Florida, Georgia, Illinois, Indiana, Kentucky, Massachusetts, Maryland, Maine, Michigan, Mississippi, North Carolina, New Hampshire, New Jersey, New York, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, Vermont, Wisconsin and West Virginia.
+
+The price received by the producer is the weighted average dressed price, Boner (85% lean), 500 lbs and up. 
+
+We first get an average and standard deviation for each year and then an average and standard deviation from 2018-2025. While we do have data through 2026, we only have data through 2025 of the rest of the supply chain. 
+
+We use the [Producer Price Index by Commodity: Farm Products: Slaughter Cattle (WPU0131)](hhttps://fred.stlouisfed.org/series/WPU0131) to put all data in 2025 dollars. Data are not seasonally adjusted (seasonally adjusted data not available for our years of interest). Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Slaughter Cattle \[WPU0131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0131, August 17, 2026.
+
+```{r}
+
+# import data
+df <- read_csv("../data_raw/Datamart-Export_LM_CT168-Detail_20261019_112711.csv") %>% 
+  clean_names() 
+
+# Keep data of interest
+df <- df %>% 
+  filter(
+    classification=="Boner (85% lean)" &  
+      selling_basis=="DRESSED" & 
+      weight_range=="500 lbs and up" & 
+      region_name=="Eastern Area"
+  ) 
+
+# Make date correct format, create year column, join PPI index, convert to 2025 dollars
+df <- df %>%
+  mutate(
+    report_date = mdy(report_date),
+    year = year(report_date)
+  ) %>%
+  filter(year<2026) %>%
+  left_join(producer_ppi, by = "year") %>%
+  mutate(real_price_2025dollars = weighted_avg_price * ppi_index_2025) %>%
+  select(year, report_date, ppi_index_2025, everything())
+
+# Yearly Mean/SD
+sum_year <- df %>% 
+  group_by(year) %>% 
+  summarise(
+    farmgate_price_2025dollars_mean = mean(real_price_2025dollars, na.rm = TRUE), 
+    farmgate_price_2025dollars_sd = sd(real_price_2025dollars, na.rm = TRUE)
+  ) %>% 
+  mutate(
+    year = as.character(year)
+  )
+
+# 10 year mean/sd
+sum <- df %>% 
+  summarise(
+    farmgate_price_2025dollars_mean = mean(real_price_2025dollars, na.rm = TRUE), 
+    farmgate_price_2025dollars_sd = sd(real_price_2025dollars, na.rm = TRUE)
+  ) %>% 
+  mutate(
+    year = "2018-2025"
+  )
+
+# Combine
+farmgate_price <- bind_rows(sum, sum_year) %>% 
+  select(year, everything())
+
+# Figure of monthly average weighted price per CWT (2025 dollars)
+ggplot(df, aes(x = report_date, 
+           y = real_price_2025dollars)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = "Weighted average price per CWT (2025 dollars)",
+  ) + 
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+rm(df, sum, sum_year)
+```
+
+#### Wholesale, retail
+
 We use [Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers](https://www.ers.usda.gov/data-products/meat-price-spreads).
 
-Here we focus on price data for the last 10 years, where available. All prices are reported in 2024 dollars.
+We start with the same year available for slaughter cattle, 2018, but only have data through 2025, 2018-2025. All prices are reported in 2025 dollars.
 
-#### Monthly prices along supply chain
+We do not have data specifically on culled cows, but assume the price spreads are similar to those reported here. 
 
-```{r, eval=FALSE}
+For retail and wholesale prices, we use the [Producer Price Index by Commodity: Processed Foods and Feeds: Meats (WPU0221)](https://fred.stlouisfed.org/series/WPU0221)("WPU0221.csv").
+
+Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Processed Foods and Feeds: Meats \[WPU0221\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0221, August 17, 2026.
+
+We compute an average yearly PPI and then use that to convert all dollars into 2025 dollars.
+
+```{r}
 
 # Import USDA ERS price spread data
 df <- read_csv("../data_raw/history.csv") %>% 
   clean_names()
 
-# Keep beef data since 2014
+# Keep beef data since 2018
 df <- df %>% 
-  filter(year>=2014 & 
+  filter(year>=2018 & 
            str_detect(data_item, "beef"))
 
 
-# Keep data of interest
+# Keep data of interest - we do not use the farm value here
 df <- df %>% 
   filter(data_item %in% c(
-    "Choice beef gross farm value", 
     "Choice beef wholesale value",
     "Choice beef retail value"
   ))
@@ -80,104 +230,91 @@ df <- df %>%
     date = make_date(year, month_number, 1)
   )
 
-```
-
-##### PPI
-
-For prices at the farmgate, we use the [producer price index by commodity: Farm products: Slaughter Cattle](https://fred.stlouisfed.org/series/WPU01830131)("WPU0131.csv") to put all beef price data in 2024 dollars.
-
-Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Slaughter Cattle \[WPU0131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0131, August 17, 2026.
-
-For retaila and wholesale prices, we use the [Producer Price Index by Commodity: Processed Foods and Feeds: Meats (WPU0221)](https://fred.stlouisfed.org/series/WPU0221)("WPU0221.csv").
-
-Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Processed Foods and Feeds: Meats \[WPU0221\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0221, August 17, 2026.
-
-We compute an average yearly PPI and then use that to convert all dollars into 2024 dollars. We keep data starting in 2014.
-
-```{r, eval=FALSE}
-
-# Import producer ppi
-producer_ppi <- read_csv("../data_raw/WPU0131.csv") %>% 
-  filter(observation_date>= as.Date("2014-01-01"))
-
-# PPI get average per year
-producer_ppi <- producer_ppi %>% 
-  mutate(year = year(observation_date)) %>% 
-  group_by(year) %>% 
-  summarise(ppi = mean(WPU0131, na.rm = TRUE)) %>% 
-  mutate(producer_ppi_index_2024 = ppi[year == 2024] / ppi) %>% 
-  select(-ppi)
-
-
-# Import retail/wholesale ppi
-retail_wholesale_ppi <- read_csv("../data_raw/WPU0221.csv") %>% 
-  filter(observation_date>= as.Date("2014-01-01"))
-
-# PPI get average per year
-retail_wholesale_ppi <- retail_wholesale_ppi %>% 
-  mutate(year = year(observation_date)) %>% 
-  group_by(year) %>% 
-  summarise(ppi = mean(WPU0221, na.rm = TRUE)) %>% 
-  mutate(retail_wholesale_ppi_index_2024 = ppi[year == 2024] / ppi) %>% 
-  select(-ppi)
-
-# Join together
-ppi <- full_join(producer_ppi, retail_wholesale_ppi)
-
-
 # Join with data 
 df <- df %>% 
-  left_join(ppi)
+  left_join(retail_wholesale_ppi)
 
-rm(ppi, producer_ppi, retail_wholesale_ppi)
+rm(ppi)
 
-# Covert prices
+# Convert prices to 2025 dollars
 df <- df %>% 
   mutate(
-    real_beef_price_2024dollars = case_when(
-      data_item=="Choice beef gross farm value" ~ value*producer_ppi_index_2024, 
-      TRUE ~ value*retail_wholesale_ppi_index_2024
-    )
+    real_beef_price_2025dollars = value*retail_wholesale_ppi_index_2025)
+
+# Yearly Mean/SD
+sum_year_retail <- df %>% 
+  filter(data_item=="Choice beef retail value") %>%
+  group_by(year) %>% 
+  summarise(
+    retail_beef_price_2025dollars_mean =
+      mean(real_beef_price_2025dollars, na.rm = TRUE),
+    retail_beef_price_2025dollars_sd =
+      sd(real_beef_price_2025dollars, na.rm = TRUE)
+  ) %>% 
+  mutate(
+    year = as.character(year)
   )
 
-```
+sum_year_wholesale <- df %>% 
+  filter(data_item=="Choice beef wholesale value") %>%
+  group_by(year) %>% 
+  summarise(
+    wholesale_beef_price_2025dollars_mean =
+      mean(real_beef_price_2025dollars, na.rm = TRUE),
+    wholesale_beef_price_2025dollars_sd =
+      sd(real_beef_price_2025dollars, na.rm = TRUE)
+  ) %>% 
+  mutate(
+    year = as.character(year)
+  )
 
-##### Figures
+sum_year <- sum_year_retail %>% 
+  left_join(sum_year_wholesale)
+rm(sum_year_retail, sum_year_wholesale)
 
-```{r, eval=FALSE}
+# 10 year mean/sd
+sum_retail <- df %>% 
+  filter(data_item=="Choice beef retail value") %>%
+  summarise(
+    retail_beef_price_2025dollars_mean =
+      mean(real_beef_price_2025dollars, na.rm = TRUE),
+    retail_beef_price_2025dollars_sd =
+      sd(real_beef_price_2025dollars, na.rm = TRUE)
+  ) 
 
-# Choice beef gross farm value
-ggplot(df %>% 
-         filter(data_item=="Choice beef gross farm value"), 
-       aes(x = date, 
-           y = real_beef_price_2024dollars)) +
-  geom_line() +
-  geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
-  labs(
-    x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
-    title = "Real monthly Choice beef gross farm value"
-  ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+sum_wholesale <- df %>% 
+  filter(data_item=="Choice beef wholesale value") %>%
+  summarise(
+    wholesale_beef_price_2025dollars_mean =
+      mean(real_beef_price_2025dollars, na.rm = TRUE),
+    wholesale_beef_price_2025dollars_sd =
+      sd(real_beef_price_2025dollars, na.rm = TRUE)
+  ) 
 
+sum <- bind_cols(sum_wholesale, sum_retail) %>% 
+  mutate(
+    year = "2018-2025"
+  )
+rm(sum_wholesale, sum_retail)
 
-# Choice beef wholesale value
+# Combine
+wholesale_retail_price <- bind_rows(sum, sum_year) %>% 
+  select(year, everything())
+
+rm(sum, sum_year)
+
+#Choice beef wholesale value
 ggplot(df %>% 
          filter(data_item=="Choice beef wholesale value"), 
        aes(x = date, 
-           y = real_beef_price_2024dollars)) +
+           y = real_beef_price_2025dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
   labs(
     x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
+    y = "Price (2025 Cents per pound of retail equivalent)",
     title = "Real monthly Choice beef wholesale value"
   ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -186,148 +323,16 @@ ggplot(df %>%
 ggplot(df %>% 
          filter(data_item=="Choice beef retail value"), 
        aes(x = date, 
-           y = real_beef_price_2024dollars)) +
+           y = real_beef_price_2025dollars)) +
   geom_line() +
   geom_smooth(method = "loess", se = FALSE, linetype = "dashed", color = "grey50") +
   labs(
     x = NULL,
-    y = "Price (2024 Cents per pound of retail equivalent)",
+    y = "Price (2025 Cents per pound of retail equivalent)",
     title = "Real monthly Choice beef retail value"
   ) +
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y",
-               limits = as.Date(c("2014-01-01", "2024-12-31"))) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-```
-
-#### Slaughter cattle
-
-We pull data from [USDA AMS My Market News](https://mymarketnews.ams.usda.gov/public_data): Commodities: Slaughter Cattle, Report: New York Weekly Auction Summary, Report Section: Report Details.
-
-Pull historical USDA MyMarketNews (MARS) data Report: New York Weekly Cattle Auction Summary (Slug ID 2011 / AMS_2011) Commodity: Slaughter Cattle Range: 2019-05-03 to present
-
-Note that you will have to use your own API key.
-
-```{r, eval=FALSE}
-#| echo: false
-
-library(httr)
-library(jsonlite)
-library(purrr)
-library(lubridate)
-
-# ---- Config ----------------------------------------------------
-API_KEY <- Sys.getenv("MY_API_KEY")
-SLUG_ID   <- 2011                         # New York Weekly Cattle Auction Summary
-START_DATE <- as.Date("2019-01-01")
-END_DATE   <- Sys.Date()
-
-BASE_URL <- paste0("https://marsapi.ams.usda.gov/services/v1.2/reports/", SLUG_ID)
-
-# ---- Helper: pull one date-range chunk
-# The API wants dates as mm/dd/yyyy, and the parameter is "report_begin_date"
-fetch_chunk <- function(from_date, to_date, api_key) {
-
-  from_str <- format(from_date, "%m/%d/%Y")
-  to_str   <- format(to_date,   "%m/%d/%Y")
-
-  q_param <- paste0("report_begin_date=", from_str, ":", to_str)
-
-  resp <- GET(
-    url = BASE_URL,
-    query = list(q = q_param, allSections = "true"),
-    authenticate(api_key, "")   # API key goes in as username, blank password
-  )
-
-  if (status_code(resp) != 200) {
-    warning(sprintf(
-      "Request for %s to %s failed with status %s",
-      from_str, to_str, status_code(resp)
-    ))
-    return(NULL)
-  }
-  tryCatch({
-    parsed <- fromJSON(content(resp, as = "text", encoding = "UTF-8"),
-                        flatten = TRUE)
-
-    if (is.null(parsed$results) || length(parsed$results) == 0) {
-      message(sprintf("No results returned for %s to %s", from_str, to_str))
-      return(NULL)
-    }
-    result_list <- parsed$results
-
-    if (is.data.frame(result_list)) {
-      as_tibble(result_list, .name_repair = "unique")
-    } else {
-      bind_rows(result_list)
-    }
-
-  }, error = function(e) {
-    warning(sprintf(
-      "Parsing failed for %s to %s: %s",
-      from_str, to_str, conditionMessage(e)
-    ))
-    NULL
-  })
-}
-
-# ---- Build list of ~170-day date ranges from 2019 to current
-# The API caps requests at 180 days; we use 170 to leave a safety margin.
-CHUNK_DAYS <- 170
-
-chunk_starts <- seq(START_DATE, END_DATE, by = CHUNK_DAYS)
-
-chunks <- map(chunk_starts, function(cs) {
-  chunk_end <- min(cs + (CHUNK_DAYS - 1), END_DATE)
-  list(from = cs, to = chunk_end)
-})
-
-# ---- Pull all chunks and combine
-all_chunks_list <- map(chunks, function(ch) {
-  message(sprintf("Fetching %s to %s ...", ch$from, ch$to))
-  df <- fetch_chunk(ch$from, ch$to, API_KEY)
-  Sys.sleep(1)  # be polite to the API
-  df
-})
-
-# bind_rows 
-all_data <- bind_rows(all_chunks_list)
-
-#Keep data of interest
-df <- all_data %>% 
-  filter(class=="Dairy Cows" &
-           quality_grade_name=="Boner 80-85%" & 
-           dressing=="Average")
-
-# Save to CSV 
-write.csv(all_data, "../data_processed/ny_weekly_slaughter_cattle.csv", row.names = FALSE)
-
-write.csv(df, "../data_processed/ny_weekly_slaughter_dairycows.csv", row.names = FALSE)
-
-```
-
-##### Figures
-
-```{r, eval=FALSE}
-
-# Make data
-df <- df %>% 
-  mutate(
-    report_date = mdy(report_date)
-  )
-
-ggplot(df, aes(x = report_date, 
-           y = avg_price)) +
-  geom_line() +
-  labs(
-    x = NULL,
-    y = "Average price",
-  ) + 
-  scale_x_date(date_breaks = "2 months", date_labels = "%b %Y") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 
 ```
 
@@ -343,182 +348,89 @@ Conventional: 6.26 USDA Organic, fresh: 6.99
 
 We apply a 11.7% premium on all retail and wholesale organic prices.
 
-```{r, eval=FALSE}
+```{r}
 
 # Define how much to inflate prices for organic
 organic_farmgate <- (118.78-116.98)/116.98
 organic_retail_wholesale <- (6.99-6.26)/6.26
 
-# Define organic price
-df <- df %>% 
+# Define organic farmgate price
+farmgate_price <- farmgate_price %>% 
   mutate(
-    organic_real_beef_price_2024dollars =
-      case_when(
-        data_item == "Choice beef gross farm value" ~ real_beef_price_2024dollars + (real_beef_price_2024dollars*organic_farmgate), 
-        TRUE ~ real_beef_price_2024dollars + (real_beef_price_2024dollars*organic_retail_wholesale)
+    organic_farmgate_price_2025dollars_mean = farmgate_price_2025dollars_mean + (farmgate_price_2025dollars_mean*organic_farmgate)
   )
+
+# Define organic price wholesale retail
+wholesale_retail_price <- wholesale_retail_price %>% 
+  mutate(
+    organic_wholesale_beef_price_2025dollars_mean = 
+      wholesale_beef_price_2025dollars_mean + (wholesale_beef_price_2025dollars_mean*organic_retail_wholesale), 
+    organic_retail_beef_price_2025dollars_mean = 
+      retail_beef_price_2025dollars_mean + (retail_beef_price_2025dollars_mean*organic_retail_wholesale)
 )
 ```
 
-## Culling decisions
+### Combine and save
 
-We need to characterize the relationship between cull rate and the relationship between milk and beef prices. [Monthly price data for farmgate milk and beef prices](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/milk_cow_monthly_prices.xlsx).
-
-[Milk prices received (dollars per cwt) are from USDA NASS](https://www.nass.usda.gov/Charts_and_Maps/Agricultural_Prices/pricemk.php). Prices are reported in 2024 dollars using the [Producer Price Index by Commodity: Farm Products: Raw Milk (WPS016)](https://fred.stlouisfed.org/series/WPS016).
-
-#### Milk
-
-```{r, eval=FALSE}
-# Create workbook
-cull <- createWorkbook()
-
-# import milk prices
-milk <- read_csv("../data_raw/milk_prices_received_by_month.csv") %>% 
-  clean_names()
-
-# Add date
-milk <- milk %>% 
-  mutate(
-    date = ymd(paste(year, month, "01", sep = "-"))
-  ) %>% 
-  select(date, year, month, everything())
-
-# import producer ppi
-milk_ppi <- read_csv("../data_raw/WPS016.csv") %>% 
-  clean_names()
-
-# Get conversion for 2024 dollars
-milk_ppi <- milk_ppi %>% 
-  mutate(year = year(observation_date)) %>% 
-  mutate(
-    milk_ppi_index_2024 = 
-      mean(wps016[year(observation_date) == 2024], na.rm = TRUE) / wps016
-  ) %>%
-  rename(date = observation_date) %>%
-  select(date, milk_ppi_index_2024)
-
-# Convert milk prices to 2024 dollars
-milk <- milk %>% 
-  left_join(milk_ppi) %>%
-  mutate(
-    real_price_2024dollars = price*milk_ppi_index_2024
-  ) %>% 
-  select(-milk_ppi_index_2024)
-
-rm(milk_ppi)
-
-# Add worksheet
-addWorksheet(cull, "milk_price")
-writeData(cull, "milk_price", milk)
-
-```
-
-#### Cull beef
-
-Change once I get a better source of data. For now, I'm using the data provided above.
-
-```{r, eval=FALSE}
-
-# Keep data of interest
-cull_beef <- df %>%
-  filter(data_item == "Choice beef gross farm value") %>%
-  select(date, data_item, value, real_beef_price_2024dollars,
-         units)
-
-
-# Add Worksheet
-addWorksheet(cull, "cull_beef_price")
-writeData(cull, "cull_beef_price", cull_beef)
-
-```
-
-#### Save
-
-```{r, eval=FALSE}
-
-# Add info
-cull_info <- tibble(
-  sheet_name = c("milk_price", "cull_beef_price"), 
-  description = c(
-    "monthly milk prices received by farmers in current and real (2024) dollars, in the U.S. 2014-2026", 
-    "monthly Choice beef gross farm value in Cents per pound of retail equivalent in the U.S., 2014-2024"), 
-  source = c(
-    "USDA NASS Prices received for milk by month (https://www.nass.usda.gov/Charts_and_Maps/Agricultural_Prices/pricemk.php), deflated using Producer Price Index by Commodity: Farm Products: Raw Milk (WPS016)(https://fred.stlouisfed.org/series/WPS016)", 
-    "Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers (https://www.ers.usda.gov/data-products/meat-price-spreads"))
-
-# Add Worksheet
-addWorksheet(cull, "info")
-writeData(cull, "info", cull_info)
-
-# Save
-saveWorkbook(cull, "../data_final/milk_cow_monthly_prices.xlsx", 
-             overwrite = TRUE)
-
-```
-
-### Final table
-
-For the model, [we include one worksheet with differentiated prices, one with commodity beef prices at each level of the supply chain](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx). These prices are an average of the prices from 2022-2024. All prices are in 2024 dollars.
+For the model, [we include one worksheet with differentiated prices, one with commodity beef prices at each level of the supply chain](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx). All prices are in 2024 dollars. They are reported as the average from 2018-2024 and in each year. 
 
 Convert all prices into \$/kg. 1 kg = 2.20462 lb
 
-cents/kg=cents/lb×2.20462
-
-\$/kg=100cents/lb×2.20462
+-   Farmgate price is reported in price per CWT
+-   Wholesale and retail price is reported in Cents per pound of retail equivalent
+  -   cents/kg=cents/lb×2.20462
+  -   \$/kg=100cents/lb×2.20462
 
 We also keep a table with all of the data to be used for validation.
 
-```{r, eval=FALSE}
+#### Commodity
+```{r}
 
-# Commodity
-sum <- df %>% 
-  filter(year %in% c(2022, 2023, 2024)) %>% 
-  group_by(data_item) %>%
-  summarise(
-    beef_price_cents_lb_2024dollars = mean(real_beef_price_2024dollars), 
-    organic_beef_price_cents_lb_2024dollars = 
-      mean(organic_real_beef_price_2024dollars)) %>%
+# Combine all commodity data
+beef_price <- farmgate_price %>% 
+  left_join(wholesale_retail_price)
+
+# Convert to price per kg
+# Farmgate: $/CWT → $/kg  (CWT = 100 lbs; $/lb = $/CWT / 100; $/kg = $/lb * 2.20462)
+# Wholesale/retail: cents/lb → $/kg  ($/lb = cents/lb / 100; $/kg = $/lb * 2.20462)
+
+beef_price <- beef_price %>%
   mutate(
-    beef_price_kg = (beef_price_cents_lb_2024dollars*2.20462) / 100, 
-    organic_beef_price_kg = (organic_beef_price_cents_lb_2024dollars*2.20462) / 100
-    ) 
-    
-# Keep data of interest
-sum <- sum %>% 
-  rename(supply_chain_location = data_item) %>% 
-  select(supply_chain_location, 
-         beef_price_kg, organic_beef_price_kg)
-    
+    # Farmgate ($/CWT)
+    farmgate_price_kg_mean              = (farmgate_price_2025dollars_mean / 100) * 2.20462,
+    farmgate_price_kg_sd                = (farmgate_price_2025dollars_sd   / 100) * 2.20462,
+    organic_farmgate_price_kg_mean      = (organic_farmgate_price_2025dollars_mean / 100) * 2.20462,
+    # Wholesale (cents/lb)
+    wholesale_price_kg_mean             = (wholesale_beef_price_2025dollars_mean / 100) * 2.20462,
+    wholesale_price_kg_sd               = (wholesale_beef_price_2025dollars_sd   / 100) * 2.20462,
+    organic_wholesale_price_kg_mean     = (organic_wholesale_beef_price_2025dollars_mean / 100) * 2.20462,
+    # Retail (cents/lb)
+    retail_price_kg_mean                = (retail_beef_price_2025dollars_mean / 100) * 2.20462,
+    retail_price_kg_sd                  = (retail_beef_price_2025dollars_sd   / 100) * 2.20462,
+    organic_retail_price_kg_mean        = (organic_retail_beef_price_2025dollars_mean  / 100) * 2.20462
+  )
 
-# Create workbook
-wb <- createWorkbook()
-
-# Add differentiated
-addWorksheet(wb, "differentiated_price")
-writeData(wb, "differentiated_price", diff_price)
-
-## Add commodity
-addWorksheet(wb, "commodity_price")
-writeData(wb, "commodity_price", sum)
-
-# Add info
-info <- tibble(
-  sheet_name = c(
-    "differentiated_price", "commodity_price"), 
-  sheet_description = c(
-    "prices along the supply chain for differentiated culled beef", 
-    "average price per kg from 2022-2024 (in 2024 dollars) for Choice beef gross farm value, Choice beef wholesale value, and Choice beef retail value"), 
-  source = c(
-    "??", 
-    "Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers (https://www.ers.usda.gov/data-products/meat-price-spreads), we inflate organic prices using USDA AMS Livestock, Poultry, and Grain Market News, New York Dept of Ag Mrkt News, Feb 5, 2025 (https://www.ams.usda.gov/mnreports/ams_3789.pdf) for farmgate prices and Retail prices are found from the USDA AMS Livestock, Poultry, & Grain Market News, Weekly Grocery Store Beef Feature Activity, August 14, 2026(https://www.ams.usda.gov/mnreports/ams_3228.pdf) for wholesale and retail prices")
+info <- c(
+  "=== farmgate_price ===",
+  "Description: Price received by the producer is the weighted average dressed price, Boner (85% lean), 500 lbs and up. Prices are reported as weighted average price per CWT in the original data and converted to price per kg in the final data.",
+  "Source: USDA Agricultural Marketing Service (AMS), Livestock Marketing LM_CT168, National Weekly Direct Cow and Bull Report - Negotiated Price. Data were provided by USDA Field Chief at AMS Livestock Poultry and Grain Market News.",
+  "",
+  "=== wholesale_retail_price ===",
+  "Description: Choice beef wholesale and retail value (in 2025 dollars). Data are reported as a yearly average and as an average from 2018-2025. Original data are in cents per pound of retail equivalent, converted to price per kg.",
+  "Source: Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers."
 )
 
-# Add worksheet
-addWorksheet(wb, "info")
-writeData(wb, "info", info)
+# Save info
+writeLines(info, "../data_final/beef_commodity_price.txt")
 
-# Save workbook 
-saveWorkbook(wb, "../data_final/beef_price.xlsx", 
-             overwrite = TRUE)
+# Differentiated
+write_csv(beef_price, "../data_final/beef_commodity_price.csv")
+
+```
+
+#### Differentiated
+....coming soon.
+
+```{r}
 
 ```

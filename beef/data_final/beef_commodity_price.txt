@@ -1,0 +1,7 @@
+=== farmgate_price ===
+Description: Price received by the producer is the weighted average dressed price, Boner (85% lean), 500 lbs and up. Prices are reported as weighted average price per CWT in the original data and converted to price per kg in the final data.
+Source: USDA Agricultural Marketing Service (AMS), Livestock Marketing LM_CT168, National Weekly Direct Cow and Bull Report - Negotiated Price. Data were provided by USDA Field Chief at AMS Livestock Poultry and Grain Market News.
+
+=== wholesale_retail_price ===
+Description: Choice beef wholesale and retail value (in 2025 dollars). Data are reported as a yearly average and as an average from 2018-2025. Original data are in cents per pound of retail equivalent, converted to price per kg.
+Source: Meat Price Spreads data from the USDA Economic Research Service, Historical monthly price spread data for beef, pork, broilers.
