@@ -84,8 +84,3 @@ The team, led by Frank Ge from the Dyson School of Applied Economics and Managem
 
 This bidding research is serving as a key input into the broader City Food Policy agent-based model. While the bidding paper is a stand-alone methodological contribution, its results are also being used to inform and validate how the model represents vendor pricing behavior and procurement responses under alternative policy scenarios. This is especially important because the success of values-based procurement depends not only on supply chain capacity, but also on how vendors strategically respond to changing bid structures and incentives. By grounding these behavioral assumptions in both theory and empirical NYC procurement data, the team is strengthening the model’s ability to simulate more realistic market responses to policy changes. In turn, this improves the project’s broader capacity to estimate whether different procurement strategies are likely to be feasible and achieve New York City’s values-based goals.
 
-#### Agency pricing
-
-##### Price of beans purchased by New York City, 2019-2023
-
-![](drybeans/images/NYC_drybean_purchasing.png)

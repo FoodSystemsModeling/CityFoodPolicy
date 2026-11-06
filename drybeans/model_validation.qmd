@@ -7,4 +7,10 @@ bibliography: ../references.bib
 
 # Model validation
 
+## Agency pricing
+
+### Price of beans purchased by New York City, 2019-2023
+
+![](images/NYC_drybean_purchasing.png)
+
 ## Estimated margins
