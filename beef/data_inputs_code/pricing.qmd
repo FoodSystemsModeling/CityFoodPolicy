@@ -32,13 +32,11 @@ library(lubridate)
 
 We use the [Producer Price Index by Commodity: Farm Products: Slaughter Cattle (WPU0131)](hhttps://fred.stlouisfed.org/series/WPU0131) to put all data in 2025 dollars. Data are not seasonally adjusted (seasonally adjusted data not available for our years of interest). Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Slaughter Cattle \[WPU0131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0131, August 17, 2026.
 
-
 For retail and wholesale prices, we use the [Producer Price Index by Commodity: Processed Foods and Feeds: Meats (WPU0221)](https://fred.stlouisfed.org/series/WPU0221)("WPU0221.csv").
 
 Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Processed Foods and Feeds: Meats \[WPU0221\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0221, August 17, 2026.
 
 We compute an average yearly PPI and then use that to convert all dollars into 2025 dollars.
-
 
 ```{r}
 
@@ -76,12 +74,11 @@ rm(ppi)
 
 ### Differentiated
 
-Data are collected from a few different places. 
+This section is still a work in progress and not yet complete. 
 
-1.  First we use data from [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 on average price per lb.  
+1.  [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 on average price per lb.
 
-Prices are reported in 2025 dollars using the producer PPI described above. 
-
+Prices are reported in 2025 dollars using the producer PPI described above.
 
 ```{r}
 
@@ -115,13 +112,13 @@ diff_price <- tibble(
 
 #### Farmgate
 
-Data is from the USDA Agricultural Marketing Service (AMS), Livestock Marketing LM_CT168, National Weekly Direct Cow and Bull Report - Negotiated Price. Data were provided by USDA Field Chief at AMS Livestock Poultry and Grain Market News. Prices are reported as weighted average price per CWT.  
+Data is from the USDA Agricultural Marketing Service (AMS), Livestock Marketing LM_CT168, National Weekly Direct Cow and Bull Report - Negotiated Price. Data were provided by USDA Field Chief at AMS Livestock Poultry and Grain Market News. Prices are reported as weighted average price per CWT.
 
 Data is for the Eastern Area, which includes the following 26 states: Alabama, Connecticut, Delaware, Florida, Georgia, Illinois, Indiana, Kentucky, Massachusetts, Maryland, Maine, Michigan, Mississippi, North Carolina, New Hampshire, New Jersey, New York, Ohio, Pennsylvania, Rhode Island, South Carolina, Tennessee, Virginia, Vermont, Wisconsin and West Virginia.
 
-The price received by the producer is the weighted average dressed price, Boner (85% lean), 500 lbs and up. 
+The price received by the producer is the weighted average dressed price, Boner (85% lean), 500 lbs and up.
 
-We first get an average and standard deviation for each year and then an average and standard deviation from 2018-2025. While we do have data through 2026, we only have data through 2025 of the rest of the supply chain. 
+We first get an average and standard deviation for each year and then an average and standard deviation from 2018-2025. While we do have data through 2026, we only have data through 2025 of the rest of the supply chain.
 
 We use the [Producer Price Index by Commodity: Farm Products: Slaughter Cattle (WPU0131)](hhttps://fred.stlouisfed.org/series/WPU0131) to put all data in 2025 dollars. Data are not seasonally adjusted (seasonally adjusted data not available for our years of interest). Citation: U.S. Bureau of Labor Statistics, Producer Price Index by Commodity: Farm Products: Slaughter Cattle \[WPU0131\], retrieved from FRED, Federal Reserve Bank of St. Louis; https://fred.stlouisfed.org/series/WPU0131, August 17, 2026.
 
@@ -197,7 +194,7 @@ We use [Meat Price Spreads data from the USDA Economic Research Service, Histori
 
 We start with the same year available for slaughter cattle, 2018, but only have data through 2025, 2018-2025. All prices are reported in 2025 dollars.
 
-We do not have data specifically on culled cows, but assume the price spreads are similar to those reported here. 
+We do not have data specifically on culled cows, but assume the price spreads are similar to those reported here.
 
 For retail and wholesale prices, we use the [Producer Price Index by Commodity: Processed Foods and Feeds: Meats (WPU0221)](https://fred.stlouisfed.org/series/WPU0221)("WPU0221.csv").
 
@@ -370,20 +367,24 @@ wholesale_retail_price <- wholesale_retail_price %>%
 )
 ```
 
+### Milk-to-feed price ratio
+
+
 ### Combine and save
 
-For the model, [we include one worksheet with differentiated prices, one with commodity beef prices at each level of the supply chain](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx). All prices are in 2024 dollars. They are reported as the average from 2018-2024 and in each year. 
+For the model, [we include one worksheet with differentiated prices, one with commodity beef prices at each level of the supply chain](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_price.xlsx). All prices are in 2024 dollars. They are reported as the average from 2018-2024 and in each year.
 
 Convert all prices into \$/kg. 1 kg = 2.20462 lb
 
--   Farmgate price is reported in price per CWT
--   Wholesale and retail price is reported in Cents per pound of retail equivalent
-  -   cents/kg=cents/lb×2.20462
-  -   \$/kg=100cents/lb×2.20462
+- Farmgate price is reported in price per CWT
+- Wholesale and retail price is reported in Cents per pound of retail equivalent
+- cents/kg=cents/lb×2.20462
+- \$/kg=100cents/lb×2.20462
 
 We also keep a table with all of the data to be used for validation.
 
 #### Commodity
+
 ```{r}
 
 # Combine all commodity data
@@ -429,6 +430,7 @@ write_csv(beef_price, "../data_final/beef_commodity_price.csv")
 ```
 
 #### Differentiated
+
 ....coming soon.
 
 ```{r}

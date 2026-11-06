@@ -1,3 +1,3 @@
-description = "Number of commercial dairy farms and milk cow inventory by county and state totals"
-sample = "Dairy farms in New York with at least 10 dairy cows"
-source = "2022 Public Census of Agriculture, NY County Level Data, Table 11"
+description = "Number of commercial dairy farms, milk cow inventory, number of organic dairy farms by county and state totals"
+sample = "Dairy farms in New York with at least 10 dairy cows for commerical dairy farms and milk cow inventory, all farms that are certified organic for organic dairy farms"
+source = "2022 Public Census of Agriculture, NY County Level Data, Table 11 and USDA Organic Integrity Database (https://organic.ams.usda.gov/integrity/)"

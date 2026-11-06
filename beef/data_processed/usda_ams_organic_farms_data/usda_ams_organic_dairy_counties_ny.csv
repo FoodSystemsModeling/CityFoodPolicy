@@ -1,0 +1,192 @@
+city,county,number_of_farms
+Bombay,Franklin,39
+Fort Plain,Montgomery,32
+Lowville,Lewis,23
+Penn Yan,Yates,19
+Brasher Falls,St. Lawrence,16
+Ellenburg Center,Clinton,14
+Oriskany Falls,Oneida,11
+Canastota,Madison,10
+Massena,St. Lawrence,10
+Hermon,St. Lawrence,10
+Palatine Bridge,Montgomery,9
+Earlville,Chenango / Madison,9
+Dundee,Yates,8
+Richfield Springs,Otsego,8
+Ovid,Seneca,8
+Jordanville,Herkimer,8
+Stanley,Ontario,7
+Burke,Franklin,7
+Fillmore,Allegany,7
+Branchport,Yates,7
+Marathon,Cortland,7
+Owego,Tioga,6
+Gouverneur,St. Lawrence,6
+Canton,St. Lawrence,6
+Prattsburgh,Steuben,6
+Cazenovia,Madison,6
+Eaton,Madison,6
+Whitehall,Washington,6
+Hammond,St. Lawrence,5
+Schenevus,Otsego,5
+Ava,Oneida,5
+Candor,Tioga,5
+Romulus,Seneca,5
+Attica,Wyoming,5
+Lyons,Wayne,5
+Munnsville,Madison,4
+Cincinnatus,Cortland,4
+Norwich,Chenango,4
+Holland Patent,Oneida,4
+Cape Vincent,Jefferson,4
+Rushville,Ontario / Yates,4
+North Bangor,Franklin,4
+Guilford,Chenango,4
+Ogdensburg,St. Lawrence,4
+Mohawk,Herkimer,4
+Edmeston,Otsego,4
+Moira,Franklin,4
+Morrisville,Madison,4
+St. Johnsville,Montgomery,4
+Truxton,Cortland,4
+Bainbridge,Chenango,4
+Antwerp,Jefferson,3
+Unadilla,Otsego,3
+Jasper,Steuben,3
+North Lawrence,St. Lawrence,3
+Medina,Orleans,3
+Himrod,Yates,3
+Hubbardsville,Madison,3
+Stockton,Chautauqua,3
+Sprakers,Montgomery,3
+Chateaugay,Franklin,3
+Dewittville,Chautauqua,3
+Bliss,Wyoming,3
+Constable,Franklin,3
+Hogansburg,Franklin / St. Lawrence,2
+Hamilton,Madison,2
+Houghton,Allegany,2
+Morris,Otsego,2
+Mannsville,Jefferson,2
+Evans Mills,Jefferson,2
+Fort Ann,Washington,2
+Lansing,Tompkins,2
+Memphis,Onondaga,2
+Lisbon,St. Lawrence,2
+Hudson,Columbia,2
+Fultonville,Montgomery,2
+Rensselaer Falls,St. Lawrence,2
+Vernon,Oneida,2
+Martville,Cayuga,2
+Albion,Orleans / Oswego,2
+Sherburne,Chenango,2
+Oneida,Madison,2
+Springfield Center,Otsego,2
+Malone,Franklin,2
+Cobleskill,Schoharie,2
+Manlius,Onondaga,2
+Trumansburg,Tompkins,2
+Penn Yann,Yates,2
+Port Byron,Cayuga,2
+Canajoharie,Montgomery,2
+Waterloo,Seneca,2
+Lyon Mountain,Clinton,2
+Little Falls,Herkimer,2
+Hammondsport,Steuben,1
+Bloomfield,Ontario,1
+Theresa,Jefferson,1
+Worcester,Otsego,1
+Remsen,Oneida,1
+Addison,Steuben,1
+Conesus,Livingston,1
+DeKalb Junction,St. Lawrence,1
+Watkins Glen,Schuyler,1
+Laurens,Otsego,1
+Greene,Chenango,1
+Lee Center,Oneida,1
+Rodman,Jefferson,1
+Alden,Erie,1
+South New Berlin,Chenango,1
+Dexter,Jefferson,1
+Canaseraga,Allegany,1
+Whitney Point,Broome,1
+Crown Point,Essex,1
+Winthrop,St. Lawrence,1
+West Seneca,Erie,1
+Lyndonville,Orleans,1
+Phelps,Ontario,1
+Dolgeville,Herkimer / Fulton,1
+Greenwich,Washington,1
+Dryden,Tompkins,1
+Bloomville,Delaware,1
+Madison,Madison,1
+Branch Port,Yates,1
+Alfred,Allegany,1
+Herman,St. Lawrence,1
+Akron,Erie,1
+South Wales,Erie,1
+East Aurora,Erie,1
+Conewango Valley,Cattaraugus,1
+East Concord,Erie,1
+Strykersville,Wyoming,1
+Margaretville,Delaware,1
+Corfu,Genesee,1
+Boonville,Oneida,1
+Vernon Center,Oneida,1
+Brushton,Franklin,1
+West Edmeston,Otsego / Madison,1
+McGraw,Cortland,1
+Deansboro,Oneida,1
+Arcade,Wyoming,1
+Burlington Flats,Otsego,1
+Erieville,Madison,1
+Philadelphia,Jefferson,1
+Merrill,Clinton,1
+Portageville,Wyoming,1
+Cattaraugus,Cattaraugus,1
+Preble,Cortland,1
+Fabius,Onondaga,1
+Clayton,Jefferson,1
+Buffalo,Erie,1
+Ripley,Chautauqua,1
+Fonda,Montgomery,1
+Clyde,Wayne,1
+Munnsvile,Madison,1
+Russell,St. Lawrence,1
+Bovina Center,Delaware,1
+Sharon Springs,Schoharie,1
+New Berlin,Chenango,1
+Sherman,Chautauqua,1
+Newark Valley,Tioga,1
+South Plymouth,Chenango,1
+Nichols,Tioga,1
+Southampton,Suffolk,1
+Norfolk,St. Lawrence,1
+Heuvelton,St. Lawrence,1
+Fort Covington,Franklin,1
+Stamford,Delaware,1
+North Brookfield,Madison,1
+Copenhagen,Lewis,1
+North Java,Wyoming,1
+Taberg,Oneida,1
+Churubusco,Clinton,1
+Three Mile Bay,Jefferson,1
+Franklin,Delaware,1
+Cortland,Cortland,1
+Freedom,Cattaraugus,1
+Ilion,Herkimer,1
+Cinccinatus,Cortland,1
+Interlaken,Seneca,1
+Bath,Steuben,1
+Wellsville,Allegany,1
+Belmont,Allegany,1
+West Leyden,Lewis,1
+Ghent,Columbia,1
+West Winfield,Herkimer,1
+Gilbertsville,Otsego,1
+Pavilion,Genesee,1
+Windsor,Broome,1
+Lodi,Seneca,1
+Bluff Point,Yates,1
+Avoca,Steuben,1
+LaFargeville,Jefferson,1

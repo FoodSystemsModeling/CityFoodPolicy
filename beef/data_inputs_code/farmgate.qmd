@@ -20,14 +20,15 @@ library(janitor)
 
 ### Farmer characteristics
 
+[Final data: Farmer characteristics .](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/farmer_characteristics.csv)
+
 We use data from the restricted access 2022 Census of Agriculture to paramertize agents in the model. [Exported data](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.beef_results_suppress.xlsx) and [code](https://github.com/FoodSystemsModeling/CityFoodPolicy/blob/main/beef/data_processed/2026.07.15_NASS_export/CFP.01.Beef_approved.qmd) used to generate results.
 
-The sample of farms include farms in New York with primary commodity dairy and at least \$1,000 in sales. Another way to disaggreate data by scale is to use herd size, where operations with less than 300 dairy cows are small and 300 or more are large. 
+The sample of farms include farms in New York with primary commodity dairy and at least \$1,000 in sales. Another way to disaggreate data by scale is to use herd size, where operations with less than 300 dairy cows are small and 300 or more are large.
 
--   For our sample of farms with gross cash farm income (GCFI) \<\$1M, the average dairy herd size is around 60.
--   The correlation between the continuous variables GCFI and dairy herd size is 0.96. 
--   Almost all dairies with 300+ cows are on operations with GCFI \$1M plus. 
---  Of those farms with 10-300 cows, 15% are on farms with GCFI \$M plus and 75% are on farms with GCFI\<\$1M. 
+- For our sample of farms with gross cash farm income (GCFI) \<\$1M, the average dairy herd size is around 60.
+- The correlation between the continuous variables GCFI and dairy herd size is 0.96.
+- Almost all dairies with 300+ cows are on operations with GCFI \$1M plus. -- Of those farms with 10-300 cows, 15% are on farms with GCFI \$M plus and 75% are on farms with GCFI\<\$1M.
 
 Due to the high correlation between GCFI under/over \$1M and herd size under/over 300, we use GCFI to indicate scale.
 
@@ -106,6 +107,8 @@ writeLines(info, "../data_final/farmer_characteristics_info.txt")
 
 ## County data
 
+[Final data: County- and state-level data on the number of dairy farms, dairy cow inventory, and number of organic dairy farms.  .](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/county_dairy_farms_inventory.csv)
+
 We download 2022 data from [U.S. Department of Agriculture, National Agricultural Statistics Service (USDA NASS), Data, Large Datasets](https://www.nass.usda.gov/datasets/).
 
 We include data on the number of farms with at least 10 milk cows and milk cow inventory by county and total for the state. The restricted access data includes New York farms with primary commodity dairy and at least 1,000 in sales, N=2,163. This is very similar to the definition of a commercial dairy farm of 10 or more dairy cows (which we use in this section) where N=2,165.
@@ -115,6 +118,8 @@ However, milk cow inventory on farms with less than 10 dairy cows is not disclos
 There are a total of 2,931 dairy cows not allocated across 7 counties due to disclosure. For commercial dairy farms (at least 10 dairy cows), this is 2,317. The number of commercial dairy farms in these 7 counties are mostly 0 or 1 (1 county has 2 and another has 5). This is less than 1% of milk cow inventory in the state.
 
 We take the 2,317 milk cow inventory that was not disclosed and allocate it evenly across the counties with missing data based evenly split based on the number of commercial dairy farms.
+
+#### Farms and inventory
 
 ```{r}
 
@@ -246,7 +251,89 @@ df <- df %>%
          commercial_dairy_inventory)
 ```
 
-#### Save
+#### Organic
+
+We do not have data on the number of organic operations by county. We used the [USDA AMS database of certified organic farms](https://organic.ams.usda.gov/integrity/) and downloaded the New York data and filtered for dairies. We used ChatGPT to match the cities to counties and cross-checked it for accuracy with Claude. Using this data, we made a pivot table to quickly skim the top few counties for a manual check. We assume a county not listed has zero organic dairy farms. 
+
+```{r}
+
+# import data
+organic <- read_csv("../data_processed/usda_ams_organic_farms_data/usda_ams_organic_dairy_counties_ny.csv") %>% 
+  rename(
+    county_name = county
+  )
+
+# get totals by county
+organic_county <- organic %>% 
+  group_by(county_name) %>% 
+  summarise(
+    organic_dairy_farms = sum(number_of_farms)
+  )
+
+# total by state
+organic_state <- organic %>% 
+  summarise(
+    organic_dairy_farms = sum(number_of_farms)
+  ) %>% 
+  mutate(
+    county_name = NA
+  )
+
+organic <- bind_rows(organic_county, organic_state)
+rm(organic_county, organic_state)
+
+# Join organic to other data - fill NAs with 0
+df <- df %>% 
+  left_join(organic) %>% 
+  mutate(
+    organic_dairy_farms = case_when(
+      is.na(organic_dairy_farms) ~ 0, 
+      TRUE ~ organic_dairy_farms),
+    fips = case_when(
+      is.na(county_name) ~ "36", 
+      TRUE ~ fips)
+  )
+
+```
+Based on that, 90% of the dairy farms are in the following counties: 
+
+```{r}
+#| label: tbl-organic-dairy-counties
+#| tbl-cap: "New York counties that account for 90% of certified organic dairy farms"
+
+library(gt)
+
+# import data
+county_ranking <- read_xlsx("../data_processed/usda_ams_organic_farms_data/usda_ams_organic_dairy_counties_ny.xlsx", 
+                            sheet = "County Ranking")
+
+county_ranking %>%
+  filter(!is.na(`Dairy Farms`), County != "Total") %>%
+  filter(row_number() <= which(`Cumulative %` >= 0.90)[1]) %>%
+  gt() %>%
+  fmt_number(columns = `Dairy Farms`, decimals = 0) %>%
+  fmt_percent(
+    columns = c(`% of Total`, `Cumulative %`),
+    decimals = 1
+  ) %>%
+  cols_align(align = "center", columns = Rank) %>%
+  cols_label(
+    `Dairy Farms` = "Dairy farms",
+    `% of Total` = "% of total",
+    `Cumulative %` = "Cumulative %"
+  ) %>%
+  tab_source_note(
+    source_note = "USDA AMS Organic Integrity Database. Counties are listed through the first county at which the cumulative share reaches 90%."
+  ) %>%
+  opt_row_striping() %>%
+  tab_options(
+    table.font.size = px(14),
+    data_row.padding = px(4),
+    table.width = px(520)
+  )
+```
+
+### Save
 
 ```{r}
 
@@ -255,9 +342,9 @@ write_csv(df, "../data_final/county_dairy_farms_inventory.csv")
 
 # Add info 
 info <- c(
-  'description = "Number of commercial dairy farms and milk cow inventory by county and state totals"',
-  'sample = "Dairy farms in New York with at least 10 dairy cows"', 
-  'source = "2022 Public Census of Agriculture, NY County Level Data, Table 11"'
+  'description = "Number of commercial dairy farms, milk cow inventory, number of organic dairy farms by county and state totals"',
+  'sample = "Dairy farms in New York with at least 10 dairy cows for commerical dairy farms and milk cow inventory, all farms that are certified organic for organic dairy farms"', 
+  'source = "2022 Public Census of Agriculture, NY County Level Data, Table 11 and USDA Organic Integrity Database (https://organic.ams.usda.gov/integrity/)"'
 )
 
 writeLines(info, "../data_final/county_dairy_farms_inventory_info.txt")
