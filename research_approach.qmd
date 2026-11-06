@@ -12,7 +12,49 @@ There is growing literature that talks about the importance of engaging stakehol
 
 ### Interviews and focus groups {#sec-stakeholder-interviewsfocusgroups}
 
-Add here...
+Values-based public food procurement (VBPFP) seeks to leverage public purchasing power to advance economic, environmental, and social objectives, often by creating
+financial incentives for products or suppliers with desired attributes. Yet limited participation suggests that demand-side incentives alone may not generate the intended supply-chain response. This study examines the internal and external factors shaping participation in VBPFP and how regional supply-chain actors may respond to alternative procurement strategies. Using New York City as a case study, we draw on 29 semi-structured interviews with mid-supply-chain actors and four focus groups with 37 producers across three New York State supply chains: beef from cull dairy cows, dry beans, and salad-bar greens. We adapt the Capability, Opportunity, Motivation–Behavior (COM-B) framework to analyze behavioral determinants of institutional market participation across the supply chain. Results show that many actors were motivated to serve public institutions, but administrative burden, established market relationships, processing and logistics constraints, and uncertain purchasing volumes limited their capability and opportunity to participate. Price preferences were viewed positively, but were generally insufficient to induce operational changes or adoption of values-based attributes such as organic certification. Participants instead emphasized interventions that reduced risk and increased predictability, including guaranteed purchasing volumes, flexible bidding structures, price-adjustment mechanisms, and stackable incentives. Effective VBPFP therefore requires aligning demand-side incentives with the supply-side conditions necessary for supply-chain actors to respond. 
+
+To analyze interviews and focus group data, we used the following process:
+
+1.  Open Coding System: Transcripts were coded inductively, guided by the research questions [@glaser_open_coding_2016; @saldana_coding_manual_2025]. The research team developed thematic memos for each producer group (beans, beef/dairy, leafy greens) through collaborative "theming" [@saldana_coding_manual_2025], returning to original transcripts throughout to preserve participants' language. This produced four thematic areas: (1) personal values, (2) relationships and reliability, (3) market conditions, and (4) logistics and infrastructure.
+2.  Secondary Coding: Transcripts were recoded using MAXQDA to identify key internal and external drivers within each theme. A structured codebook, which defined core themes as well as internal and external influences, was developed based on thematic memos generated during the analysis.
+3.  Mapping to COM-B Framework: Following prior applications of inductive coding to adapted COM-B frameworks [@Ambrose-Oji_2022, @Evans_common_sense_2025; @Farrell_vet_2023; @Mastenbroek_seed_demand_2025], our study first inductively identified themes and internal/external factors, then deductively mapping those findings onto the adapted framework's three domains to explore how potential NYC procurement policies might influence current behaviors.
+
+In order to go from the qualitative coding to the behavioral decisions that agents make the model, we created a crosswalk. The "Beyond Price incentives: Supply-chain participation in values-based public food procurement" manuscript presents a review on values-based food procurement through highlighting the values, barriers, and support supply chain actors have encountered. The manuscript presents key overarching themes: Personal Values, Relationships and Reliability, Logistics and Infrastructure, and Market Conditions. Below is a table showcasing the key themes presented in the manuscript and Bean Model key results/implementation practices pertaining to the corresponding theme. 
+
+The "Other" under the "Overarching themes" column represents other findings not categorized in the main overarching themes but still significant. 
+
+
+```{r}
+#| label: tbl-crosswalk
+#| tbl-cap: "Cross-walk of manuscript themes and Bean Model results"
+
+library(readr)
+library(gt)
+
+df <- read_csv("images/cross-walking.csv", show_col_types = FALSE)
+
+df |>
+  gt(groupname_col = "Overarching themes") |>
+  cols_width(
+    `Description of Value`        ~ pct(14),
+    `CFPP Qualitative Manuscript` ~ pct(44),
+    `Bean Model`                  ~ pct(42)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_row_groups()
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = `Description of Value`)
+  ) |>
+  tab_options(
+    table.font.size = px(13),
+    data_row.padding = px(6)
+  )
+```
 
 ### Causal loop diagrams
 
