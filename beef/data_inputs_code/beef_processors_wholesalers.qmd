@@ -1072,7 +1072,7 @@ rm(missing, still_missing, missing_geocoded)
 #### Additional scale data
 
 We assume harvester/processors have a constrained capacity. We use data from surveys, data gathered by the research team, and AI to estimate the maximum capacities for all businesses. All other entities along the supply chain are assumed to have infinite capacity. 
-We took the list of harvester/processors created above and added [scales](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_processed/NYS_Harvest_Facilities_FSIS_Volume.xlsx), those data are imported here and added back into the full data set. 
+We took the list of harvester/processors created above and added scales, those data are imported here and added back into the full data set. 
 
 This new list includes all harvester/processors that are also LRFS, any businesses listed as a harvester/processor from previous data above that are not listed in the new data are assumed to have unlimited capacity and do not have a scale. 
 
