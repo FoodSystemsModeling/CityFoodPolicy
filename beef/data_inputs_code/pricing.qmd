@@ -74,7 +74,7 @@ rm(ppi)
 
 ### Differentiated
 
-This section is still a work in progress and not yet complete. 
+This section is still a work in progress and not yet complete.
 
 1.  [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 on average price per lb.
 
@@ -368,7 +368,6 @@ wholesale_retail_price <- wholesale_retail_price %>%
 ```
 
 ### Milk-to-feed price ratio
-
 
 ### Combine and save
 

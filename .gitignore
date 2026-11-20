@@ -12,6 +12,7 @@ drybeans/old/
 drybeans/data_final/old/
 drybeans/data_raw/qs.census2022.txt
 beef/data_raw/qs.census2022.txt
+beef/data_processed/
 
 /.quarto/
 .positai

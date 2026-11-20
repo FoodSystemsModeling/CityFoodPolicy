@@ -3,9 +3,10 @@ execute:
   eval: false
   echo: true
 ---
+
 ### Description of Data Sources
 
-All of the data from this file will be used to inform the supply chain of the ABM model.
+All of the data from this file will be used to inform the supply chain of the ABM model: [final data](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_final/beef_processor_distributor_full.csv).
 
 **Processors** We include all USDA inspected meat processing facilities
 
@@ -145,7 +146,7 @@ We create a list of livestock auctions from three sources:
 - New York Agriculture and Markets
 - USDA Agricultural Marketing Service - Packers and Stockyards Division
 
-Data is imported from each source and aggregated into one file. 
+Data is imported from each source and aggregated into one file.
 
 ```{r}
 
@@ -967,9 +968,10 @@ df <- df %>%
 ```
 
 #### Add in scale data
-We use data from surveys conducted by Cornell of Slaughterhouses in the Northeast. 
 
-The scale is the maximum number of beef/dairy cattle that can be slaughtered/processed each day. 
+We use data from surveys conducted by Cornell of Slaughterhouses in the Northeast.
+
+The scale is the maximum number of beef/dairy cattle that can be slaughtered/processed each **day**.
 
 ```{r}
 
@@ -999,6 +1001,7 @@ df <- df %>%
   )
 
 ```
+
 #### Geocode
 
 ```{r}
@@ -1066,6 +1069,143 @@ rm(missing, still_missing, missing_geocoded)
 
 ```
 
+#### Additional scale data
+
+We assume harvester/processors have a constrained capacity. We use data from surveys, data gathered by the research team, and AI to estimate the maximum capacities for all businesses. All other entities along the supply chain are assumed to have infinite capacity. 
+We took the list of harvester/processors created above and added [scales](https://github.com/FoodSystemsModeling/CityFoodPolicy/tree/main/beef/data_processed/NYS_Harvest_Facilities_FSIS_Volume.xlsx), those data are imported here and added back into the full data set. 
+
+This new list includes all harvester/processors that are also LRFS, any businesses listed as a harvester/processor from previous data above that are not listed in the new data are assumed to have unlimited capacity and do not have a scale. 
+
+If we have a precise number, we use that number. Otherwise we estimate based on scale categories developed by the qualitative research team, categories are output per year (note that the scale data that we have is output per day):
+
+- Category 1: fewer than 1,000 head/yr (all species)
+- Category 2: 1,000–9,999 head/yr
+- Category 3: 10,000–99,999 head/yr
+- Category 4: 100,000+ head/yr
+
+To compute missing scale data, we take a median head per day from businesses with reported data of the same scale and apply to missing data. 
+
+Notes/limitations:
+
+- USDA does not publish plant-level cattle counts. These ranges are the most precise public figures and cover ALL species a plant slaughters, They count federally inspected slaughter; plants marked 'Also custom-exempt' may kill additional cattle under the custom exemption that these ranges likely do not capture, so the ranges are not a ceiling on total cattle output.
+- Weekly columns are simple averages of the annual bounds. Small plants typically harvest only a couple of days a week and volume swings seasonally.
+- Exact weekly cattle numbers have to come from the plants themselves (or a records request to USDA, which may be withheld as confidential business information).
+
+Changes to data: - Happy Valley Meat Co. and Palmer Food Service were changed from harvester/processor to just secondary processor (rather than both).
+
+```{r}
+
+# In original data, remove harvester_processor from  Happy Valley Meat Co. and Palmer Food Service and duplicate response Burly Brothers Country Butchery
+df <- df %>% 
+  filter(company_name != "Burly Brothers Country Butchery") %>%
+  mutate(
+    harvester_processor = 
+      case_when(
+        company_name %in% c(
+          "HAPPY VALLEY MEAT CO.", 
+          "Palmer Food Service") ~ 0, 
+        TRUE ~ harvester_processor)
+  )
+ 
+# Load harvester processor data with scale
+harvester <- read_xlsx("../data_processed/NYS_Harvest_Facilities_FSIS_Volume.xlsx", 
+                       skip = 4,
+                       range = "B5:Q26") %>% 
+  clean_names()
+
+# Get scale from Survey data above to
+scale <- df %>% 
+  filter(!is.na(harvester_processor_scale)) %>% 
+  select(company_name, harvester_processor_scale) %>% 
+  rename(frank_scale = harvester_processor_scale)
+
+
+# Drop duplicate business and non-harvester processors
+harvester <- harvester %>% 
+  filter(
+    !plant_as_listed %in% c(
+      "Burly Brothers Country Butchery", 
+      "HAPPY VALLEY MEAT CO.",
+      "Palmer Food Service")
+  )
+
+# Convert numbers to numeric
+harvester <- harvester %>% 
+  mutate(across(
+    c(
+      fsis_slaughter_volume_category:implied_avg_weekly_head_high, weekly_numbers_to_use_from_this_sheet_otherwise_use_franks_numbers), 
+    ~as.numeric(.)
+  ))
+    
+# Keep data of interest
+harvester <- harvester %>% 
+  select(plant_as_listed, 
+         fsis_slaughter_volume_category, 
+         weekly_numbers_to_use_from_this_sheet_otherwise_use_franks_numbers) %>% 
+  rename(
+    company_name = plant_as_listed, 
+    harvester_processor_scale_category = fsis_slaughter_volume_category
+  )
+
+# Join scale data that we already have
+harvester <- harvester %>% 
+  left_join(scale) %>%
+  mutate(
+    harvester_processor_scale = coalesce(
+      weekly_numbers_to_use_from_this_sheet_otherwise_use_franks_numbers,
+      frank_scale
+    )
+  ) %>% 
+  select(
+    -weekly_numbers_to_use_from_this_sheet_otherwise_use_franks_numbers, -frank_scale
+  )
+  
+rm(scale)
+
+
+# Add median by scale category based on reported data
+median_scale <- harvester %>% 
+  group_by(harvester_processor_scale_category) %>% 
+  summarise(
+    median = median(harvester_processor_scale, 
+                    na.rm = TRUE)
+  )
+        
+# Use median scale if NA
+harvester <- harvester %>% 
+  left_join(median_scale) %>%
+  mutate(
+    scale = coalesce(harvester_processor_scale, median)
+    ) %>%
+  select(!c(
+    harvester_processor_scale_category,
+    harvester_processor_scale, 
+    median))
+
+rm(median_scale) 
+
+# Join with original data
+df <- df %>% 
+  left_join(harvester, by = join_by(company_name))
+
+rm(harvester)
+
+# Keep data of interest and put in correct order
+df <- df %>% 
+  select(-harvester_processor_scale) %>% 
+  rename(harvester_processor_scale = scale) %>% 
+  relocate(
+    harvester_processor_scale, .after = auction
+  )
+
+# Make auction scale NA drop id
+df <- df %>% 
+  mutate(
+    auction_scale = NA
+  )
+
+```
+
 #### Save
 
 Here we save a full version and the version that can be shared publicly with business names and addresses removed. We also drop any columns that are not relevant.
@@ -1074,8 +1214,8 @@ Here we save a full version and the version that can be shared publicly with bus
 
 ```{r}
 
-# Save full file
-write_csv(df, "../data_final/beef_processor_distributor_full.csv")
+# Save full file in data processed (not for public)
+write_csv(df, "../data_processed/beef_processor_distributor_full.csv")
 
 # Add information on what data means
 info <- c(
@@ -1102,8 +1242,8 @@ info <- c(
     "0/1 variable indicating if the business is a secondary processor or not",
     "0/1 variable indicating if the business is an auction or not",
     "Scale of harvester processor business. If not a primary processor then leave blank, otherwise fill in maximum number of beef/dairy cattle that can be slaughtered/processed each day",
-    "Scale of secondary processor business. If not a secondary processor then leave blank, otherwise fill in maximum number of beef/dairy cattle that can be slaughtered/processed each day",
-     "Scale of auction business. If not an auction then leave blank, otherwise fill in with maximum number of beef/dairy cattle that can be slaughtered/processed each day",
+    "Scale of secondary processor business, assumed to be unlimited",
+     "Scale of auction business, assumed to be unlimited",
     "0/1 variable indicating if the business is sells NYS source identified product or not",
     "0/1 variable indicating if the business is an MWBE processor or not",
     "0/1 variable indicating if the business is sold to NYC or not",
@@ -1128,7 +1268,21 @@ info <- c(
     "1 indicates yes and 0 indicates no. Do not change data in this column.")'
   )
 
-writeLines(info, "../data_final/beef_processor_distributor_full.txt")    
-
+# Save in data final
+writeLines(info, "../data_final/beef_processor_distributor.txt")    
 ```
 
+##### No names
+
+Save data for public with no names
+
+```{r}
+
+# Drop company name and address
+df <- df %>% 
+  select(-company_name, -street_address, -city)
+
+# Save for public
+write_csv(df, "../data_final/beef_processor_distributor.csv")
+
+```
