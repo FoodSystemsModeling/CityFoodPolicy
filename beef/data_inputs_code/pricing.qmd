@@ -74,40 +74,82 @@ rm(ppi)
 
 ### Differentiated
 
-This section is still a work in progress and not yet complete.
+We use data from [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 from the Grocery Store report using 90/10 ground beef, price per pound.
 
-1.  [Cornell University, Farm Product Price Reports Farmers Markets & Grocery Stores in NY](https://farmersmarketresearch.cornell.edu/price-reports/). Data is reported monthly from 2024-2026. We use data from 2024 and 2025 on average price per lb.
+PDFs of all grocery store reports were downloaded and put into a spreadsheet using AI. 
 
 Prices are reported in 2025 dollars using the producer PPI described above.
 
 ```{r}
 
-## Import farmers market data
-df <- read_xlsx("../data_raw/farmers_market_prices.xlsx")
+## Import retail beef data
+df <- read_xlsx("../data_raw/differentiated_retail_beef_price.xlsx", 
+                sheet = "Source Detail") %>% 
+  clean_names() 
+
+# Use 2024 and 2025 data only 
+df <- df %>% 
+  filter(year!= 2026)
+
+# Keep data of interest
+df <- df %>% 
+  select(year, month, cut_name, type, avg_price_lb) %>% 
+  pivot_wider(
+    names_from = type, 
+    values_from = avg_price_lb
+  )
+
+# Use 90/10 price
+df <- df %>% 
+  filter(
+    cut_name=="Ground beef, 90/10+"
+  )
+
+# Get yearly average
+df <- df %>% 
+  group_by(year) %>% 
+  summarise(
+    diff_organic_price_lb = mean(Organic, na.rm= TRUE), 
+    diff_non_organic_price_lb = mean(`Non-organic`, na.rm = TRUE)
+  )
 
 # Join producer ppi
 df <- df %>% 
   left_join(producer_ppi)
   
-# Put in 2025 prices
+# Put in 2025 prices per kg (Price per kg = price per lb × 2.20462)
 df <- df %>% 
   mutate(
-    diff_retail_beef_price_2025dollars = ground_beef_price*ppi_index_2025
-  )
+    diff_organic_price_kg_2025dollars = diff_organic_price_lb*ppi_index_2025*2.20462,
+    diff_non_organic_price_kg_2025dollars = 
+      diff_non_organic_price_lb*ppi_index_2025*2.20462
+  ) %>% 
+  select(-ppi_index_2025)
 
-# Still working on this section
-diff_price <- tibble(
-  supply_chain_location = c(
-    "Choice beef gross farm value", 
-    "Choice beef retail value",
-    "Choice beef wholesale value"
-  ),
-  beef_price_kg = "need data", 
-  organic_beef_price_kg = "need data"
-)
+## convert to price per kg
+
+# Rename 
+diff_beef_price <- df 
 
 ```
+#### Save
 
+```{r}
+
+# Create info file
+info <- c(
+  "Description: Differentiated retail price per kg of New York Ground beef, 90/10+ reported for Organic and Non-Organic. Data are reported in 2025 dollars using the PPI.",
+  "Source: Cornell University, Price Reports, 2024 and 2025 Monthly Grocery Store Reports."
+)
+
+
+# Save info
+writeLines(info, "../data_final/beef_diff_price.txt")
+
+# Save
+write_csv(diff_beef_price, "../data_final/beef_diff_price.csv")
+
+```
 ### Commodity
 
 #### Farmgate
@@ -423,15 +465,8 @@ info <- c(
 # Save info
 writeLines(info, "../data_final/beef_commodity_price.txt")
 
-# Differentiated
+# Save
 write_csv(beef_price, "../data_final/beef_commodity_price.csv")
 
 ```
 
-#### Differentiated
-
-....coming soon.
-
-```{r}
-
-```

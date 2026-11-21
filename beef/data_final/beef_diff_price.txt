@@ -1,0 +1,2 @@
+Description: Differentiated retail price per kg of New York Ground beef, 90/10+ reported for Organic and Non-Organic. Data are reported in 2025 dollars using the PPI.
+Source: Cornell University, Price Reports, 2024 and 2025 Monthly Grocery Store Reports.
